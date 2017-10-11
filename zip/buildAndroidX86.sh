@@ -13,7 +13,7 @@ mkdir android-x86
 cd android-x86
 
 PREFIX="${top_dir}/contrib/install-android/x86"
-SDKROOT="${ANDROID_NDK}/platforms/android-19/arch-x86"
+SDKROOT="${ANDROID_NDK}/platforms/android-9/arch-x86"
 
 tar xvzf ../../libzip-1.1.3.tar.gz
 mv libzip-1.1.3 zip && touch zip
