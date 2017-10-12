@@ -16,7 +16,7 @@ tar xvzf ../../zlib-1.2.8.tar.gz
 mv zlib-1.2.8 zlib && touch zlib
 
 PREFIX="${top_dir}/contrib/install-android/armv7"
-SDKROOT="${ANDROID_NDK}/platforms/android-9/arch-arm"
+SDKROOT="${ANDROID_NDK}/platforms/android-14/arch-arm"
 
 
 cd zlib
