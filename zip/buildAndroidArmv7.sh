@@ -14,10 +14,10 @@ mkdir android-armv7
 cd android-armv7
 
 PREFIX="${top_dir}/contrib/install-android/armv7"
-SDKROOT="${ANDROID_NDK}/platforms/android-9/arch-arm"
+SDKROOT="${ANDROID_NDK}/platforms/android-14/arch-arm"
 
-tar xvzf ../../libzip-1.1.3.tar.gz
-mv libzip-1.1.3 zip && touch zip
+tar xvzf ../../libzip-0.11.2.tar.gz
+mv libzip-0.11.2 zip && touch zip
 cd zip
 
 export CC="arm-linux-androideabi-gcc --sysroot=${SDKROOT}"
