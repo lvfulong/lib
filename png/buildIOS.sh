@@ -223,3 +223,4 @@ export LDFLAGS=" -L${SDKROOT}/usr/lib -arch x86_64 -isysroot ${SDKROOT} -miphone
 cd ../..
 ##############################################################################################
 lipo -create install-ios/armv7/lib/libpng16.a install-ios/arm64/lib/libpng16.a install-ios/x86_64/lib/libpng16.a install-ios/i386/lib/libpng16.a -output install-ios/libpng.a
+lipo -create install-ios/armv7/lib/libz.a install-ios/arm64/lib/libz.a install-ios/x86_64/lib/libz.a install-ios/i386/lib/libz.a -output install-ios/libz.a
