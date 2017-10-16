@@ -39,11 +39,11 @@ export CFLAGS=" -ffunction-sections -funwind-tables -fstack-protector -no-canoni
 /Applications/Xcode.app/Contents/Developer/usr/bin/make install
 
 cd .. 
-tar xvzf ../../libpng-1.6.34.tar.xz
-mv libpng-1.6.34 png && touch png
+tar xvzf ../../freetype-2.8.1.tar.gz
+mv freetype-2.8.1 freetype && touch freetype
 
 
-mkdir -p -- ${PREFIX}/share/aclocal && cd png && autoreconf -fiv -I${PREFIX}/share/aclocal
+cd freetype
 
 export CC="i686-linux-android-gcc --sysroot=${SDKROOT}"
 export CXX="i686-linux-android-g++ --sysroot=${SDKROOT}"
@@ -57,7 +57,7 @@ export CPPFLAGS=" -ffunction-sections -funwind-tables -fstack-protector -no-cano
 export CFLAGS=" -ffunction-sections -funwind-tables -fstack-protector -no-canonical-prefixes  -fomit-frame-pointer -fstrict-aliasing -DANDROID  -Wa,--noexecstack -Wformat  -I${PREFIX}/include -O3 -DNDEBUG"
 export CXXFLAGS=" -ffunction-sections -funwind-tables -fstack-protector -no-canonical-prefixes  -fomit-frame-pointer -fstrict-aliasing -DANDROID  -Wa,--noexecstack -Wformat  -I${PREFIX}/include -O3 -DNDEBUG"
 export LDFLAGS=" -L${PREFIX}/lib"
-./configure --prefix=${PREFIX} --datarootdir="${PREFIX}/share" --includedir="${PREFIX}/include" --libdir="${PREFIX}/lib" --build="x86_64-apple-darwin14" --host="i686-linux-android" --target="i686-linux-android" --program-prefix="" --enable-static --disable-shared --disable-dependency-tracking --with-pic
+./configure --with-harfbuzz=no --with-zlib=yes --without-png --with-bzip2=no --prefix=${PREFIX} --datarootdir="${PREFIX}/share" --includedir="${PREFIX}/include" --libdir="${PREFIX}/lib" --build="x86_64-apple-darwin14" --host="i686-linux-android" --target="i686-linux-android" --program-prefix="" --enable-static --disable-shared --disable-dependency-tracking --with-pic
 
 /Applications/Xcode.app/Contents/Developer/usr/bin/make install
 cd ../..
