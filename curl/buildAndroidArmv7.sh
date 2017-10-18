@@ -64,10 +64,10 @@ export CFLAGS=" -march=armv7-a -mfpu=neon -mfloat-abi=softfp  -mthumb -fomit-fra
 /Applications/Xcode.app/Contents/Developer/usr/bin/make install
 cd ..
 
-#tar xvzf ../../curl-7.56.0.tar.gz
-#mv curl-7.56.0 curl && touch curl
-tar xvzf ../../curl-7.52.1.tar.gz
-mv curl-7.52.1 curl && touch curl
+tar xvzf ../../curl-7.56.0.tar.gz
+mv curl-7.56.0 curl && touch curl
+#tar xvzf ../../curl-7.52.1.tar.gz
+#mv curl-7.52.1 curl && touch curl
 mkdir -p -- ${PREFIX}/share/aclocal&&cd curl&&autoreconf -fiv -I${PREFIX}/share/aclocal
 export CC="arm-linux-androideabi-gcc --sysroot=${SDKROOT}"
 export CXX="arm-linux-androideabi-g++ --sysroot=${SDKROOT}"
