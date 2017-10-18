@@ -65,10 +65,10 @@ export CFLAGS=" -ffunction-sections -funwind-tables -fstack-protector -no-canoni
 ./configure --prefix=${PREFIX} --static
 cd ..
 
-#tar xvzf ../../curl-7.56.0.tar.gz
-#mv curl-7.56.0 curl && touch curl
-tar xvzf ../../curl-7.52.1.tar.gz
-mv curl-7.52.1 curl && touch curl
+tar xvzf ../../curl-7.56.0.tar.gz
+mv curl-7.56.0 curl && touch curl
+#tar xvzf ../../curl-7.52.1.tar.gz
+#mv curl-7.52.1 curl && touch curl
 mkdir -p -- ${PREFIX}/share/aclocal && cd curl && autoreconf -fiv -I${PREFIX}/share/aclocal
 export CC="i686-linux-android-gcc --sysroot=${SDKROOT}"
 export CXX="i686-linux-android-g++ --sysroot=${SDKROOT}"
