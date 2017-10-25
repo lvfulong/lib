@@ -5,7 +5,7 @@ PATH="${current_dir}/..:${PATH}"
 mkdir Contrib
 cd Contrib
 
-export ANDROID_NDK=/Users/layabox_mac/Music/lib/android-ndk-r12b
+export ANDROID_NDK=/Users/layabox_mac/Public/lib/android-ndk-r10e
 PATH="${ANDROID_NDK}/toolchains/x86-4.9/prebuilt/darwin-x86_64/bin:${PATH}"
 ##############################################################################################
 rm -rf android-x86
