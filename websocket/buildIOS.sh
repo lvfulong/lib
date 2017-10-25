@@ -59,12 +59,12 @@ export CCAS="gas-preprocessor.pl xcrun clang -c"
 export RANLIB="xcrun ranlib"
 export STRIP="xcrun strip"
 export PATH="${PREFIX}/bin:${PATH}"
-export CPPFLAGS=" -isysroot ${SDKROOT} -arch armv7 -miphoneos-version-min=6.0 -mcpu=cortex-a8  -I${PREFIX}/include -O3 -DNDEBUG"
-export CFLAGS=" -isysroot ${SDKROOT} -arch armv7 -miphoneos-version-min=6.0 -mcpu=cortex-a8  -I${PREFIX}/include -O3 -DNDEBUG"
-export CXXFLAGS=" -isysroot ${SDKROOT} -arch armv7 -miphoneos-version-min=6.0 -mcpu=cortex-a8  -I${PREFIX}/include -O3 -DNDEBUG"
-export LDFLAGS=" -L${SDKROOT}/usr/lib -arch armv7 -isysroot ${SDKROOT} -miphoneos-version-min=6.0 -L${PREFIX}/lib"
+export CPPFLAGS=" -isysroot ${SDKROOT} -arch armv7 -miphoneos-version-min=8.0 -mcpu=cortex-a8  -I${PREFIX}/include -O3 -DNDEBUG"
+export CFLAGS=" -isysroot ${SDKROOT} -arch armv7 -miphoneos-version-min=8.0 -mcpu=cortex-a8  -I${PREFIX}/include -O3 -DNDEBUG"
+export CXXFLAGS=" -isysroot ${SDKROOT} -arch armv7 -miphoneos-version-min=8.0 -mcpu=cortex-a8  -I${PREFIX}/include -O3 -DNDEBUG"
+export LDFLAGS=" -L${SDKROOT}/usr/lib -arch armv7 -isysroot ${SDKROOT} -miphoneos-version-min=8.0 -L${PREFIX}/lib"
 export CHOST=arm-apple-darwin
-export CFLAGS=" -isysroot ${SDKROOT} -arch armv7 -miphoneos-version-min=6.0 -mcpu=cortex-a8  -I${PREFIX}/include -O3 -DNDEBUG "
+export CFLAGS=" -isysroot ${SDKROOT} -arch armv7 -miphoneos-version-min=8.0 -mcpu=cortex-a8  -I${PREFIX}/include -O3 -DNDEBUG "
 ./configure --prefix=${PREFIX} --static
 /Applications/Xcode.app/Contents/Developer/usr/bin/make install
 
@@ -73,9 +73,9 @@ cd ..
 CMAKE_TOOLCHAIN_PATH=`pwd`
 rm -f toolchain.cmake
 echo "set(CMAKE_SYSTEM_NAME Darwin)" >> toolchain.cmake
-echo "set(CMAKE_C_FLAGS  -isysroot ${SDKROOT} -arch armv7 -miphoneos-version-min=6.0 -mcpu=cortex-a8  -I${PREFIX}/include -O3 -DNDEBUG)" >> toolchain.cmake
-echo "set(CMAKE_CXX_FLAGS  -isysroot ${SDKROOT} -arch armv7 -miphoneos-version-min=6.0 -mcpu=cortex-a8  -I${PREFIX}/include -O3 -DNDEBUG)" >> toolchain.cmake
-echo "set(CMAKE_LD_FLAGS  -L${SDKROOT}/usr/lib -arch armv7 -isysroot ${SDKROOT} -miphoneos-version-min=6.0 -L${PREFIX}/lib)" >> toolchain.cmake
+echo "set(CMAKE_C_FLAGS  -isysroot ${SDKROOT} -arch armv7 -miphoneos-version-min=8.0 -mcpu=cortex-a8  -I${PREFIX}/include -O3 -DNDEBUG)" >> toolchain.cmake
+echo "set(CMAKE_CXX_FLAGS  -isysroot ${SDKROOT} -arch armv7 -miphoneos-version-min=8.0 -mcpu=cortex-a8  -I${PREFIX}/include -O3 -DNDEBUG)" >> toolchain.cmake
+echo "set(CMAKE_LD_FLAGS  -L${SDKROOT}/usr/lib -arch armv7 -isysroot ${SDKROOT} -miphoneos-version-min=8.0 -L${PREFIX}/lib)" >> toolchain.cmake
 echo "set(CMAKE_AR ar CACHE FILEPATH "Archiver")" >> toolchain.cmake
 echo "set(CMAKE_OSX_SYSROOT ${SDKROOT})" >> toolchain.cmake
 echo "set(_CMAKE_TOOLCHAIN_PREFIX arm-apple-darwin-)" >> toolchain.cmake
@@ -103,11 +103,11 @@ export CCAS="gas-preprocessor.pl xcrun clang -c"
 export RANLIB="xcrun ranlib"
 export STRIP="xcrun strip"
 export PATH="${PREFIX}/bin:${PATH}"
-export CPPFLAGS=" -isysroot ${SDKROOT} -arch armv7 -miphoneos-version-min=6.0 -mcpu=cortex-a8  -I${PREFIX}/include -O3 -DNDEBUG"
-export CFLAGS=" -isysroot ${SDKROOT}  -arch armv7 -miphoneos-version-min=6.0 -mcpu=cortex-a8  -I${PREFIX}/include -O3 -DNDEBUG"
-export CXXFLAGS=" -isysroot ${SDKROOT} -arch armv7 -miphoneos-version-min=6.0 -mcpu=cortex-a8  -I${PREFIX}/include -O3 -DNDEBUG"
-export LDFLAGS=" -L${SDKROOT}/usr/lib -arch armv7 -isysroot ${SDKROOT} -miphoneos-version-min=6.0 -L${PREFIX}/lib"
-export CFLAGS=" -isysroot ${SDKROOT} -arch armv7 -miphoneos-version-min=6.0 -mcpu=cortex-a8  -I${PREFIX}/include -O3 -DNDEBUG "
+export CPPFLAGS=" -isysroot ${SDKROOT} -arch armv7 -miphoneos-version-min=8.0 -mcpu=cortex-a8  -I${PREFIX}/include -O3 -DNDEBUG"
+export CFLAGS=" -isysroot ${SDKROOT}  -arch armv7 -miphoneos-version-min=8.0 -mcpu=cortex-a8  -I${PREFIX}/include -O3 -DNDEBUG"
+export CXXFLAGS=" -isysroot ${SDKROOT} -arch armv7 -miphoneos-version-min=8.0 -mcpu=cortex-a8  -I${PREFIX}/include -O3 -DNDEBUG"
+export LDFLAGS=" -L${SDKROOT}/usr/lib -arch armv7 -isysroot ${SDKROOT} -miphoneos-version-min=8.0 -L${PREFIX}/lib"
+export CFLAGS=" -isysroot ${SDKROOT} -arch armv7 -miphoneos-version-min=8.0 -mcpu=cortex-a8  -I${PREFIX}/include -O3 -DNDEBUG "
 cmake . -DCMAKE_TOOLCHAIN_FILE=${CMAKE_TOOLCHAIN_PATH}/toolchain.cmake -DCMAKE_INSTALL_PREFIX=${PREFIX} -DLWS_WITH_SSL=1 -DLWS_WITHOUT_SERVER=1 -DLWS_WITH_SHARED=0 -DLWS_WITHOUT_TEST_SERVER=1 -DLWS_WITHOUT_TEST_SERVER_EXTPOLL=1 -DLWS_WITHOUT_TEST_PING=1 -DLWS_WITHOUT_TEST_ECHO=1 -DLWS_WITHOUT_TEST_FRAGGLE=1 -DLWS_IPV6=1
 /Applications/Xcode.app/Contents/Developer/usr/bin/make VERBOSE=1 install
 
@@ -133,12 +133,12 @@ export CCAS="gas-preprocessor.pl xcrun clang -c"
 export RANLIB="xcrun ranlib"
 export STRIP="xcrun strip"
 export PATH="${PREFIX}/bin:${PATH}"
-export CPPFLAGS=" -isysroot ${SDKROOT} -arch arm64 -miphoneos-version-min=6.0  -I${PREFIX}/include -O3 -DNDEBUG"
-export CFLAGS=" -isysroot ${SDKROOT} -arch arm64 -miphoneos-version-min=6.0  -I${PREFIX}/include -O3 -DNDEBUG"
-export CXXFLAGS=" -isysroot ${SDKROOT} -arch arm64 -miphoneos-version-min=6.0  -I${PREFIX}/include -O3 -DNDEBUG"
-export LDFLAGS=" -L${SDKROOT}/usr/lib -arch arm64 -isysroot ${SDKROOT} -miphoneos-version-min=6.0 -L${PREFIX}/lib"
+export CPPFLAGS=" -isysroot ${SDKROOT} -arch arm64 -miphoneos-version-min=8.0  -I${PREFIX}/include -O3 -DNDEBUG"
+export CFLAGS=" -isysroot ${SDKROOT} -arch arm64 -miphoneos-version-min=8.0  -I${PREFIX}/include -O3 -DNDEBUG"
+export CXXFLAGS=" -isysroot ${SDKROOT} -arch arm64 -miphoneos-version-min=8.0  -I${PREFIX}/include -O3 -DNDEBUG"
+export LDFLAGS=" -L${SDKROOT}/usr/lib -arch arm64 -isysroot ${SDKROOT} -miphoneos-version-min=8.0 -L${PREFIX}/lib"
 export CHOST=arm-apple-darwin
-export CFLAGS=" -isysroot ${SDKROOT} -arch arm64 -miphoneos-version-min=6.0  -I${PREFIX}/include -O3 -DNDEBUG "
+export CFLAGS=" -isysroot ${SDKROOT} -arch arm64 -miphoneos-version-min=8.0  -I${PREFIX}/include -O3 -DNDEBUG "
 ./configure --prefix=${PREFIX} --static
 /Applications/Xcode.app/Contents/Developer/usr/bin/make install
 cd ..
@@ -147,9 +147,9 @@ cd ..
 CMAKE_TOOLCHAIN_PATH=`pwd`
 rm -f toolchain.cmake
 echo "set(CMAKE_SYSTEM_NAME Darwin)" >> toolchain.cmake
-echo "set(CMAKE_C_FLAGS  -isysroot ${SDKROOT} -arch arm64 -miphoneos-version-min=6.0  -I${PREFIX}/include -O3 -DNDEBUG)" >> toolchain.cmake
-echo "set(CMAKE_CXX_FLAGS  -isysroot ${SDKROOT} -arch arm64 -miphoneos-version-min=6.0  -I${PREFIX}/include -O3 -DNDEBUG)" >> toolchain.cmake
-echo "set(CMAKE_LD_FLAGS  -L${SDKROOT}/usr/lib -arch arm64 -isysroot ${SDKROOT} -miphoneos-version-min=6.0 -L${PREFIX}/lib)" >> toolchain.cmake
+echo "set(CMAKE_C_FLAGS  -isysroot ${SDKROOT} -arch arm64 -miphoneos-version-min=8.0  -I${PREFIX}/include -O3 -DNDEBUG)" >> toolchain.cmake
+echo "set(CMAKE_CXX_FLAGS  -isysroot ${SDKROOT} -arch arm64 -miphoneos-version-min=8.0  -I${PREFIX}/include -O3 -DNDEBUG)" >> toolchain.cmake
+echo "set(CMAKE_LD_FLAGS  -L${SDKROOT}/usr/lib -arch arm64 -isysroot ${SDKROOT} -miphoneos-version-min=8.0 -L${PREFIX}/lib)" >> toolchain.cmake
 echo "set(CMAKE_AR ar CACHE FILEPATH "Archiver")" >> toolchain.cmake
 echo "set(CMAKE_OSX_SYSROOT ${SDKROOT})" >> toolchain.cmake
 echo "set(_CMAKE_TOOLCHAIN_PREFIX arm-apple-darwin-)" >> toolchain.cmake
@@ -178,11 +178,11 @@ export CCAS="gas-preprocessor.pl xcrun clang -c"
 export RANLIB="xcrun ranlib"
 export STRIP="xcrun strip"
 export PATH="${PREFIX}/bin:${PATH}"
-export CPPFLAGS=" -isysroot ${SDKROOT} -arch arm64 -miphoneos-version-min=6.0  -I${PREFIX}/include -O3 -DNDEBUG"
-export CFLAGS=" -isysroot ${SDKROOT} -arch arm64 -miphoneos-version-min=6.0  -I${PREFIX}/include -O3 -DNDEBUG"
-export CXXFLAGS=" -isysroot ${SDKROOT} -arch arm64 -miphoneos-version-min=6.0  -I${PREFIX}/include -O3 -DNDEBUG"
-export LDFLAGS=" -L${SDKROOT}/usr/lib -arch arm64 -isysroot ${SDKROOT} -miphoneos-version-min=6.0 -L${PREFIX}/lib"
-export CFLAGS=" -isysroot ${SDKROOT} -arch arm64 -miphoneos-version-min=6.0  -I${PREFIX}/include -O3 -DNDEBUG "
+export CPPFLAGS=" -isysroot ${SDKROOT} -arch arm64 -miphoneos-version-min=8.0  -I${PREFIX}/include -O3 -DNDEBUG"
+export CFLAGS=" -isysroot ${SDKROOT} -arch arm64 -miphoneos-version-min=8.0  -I${PREFIX}/include -O3 -DNDEBUG"
+export CXXFLAGS=" -isysroot ${SDKROOT} -arch arm64 -miphoneos-version-min=8.0  -I${PREFIX}/include -O3 -DNDEBUG"
+export LDFLAGS=" -L${SDKROOT}/usr/lib -arch arm64 -isysroot ${SDKROOT} -miphoneos-version-min=8.0 -L${PREFIX}/lib"
+export CFLAGS=" -isysroot ${SDKROOT} -arch arm64 -miphoneos-version-min=8.0  -I${PREFIX}/include -O3 -DNDEBUG "
 cmake . -DCMAKE_TOOLCHAIN_FILE=${CMAKE_TOOLCHAIN_PATH}/toolchain.cmake -DCMAKE_INSTALL_PREFIX=${PREFIX} -DLWS_WITH_SSL=1 -DLWS_WITHOUT_SERVER=1 -DLWS_WITH_SHARED=0 -DLWS_WITHOUT_TEST_SERVER=1 -DLWS_WITHOUT_TEST_SERVER_EXTPOLL=1 -DLWS_WITHOUT_TEST_PING=1 -DLWS_WITHOUT_TEST_ECHO=1 -DLWS_WITHOUT_TEST_FRAGGLE=1 -DLWS_IPV6=1
 /Applications/Xcode.app/Contents/Developer/usr/bin/make VERBOSE=1 install
 
@@ -208,12 +208,12 @@ export CCAS="gas-preprocessor.pl xcrun clang -c"
 export RANLIB="xcrun ranlib"
 export STRIP="xcrun strip"
 export PATH="${PREFIX}/bin:${PATH}"
-export CPPFLAGS=" -isysroot ${SDKROOT} -arch i386 -miphoneos-version-min=6.0  -I${PREFIX}/include -O3 -DNDEBUG"
-export CFLAGS=" -isysroot ${SDKROOT} -arch i386 -miphoneos-version-min=6.0  -I${PREFIX}/include -O3 -DNDEBUG"
-export CXXFLAGS=" -isysroot ${SDKROOT} -arch i386 -miphoneos-version-min=6.0  -I${PREFIX}/include -O3 -DNDEBUG"
-export LDFLAGS=" -L${SDKROOT}/usr/lib -arch i386 -isysroot ${SDKROOT} -miphoneos-version-min=6.0 -L${PREFIX}/lib"
+export CPPFLAGS=" -isysroot ${SDKROOT} -arch i386 -miphoneos-version-min=8.0  -I${PREFIX}/include -O3 -DNDEBUG"
+export CFLAGS=" -isysroot ${SDKROOT} -arch i386 -miphoneos-version-min=8.0  -I${PREFIX}/include -O3 -DNDEBUG"
+export CXXFLAGS=" -isysroot ${SDKROOT} -arch i386 -miphoneos-version-min=8.0  -I${PREFIX}/include -O3 -DNDEBUG"
+export LDFLAGS=" -L${SDKROOT}/usr/lib -arch i386 -isysroot ${SDKROOT} -miphoneos-version-min=8.0 -L${PREFIX}/lib"
 export CHOST=i386-apple-darwin
-export CFLAGS=" -isysroot ${SDKROOT} -arch i386 -miphoneos-version-min=6.0  -I${PREFIX}/include -O3 -DNDEBUG "
+export CFLAGS=" -isysroot ${SDKROOT} -arch i386 -miphoneos-version-min=8.0  -I${PREFIX}/include -O3 -DNDEBUG "
 ./configure --prefix=${PREFIX} --static
 
 /Applications/Xcode.app/Contents/Developer/usr/bin/make install
@@ -223,9 +223,9 @@ cd ..
 CMAKE_TOOLCHAIN_PATH=`pwd`
 rm -f toolchain.cmake
 echo "set(CMAKE_SYSTEM_NAME Darwin)" >> toolchain.cmake
-echo "set(CMAKE_C_FLAGS  -isysroot ${SDKROOT} -arch i386 -miphoneos-version-min=6.0  -I${PREFIX}/include -O3 -DNDEBUG)" >> toolchain.cmake
-echo "set(CMAKE_CXX_FLAGS  -isysroot ${SDKROOT} -arch i386 -miphoneos-version-min=6.0  -I${PREFIX}/include -O3 -DNDEBUG)" >> toolchain.cmake
-echo "set(CMAKE_LD_FLAGS  -L${SDKROOT}/usr/lib -arch i386 -isysroot ${SDKROOT} -miphoneos-version-min=6.0 -L${PREFIX}/lib)" >> toolchain.cmake
+echo "set(CMAKE_C_FLAGS  -isysroot ${SDKROOT} -arch i386 -miphoneos-version-min=8.0  -I${PREFIX}/include -O3 -DNDEBUG)" >> toolchain.cmake
+echo "set(CMAKE_CXX_FLAGS  -isysroot ${SDKROOT} -arch i386 -miphoneos-version-min=8.0  -I${PREFIX}/include -O3 -DNDEBUG)" >> toolchain.cmake
+echo "set(CMAKE_LD_FLAGS  -L${SDKROOT}/usr/lib -arch i386 -isysroot ${SDKROOT} -miphoneos-version-min=8.0 -L${PREFIX}/lib)" >> toolchain.cmake
 echo "set(CMAKE_AR ar CACHE FILEPATH "Archiver")" >> toolchain.cmake
 echo "set(CMAKE_OSX_SYSROOT ${SDKROOT})" >> toolchain.cmake
 echo "set(_CMAKE_TOOLCHAIN_PREFIX i386-apple-darwin-)" >> toolchain.cmake
@@ -254,11 +254,11 @@ export CCAS="gas-preprocessor.pl xcrun clang -c"
 export RANLIB="xcrun ranlib"
 export STRIP="xcrun strip"
 export PATH="${PREFIX}/bin:${PATH}"
-export CPPFLAGS=" -isysroot ${SDKROOT} -arch i386 -miphoneos-version-min=6.0  -I${PREFIX}/include -O3 -DNDEBUG"
-export CFLAGS=" -isysroot ${SDKROOT} -arch i386 -miphoneos-version-min=6.0  -I${PREFIX}/include -O3 -DNDEBUG"
-export CXXFLAGS=" -isysroot ${SDKROOT} -arch i386 -miphoneos-version-min=6.0  -I${PREFIX}/include -O3 -DNDEBUG"
-export LDFLAGS=" -L${SDKROOT}/usr/lib -arch i386 -isysroot ${SDKROOT} -miphoneos-version-min=6.0 -L${PREFIX}/lib"
-export CFLAGS=" -isysroot ${SDKROOT} -arch i386 -miphoneos-version-min=6.0  -I${PREFIX}/include -O3 -DNDEBUG "
+export CPPFLAGS=" -isysroot ${SDKROOT} -arch i386 -miphoneos-version-min=8.0  -I${PREFIX}/include -O3 -DNDEBUG"
+export CFLAGS=" -isysroot ${SDKROOT} -arch i386 -miphoneos-version-min=8.0  -I${PREFIX}/include -O3 -DNDEBUG"
+export CXXFLAGS=" -isysroot ${SDKROOT} -arch i386 -miphoneos-version-min=8.0  -I${PREFIX}/include -O3 -DNDEBUG"
+export LDFLAGS=" -L${SDKROOT}/usr/lib -arch i386 -isysroot ${SDKROOT} -miphoneos-version-min=8.0 -L${PREFIX}/lib"
+export CFLAGS=" -isysroot ${SDKROOT} -arch i386 -miphoneos-version-min=8.0  -I${PREFIX}/include -O3 -DNDEBUG "
 cmake . -DCMAKE_TOOLCHAIN_FILE=${CMAKE_TOOLCHAIN_PATH}/toolchain.cmake -DCMAKE_INSTALL_PREFIX=${PREFIX} -DLWS_WITH_SSL=1 -DLWS_WITHOUT_SERVER=1 -DLWS_WITH_SHARED=0 -DLWS_WITHOUT_TEST_SERVER=1 -DLWS_WITHOUT_TEST_SERVER_EXTPOLL=1 -DLWS_WITHOUT_TEST_PING=1 -DLWS_WITHOUT_TEST_ECHO=1 -DLWS_WITHOUT_TEST_FRAGGLE=1 -DLWS_IPV6=1
 /Applications/Xcode.app/Contents/Developer/usr/bin/make VERBOSE=1 install
 cd ../..
@@ -282,12 +282,12 @@ export CCAS="gas-preprocessor.pl xcrun clang -c"
 export RANLIB="xcrun ranlib"
 export STRIP="xcrun strip"
 export PATH="${PREFIX}/bin:${PATH}"
-export CPPFLAGS=" -isysroot ${SDKROOT} -arch x86_64 -miphoneos-version-min=6.0  -I${PREFIX}/include -O3 -DNDEBUG"
-export CFLAGS=" -isysroot ${SDKROOT} -arch x86_64 -miphoneos-version-min=6.0  -I${PREFIX}/include -O3 -DNDEBUG"
-export CXXFLAGS=" -isysroot ${SDKROOT} -arch x86_64 -miphoneos-version-min=6.0  -I${PREFIX}/include -O3 -DNDEBUG"
-export LDFLAGS=" -L${SDKROOT}/usr/lib -arch x86_64 -isysroot ${SDKROOT} -miphoneos-version-min=6.0 -L${PREFIX}/lib"
+export CPPFLAGS=" -isysroot ${SDKROOT} -arch x86_64 -miphoneos-version-min=8.0  -I${PREFIX}/include -O3 -DNDEBUG"
+export CFLAGS=" -isysroot ${SDKROOT} -arch x86_64 -miphoneos-version-min=8.0  -I${PREFIX}/include -O3 -DNDEBUG"
+export CXXFLAGS=" -isysroot ${SDKROOT} -arch x86_64 -miphoneos-version-min=8.0  -I${PREFIX}/include -O3 -DNDEBUG"
+export LDFLAGS=" -L${SDKROOT}/usr/lib -arch x86_64 -isysroot ${SDKROOT} -miphoneos-version-min=8.0 -L${PREFIX}/lib"
 export CHOST=x86_64-apple-darwin
-export CFLAGS=" -isysroot ${SDKROOT} -arch x86_64 -miphoneos-version-min=6.0  -I${PREFIX}/include -O3 -DNDEBUG "
+export CFLAGS=" -isysroot ${SDKROOT} -arch x86_64 -miphoneos-version-min=8.0  -I${PREFIX}/include -O3 -DNDEBUG "
 ./configure --prefix=${PREFIX} --static
 /Applications/Xcode.app/Contents/Developer/usr/bin/make install
 cd ..
@@ -296,9 +296,9 @@ cd ..
 CMAKE_TOOLCHAIN_PATH=`pwd`
 rm -f toolchain.cmake
 echo "set(CMAKE_SYSTEM_NAME Darwin)" >> toolchain.cmake
-echo "set(CMAKE_C_FLAGS  -isysroot ${SDKROOT} -arch x86_64 -miphoneos-version-min=6.0  -I${PREFIX}/include -O3 -DNDEBUG)" >> toolchain.cmake
-echo "set(CMAKE_CXX_FLAGS  -isysroot ${SDKROOT} -arch x86_64 -miphoneos-version-min=6.0  -I${PREFIX}/include -O3 -DNDEBUG)" >> toolchain.cmake
-echo "set(CMAKE_LD_FLAGS  -L${SDKROOT}/usr/lib -arch x86_64 -isysroot ${SDKROOT} -miphoneos-version-min=6.0 -L${PREFIX}/lib)" >> toolchain.cmake
+echo "set(CMAKE_C_FLAGS  -isysroot ${SDKROOT} -arch x86_64 -miphoneos-version-min=8.0  -I${PREFIX}/include -O3 -DNDEBUG)" >> toolchain.cmake
+echo "set(CMAKE_CXX_FLAGS  -isysroot ${SDKROOT} -arch x86_64 -miphoneos-version-min=8.0  -I${PREFIX}/include -O3 -DNDEBUG)" >> toolchain.cmake
+echo "set(CMAKE_LD_FLAGS  -L${SDKROOT}/usr/lib -arch x86_64 -isysroot ${SDKROOT} -miphoneos-version-min=8.0 -L${PREFIX}/lib)" >> toolchain.cmake
 echo "set(CMAKE_AR ar CACHE FILEPATH "Archiver")" >> toolchain.cmake
 echo "set(CMAKE_OSX_SYSROOT ${SDKROOT})" >> toolchain.cmake
 echo "set(_CMAKE_TOOLCHAIN_PREFIX x86_64-apple-darwin-)" >> toolchain.cmake
@@ -326,11 +326,11 @@ export CCAS="gas-preprocessor.pl xcrun clang -c"
 export RANLIB="xcrun ranlib"
 export STRIP="xcrun strip"
 export PATH="${PREFIX}/bin:${PATH}"
-export CPPFLAGS=" -isysroot ${SDKROOT} -arch x86_64 -miphoneos-version-min=6.0  -I${PREFIX}/include -O3 -DNDEBUG"
-export CFLAGS=" -isysroot ${SDKROOT} -arch x86_64 -miphoneos-version-min=6.0  -I${PREFIX}/include -O3 -DNDEBUG"
-export CXXFLAGS=" -isysroot ${SDKROOT} -arch x86_64 -miphoneos-version-min=6.0  -I${PREFIX}/include -O3 -DNDEBUG"
-export LDFLAGS=" -L${SDKROOT}/usr/lib -arch x86_64 -isysroot ${SDKROOT} -miphoneos-version-min=6.0 -L${PREFIX}/lib"
-export CFLAGS=" -isysroot ${SDKROOT} -arch x86_64 -miphoneos-version-min=6.0  -I${PREFIX}/include -O3 -DNDEBUG "
+export CPPFLAGS=" -isysroot ${SDKROOT} -arch x86_64 -miphoneos-version-min=8.0  -I${PREFIX}/include -O3 -DNDEBUG"
+export CFLAGS=" -isysroot ${SDKROOT} -arch x86_64 -miphoneos-version-min=8.0  -I${PREFIX}/include -O3 -DNDEBUG"
+export CXXFLAGS=" -isysroot ${SDKROOT} -arch x86_64 -miphoneos-version-min=8.0  -I${PREFIX}/include -O3 -DNDEBUG"
+export LDFLAGS=" -L${SDKROOT}/usr/lib -arch x86_64 -isysroot ${SDKROOT} -miphoneos-version-min=8.0 -L${PREFIX}/lib"
+export CFLAGS=" -isysroot ${SDKROOT} -arch x86_64 -miphoneos-version-min=8.0  -I${PREFIX}/include -O3 -DNDEBUG "
 cmake . -DCMAKE_TOOLCHAIN_FILE=${CMAKE_TOOLCHAIN_PATH}/toolchain.cmake -DCMAKE_INSTALL_PREFIX=${PREFIX} -DLWS_WITH_SSL=1 -DLWS_WITHOUT_SERVER=1 -DLWS_WITH_SHARED=0 -DLWS_WITHOUT_TEST_SERVER=1 -DLWS_WITHOUT_TEST_SERVER_EXTPOLL=1 -DLWS_WITHOUT_TEST_PING=1 -DLWS_WITHOUT_TEST_ECHO=1 -DLWS_WITHOUT_TEST_FRAGGLE=1 -DLWS_IPV6=1
 /Applications/Xcode.app/Contents/Developer/usr/bin/make VERBOSE=1 install
 cd ../..
