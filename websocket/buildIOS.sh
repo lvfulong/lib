@@ -86,8 +86,8 @@ echo "set(CMAKE_FIND_ROOT_PATH_MODE_PROGRAM NEVER)" >> toolchain.cmake
 echo "set(CMAKE_FIND_ROOT_PATH_MODE_LIBRARY ONLY)" >> toolchain.cmake
 echo "set(CMAKE_FIND_ROOT_PATH_MODE_INCLUDE ONLY)" >> toolchain.cmake
 
-cp ${top_dir}/Contrib/openssl/bin/iPhoneOS10.3-armv7.sdk/lib/libssl.a ${PREFIX}/lib
-cp ${top_dir}/Contrib/openssl/bin/iPhoneOS10.3-armv7.sdk/lib/libcrypto.a ${PREFIX}/lib
+cp ${top_dir}/Contrib/openssl/bin/iPhoneOS${SDK_VERSION}-armv7.sdk/lib/libssl.a ${PREFIX}/lib
+cp ${top_dir}/Contrib/openssl/bin/iPhoneOS${SDK_VERSION}-armv7.sdk/lib/libcrypto.a ${PREFIX}/lib
 mkdir ${PREFIX}/include/openssl
 cp  ${top_dir}/Contrib/openssl/include/* ${PREFIX}/include/openssl
 
@@ -161,8 +161,8 @@ echo "set(CMAKE_FIND_ROOT_PATH_MODE_LIBRARY ONLY)" >> toolchain.cmake
 echo "set(CMAKE_FIND_ROOT_PATH_MODE_INCLUDE ONLY)" >> toolchain.cmake
 
 
-cp ${top_dir}/Contrib/openssl/bin/iPhoneOS10.3-arm64.sdk/lib/libssl.a ${PREFIX}/lib
-cp ${top_dir}/Contrib/openssl/bin/iPhoneOS10.3-arm64.sdk/lib/libcrypto.a ${PREFIX}/lib
+cp ${top_dir}/Contrib/openssl/bin/iPhoneOS${SDK_VERSION}-arm64.sdk/lib/libssl.a ${PREFIX}/lib
+cp ${top_dir}/Contrib/openssl/bin/iPhoneOS${SDK_VERSION}-arm64.sdk/lib/libcrypto.a ${PREFIX}/lib
 mkdir ${PREFIX}/include/openssl
 cp  ${top_dir}/Contrib/openssl/include/* ${PREFIX}/include/openssl
 
@@ -237,8 +237,8 @@ echo "set(CMAKE_FIND_ROOT_PATH_MODE_LIBRARY ONLY)" >> toolchain.cmake
 echo "set(CMAKE_FIND_ROOT_PATH_MODE_INCLUDE ONLY)" >> toolchain.cmake
 
 
-cp ${top_dir}/Contrib/openssl/bin/iPhoneSimulator10.3-i386.sdk/lib/libssl.a ${PREFIX}/lib
-cp ${top_dir}/Contrib/openssl/bin/iPhoneSimulator10.3-i386.sdk/lib/libcrypto.a ${PREFIX}/lib
+cp ${top_dir}/Contrib/openssl/bin/iPhoneSimulator${SDK_VERSION}-i386.sdk/lib/libssl.a ${PREFIX}/lib
+cp ${top_dir}/Contrib/openssl/bin/iPhoneSimulator${SDK_VERSION}-i386.sdk/lib/libcrypto.a ${PREFIX}/lib
 mkdir ${PREFIX}/include/openssl
 cp  ${top_dir}/Contrib/openssl/include/* ${PREFIX}/include/openssl
 
@@ -309,8 +309,8 @@ echo "set(CMAKE_FIND_ROOT_PATH_MODE_PROGRAM NEVER)" >> toolchain.cmake
 echo "set(CMAKE_FIND_ROOT_PATH_MODE_LIBRARY ONLY)" >> toolchain.cmake
 echo "set(CMAKE_FIND_ROOT_PATH_MODE_INCLUDE ONLY)" >> toolchain.cmake
 
-cp ${top_dir}/Contrib/openssl/bin/iPhoneSimulator10.3-x86_64.sdk/lib/libssl.a ${PREFIX}/lib
-cp ${top_dir}/Contrib/openssl/bin/iPhoneSimulator10.3-x86_64.sdk/lib/libcrypto.a ${PREFIX}/lib
+cp ${top_dir}/Contrib/openssl/bin/iPhoneSimulator${SDK_VERSION}-x86_64.sdk/lib/libssl.a ${PREFIX}/lib
+cp ${top_dir}/Contrib/openssl/bin/iPhoneSimulator${SDK_VERSION}-x86_64.sdk/lib/libcrypto.a ${PREFIX}/lib
 mkdir ${PREFIX}/include/openssl
 cp  ${top_dir}/Contrib/openssl/include/* ${PREFIX}/include/openssl
 
