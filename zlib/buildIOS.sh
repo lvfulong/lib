@@ -31,12 +31,12 @@ export  CCAS="gas-preprocessor.pl xcrun clang -c"
 export  RANLIB="xcrun ranlib" 
 export  STRIP="xcrun strip"
 export  PATH="${PREFIX}/bin:${PATH}" 
-export  CPPFLAGS="-isysroot ${SDKROOT} -arch armv7 -miphoneos-version-min=8.0   -mcpu=cortex-a8 -I${PREFIX}/include -03 -DNDEBUG"
-export  CFLAGS="-isysroot ${SDKROOT} -arch armv7 -miphoneos-version-min=8.0   -mcpu=cortex-a8 -I${PREFIX}/include -03 -DNDEBUG"
-export  CXXFLAGS="-isysroot ${SDKROOT} -arch armv7 -miphoneos-version-min=8.0   -mcpu=cortex-a8 -I${PREFIX}/include -03 -DNDEBUG"
+export  CPPFLAGS="-isysroot ${SDKROOT} -arch armv7 -miphoneos-version-min=8.0   -mcpu=cortex-a8 -I${PREFIX}/include -O3 -DNDEBUG"
+export  CFLAGS="-isysroot ${SDKROOT} -arch armv7 -miphoneos-version-min=8.0   -mcpu=cortex-a8 -I${PREFIX}/include -O3 -DNDEBUG"
+export  CXXFLAGS="-isysroot ${SDKROOT} -arch armv7 -miphoneos-version-min=8.0   -mcpu=cortex-a8 -I${PREFIX}/include -O3 -DNDEBUG"
 export  LDFLAGS="-L${SDKROOT}/usr/lib -arch armv7 -isysroot ${SDKROOT} -miphoneos-version-min=8.0 -L${PREFIX}/lib"
 export  CHOST=arm-apple-darwin
-export  CFLAGS="-isysroot ${SDKROOT} -arch armv7 -miphoneos-version-min=8.0   -mcpu=cortex-a8 -I${PREFIX}/include -03 -DNDEBUG"
+export  CFLAGS="-isysroot ${SDKROOT} -arch armv7 -miphoneos-version-min=8.0   -mcpu=cortex-a8 -I${PREFIX}/include -O3 -DNDEBUG"
 ./configure --prefix=${PREFIX} --static --zprefix
 /Applications/Xcode.app/Contents/Developer/usr/bin/make install
 
