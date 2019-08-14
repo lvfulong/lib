@@ -82,7 +82,7 @@ echo "set(CMAKE_FIND_ROOT_PATH_MODE_LIBRARY ONLY)" >> toolchain.cmake
 echo "set(CMAKE_FIND_ROOT_PATH_MODE_INCLUDE ONLY)" >> toolchain.cmake
 
 
-tar xvzf ../libzip-rel-1-5-2.tar.gz
+tar xvzf ../../libzip-rel-1-5-2.tar.gz
 mv libzip-rel-1-5-2 zip && touch zip
 
 cd zip
