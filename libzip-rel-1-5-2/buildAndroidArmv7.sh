@@ -17,7 +17,7 @@ PREFIX="${top_dir}/contrib/install-android/armv7"
 SDKROOT="${ANDROID_NDK}/platforms/android-14/arch-arm"
 
 tar xvzf ../../libzip-rel-1-5-2.tar.gz
-mv libzip-0.11.2 zip && touch zip
+mv libzip-rel-1-5-2 zip && touch zip
 cd zip
 
 export CC="arm-linux-androideabi-gcc --sysroot=${SDKROOT}"

@@ -17,7 +17,7 @@ PREFIX="${top_dir}/contrib/install-android/arm64"
 SDKROOT="${ANDROID_NDK}/platforms/android-21/arch-arm64"
 
 tar xvzf ../../libzip-rel-1-5-2.tar.gz
-mv libzip-0.11.2 zip && touch zip
+mv libzip-rel-1-5-2 zip && touch zip
 cd zip
 
 export CC="aarch64-linux-android-gcc  --sysroot=${SDKROOT}"
