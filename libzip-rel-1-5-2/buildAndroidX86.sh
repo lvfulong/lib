@@ -15,7 +15,7 @@ cd android-x86
 PREFIX="${top_dir}/contrib/install-android/x86"
 SDKROOT="${ANDROID_NDK}/platforms/android-19/arch-x86"
 
-tar xvzf ../../libzip-0.11.2.tar.gz
+tar xvzf ../../libzip-rel-1-5-2.tar.gz
 mv libzip-0.11.2 zip && touch zip
 cd zip
 

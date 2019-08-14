@@ -20,7 +20,7 @@ IOS_PLATFORM=OS
 SDKROOT=`xcode-select -print-path`/Platforms/iPhone${IOS_PLATFORM}.platform/Developer/SDKs/iPhone${IOS_PLATFORM}${SDK_VERSION}.sdk
 
 
-tar xvzf ../../libzip-0.11.2.tar.gz
+tar xvzf ../../libzip-rel-1-5-2.tar.gz
 mv libzip-0.11.2 zip && touch zip
 
 cd zip
@@ -51,7 +51,7 @@ IOS_PLATFORM=OS
 SDKROOT=`xcode-select -print-path`/Platforms/iPhone${IOS_PLATFORM}.platform/Developer/SDKs/iPhone${IOS_PLATFORM}${SDK_VERSION}.sdk
 
 
-tar xvzf ../../libzip-0.11.2.tar.gz
+tar xvzf ../libzip-rel-1-5-2.tar.gz
 mv libzip-0.11.2 zip && touch zip
 
 cd zip
@@ -81,7 +81,7 @@ PREFIX="${top_dir}/contrib/install-ios/i386"
 IOS_PLATFORM=Simulator
 SDKROOT=`xcode-select -print-path`/Platforms/iPhone${IOS_PLATFORM}.platform/Developer/SDKs/iPhone${IOS_PLATFORM}${SDK_VERSION}.sdk
 
-tar xvzf ../../libzip-0.11.2.tar.gz
+tar xvzf ../../libzip-rel-1-5-2.tar.gz
 mv libzip-0.11.2 zip && touch zip
 
 cd zip
@@ -110,7 +110,7 @@ PREFIX="${top_dir}/contrib/install-ios/x86_64"
 IOS_PLATFORM=Simulator
 SDKROOT=`xcode-select -print-path`/Platforms/iPhone${IOS_PLATFORM}.platform/Developer/SDKs/iPhone${IOS_PLATFORM}${SDK_VERSION}.sdk
 
-tar xvzf ../../libzip-0.11.2.tar.gz
+tar xvzf ../../libzip-rel-1-5-2.tar.gz
 mv libzip-0.11.2 zip && touch zip
 
 cd zip

@@ -16,7 +16,7 @@ cd android-arm64
 PREFIX="${top_dir}/contrib/install-android/arm64"
 SDKROOT="${ANDROID_NDK}/platforms/android-21/arch-arm64"
 
-tar xvzf ../../libzip-0.11.2.tar.gz
+tar xvzf ../../libzip-rel-1-5-2.tar.gz
 mv libzip-0.11.2 zip && touch zip
 cd zip
 
