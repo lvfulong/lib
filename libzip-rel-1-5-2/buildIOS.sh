@@ -51,7 +51,7 @@ export  CPPFLAGS="-isysroot ${SDKROOT} -arch armv7 -miphoneos-version-min=8.0 -m
 export  CFLAGS="-isysroot ${SDKROOT} -arch armv7 -miphoneos-version-min=8.0 -mcpu=cortex-a8  -I${PREFIX}/include -O3 -DNDEBUG -DHAVE_CONFIG_H=1"
 export  CXXFLAGS="-isysroot ${SDKROOT} -arch armv7 -miphoneos-version-min=8.0 -mcpu=cortex-a8  -I${PREFIX}/include -O3 -DNDEBUG -DHAVE_CONFIG_H=1"
 export  LDFLAGS="-L${SDKROOT}/usr/lib -arch armv7 -isysroot ${SDKROOT} -miphoneos-version-min=8.0 -L${PREFIX}/lib"
-cmake . -DCMAKE_TOOLCHAIN_FILE=${CMAKE_TOOLCHAIN_PATH}/toolchain.cmake -DCMAKE_INSTALL_PREFIX=${PREFIX} -DZLIB_INCLUDE_DIR=../png/Contrib/armv7/include -DZLIB_LIBRARY=../png/Contrib/armv7/lib
+cmake . -DCMAKE_TOOLCHAIN_FILE=${CMAKE_TOOLCHAIN_PATH}/toolchain.cmake -DCMAKE_INSTALL_PREFIX=${PREFIX} -DZLIB_INCLUDE_DIR=../png/Contrib/install-ios/armv7/include -DZLIB_LIBRARY=../png/Contrib/install-ios/armv7/lib
 /Applications/Xcode.app/Contents/Developer/usr/bin/make VERBOSE=1 install
 
 cd ../..
@@ -98,7 +98,7 @@ export  CPPFLAGS=" -isysroot ${SDKROOT} -arch arm64 -miphoneos-version-min=8.0  
 export  CFLAGS=" -isysroot ${SDKROOT} -arch arm64 -miphoneos-version-min=8.0  -I${PREFIX}/include -O3 -DNDEBUG -DHAVE_CONFIG_H=1"
 export  CXXFLAGS=" -isysroot ${SDKROOT} -arch arm64 -miphoneos-version-min=8.0  -I${PREFIX}/include -O3 -DNDEBUG -DHAVE_CONFIG_H=1"
 export  LDFLAGS=" -L${SDKROOT}/usr/lib -arch arm64 -isysroot ${SDKROOT} -miphoneos-version-min=8.0 -L${PREFIX}/lib"
-cmake . -DCMAKE_TOOLCHAIN_FILE=${CMAKE_TOOLCHAIN_PATH}/toolchain.cmake -DCMAKE_INSTALL_PREFIX=${PREFIX} -DZLIB_INCLUDE_DIR=../png/Contrib/arm64/include -DZLIB_LIBRARY=../png/Contrib/arm64/lib
+cmake . -DCMAKE_TOOLCHAIN_FILE=${CMAKE_TOOLCHAIN_PATH}/toolchain.cmake -DCMAKE_INSTALL_PREFIX=${PREFIX} -DZLIB_INCLUDE_DIR=../png/Contrib/install-ios/arm64/include -DZLIB_LIBRARY=../png/Contrib/install-ios/arm64/lib
 /Applications/Xcode.app/Contents/Developer/usr/bin/make VERBOSE=1 install
 
 cd ../..
@@ -143,7 +143,7 @@ export  CPPFLAGS=" -isysroot ${SDKROOT} -arch i386 -miphoneos-version-min=8.0  -
 export  CFLAGS=" -isysroot ${SDKROOT} -arch i386 -miphoneos-version-min=8.0  -I${PREFIX}/include -O3 -DNDEBUG -DHAVE_CONFIG_H=1"
 export  CXXFLAGS=" -isysroot ${SDKROOT} -arch i386 -miphoneos-version-min=8.0  -I${PREFIX}/include -O3 -DNDEBUG -DHAVE_CONFIG_H=1"
 export  LDFLAGS=" -L${SDKROOT}/usr/lib -arch i386 -isysroot ${SDKROOT} -miphoneos-version-min=8.0 -L${PREFIX}/lib"
-cmake . -DCMAKE_TOOLCHAIN_FILE=${CMAKE_TOOLCHAIN_PATH}/toolchain.cmake -DCMAKE_INSTALL_PREFIX=${PREFIX} -DZLIB_INCLUDE_DIR=../png/Contrib/i386/include -DZLIB_LIBRARY=../png/Contrib/i386/lib
+cmake . -DCMAKE_TOOLCHAIN_FILE=${CMAKE_TOOLCHAIN_PATH}/toolchain.cmake -DCMAKE_INSTALL_PREFIX=${PREFIX} -DZLIB_INCLUDE_DIR=../png/Contrib/install-ios/i386/include -DZLIB_LIBRARY=../png/Contrib/install-ios/i386/lib
 /Applications/Xcode.app/Contents/Developer/usr/bin/make VERBOSE=1 install
 
 cd ../..
@@ -187,7 +187,7 @@ export CPPFLAGS=" -isysroot ${SDKROOT} -arch x86_64 -miphoneos-version-min=8.0  
 export CFLAGS=" -isysroot ${SDKROOT} -arch x86_64 -miphoneos-version-min=8.0  -I${PREFIX}/include -O3 -DNDEBUG -DHAVE_CONFIG_H=1"
 export CXXFLAGS=" -isysroot ${SDKROOT} -arch x86_64 -miphoneos-version-min=8.0  -I${PREFIX}/include -O3 -DNDEBUG -DHAVE_CONFIG_H=1"
 export LDFLAGS=" -L${SDKROOT}/usr/lib -arch x86_64 -isysroot ${SDKROOT} -miphoneos-version-min=8.0 -L${PREFIX}/lib"
-cmake . -DCMAKE_TOOLCHAIN_FILE=${CMAKE_TOOLCHAIN_PATH}/toolchain.cmake -DCMAKE_INSTALL_PREFIX=${PREFIX}  -DZLIB_INCLUDE_DIR=../png/Contrib/x86_64/include -DZLIB_LIBRARY=../png/Contrib/x86_64/lib
+cmake . -DCMAKE_TOOLCHAIN_FILE=${CMAKE_TOOLCHAIN_PATH}/toolchain.cmake -DCMAKE_INSTALL_PREFIX=${PREFIX}  -DZLIB_INCLUDE_DIR=../png/Contrib/install-ios/x86_64/include -DZLIB_LIBRARY=../png/Contrib/install-ios/x86_64/lib
 /Applications/Xcode.app/Contents/Developer/usr/bin/make VERBOSE=1 install
 
 cd ../..
