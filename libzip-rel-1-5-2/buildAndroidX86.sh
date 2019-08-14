@@ -15,6 +15,30 @@ cd android-x86
 PREFIX="${top_dir}/contrib/install-android/x86"
 SDKROOT="${ANDROID_NDK}/platforms/android-19/arch-x86"
 
+tar xvzf ../../zlib-1.2.8.tar.gz
+mv zlib-1.2.8 zlib && touch zlib
+
+cd zlib
+export CC="i686-linux-android-gcc --sysroot=${SDKROOT}"
+export CXX="i686-linux-android-g++ --sysroot=${SDKROOT}"
+export LD="i686-linux-android-ld"
+export AR="i686-linux-android-ar"
+export CCAS="i686-linux-android-gcc --sysroot=${SDKROOT} -c"
+export RANLIB="i686-linux-android-ranlib"
+export STRIP="i686-linux-android-strip"
+export PATH="${PREFIX}/bin:${PATH}"
+export CPPFLAGS=" -ffunction-sections -funwind-tables -fstack-protector -no-canonical-prefixes  -fomit-frame-pointer -fstrict-aliasing -DANDROID  -Wa,--noexecstack -Wformat  -I{PREFIX}/include -O1 -DNDEBUG"
+export CFLAGS=" -ffunction-sections -funwind-tables -fstack-protector -no-canonical-prefixes  -fomit-frame-pointer -fstrict-aliasing -DANDROID  -Wa,--noexecstack -Wformat  -I{PREFIX}/include -O1 -DNDEBUG"
+export CXXFLAGS=" -ffunction-sections -funwind-tables -fstack-protector -no-canonical-prefixes  -fomit-frame-pointer -fstrict-aliasing -DANDROID  -Wa,--noexecstack -Wformat  -I{PREFIX}/include -O1 -DNDEBUG"
+export LDFLAGS=" -L${PREFIX}/lib"
+export CHOST=i686-linux-android
+export CFLAGS=" -ffunction-sections -funwind-tables -fstack-protector -no-canonical-prefixes  -fomit-frame-pointer -fstrict-aliasing -DANDROID  -Wa,--noexecstack -Wformat  -I{PREFIX}/include -O1 -DNDEBUG -fPIC"
+./configure --prefix=${PREFIX} --static --zprefix
+
+/Applications/Xcode.app/Contents/Developer/usr/bin/make install
+
+cd .. 
+
 tar xvzf ../../libzip-rel-1-5-2.tar.gz
 mv libzip-rel-1-5-2 zip && touch zip
 cd zip

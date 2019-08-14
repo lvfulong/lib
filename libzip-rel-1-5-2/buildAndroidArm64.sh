@@ -16,6 +16,30 @@ cd android-arm64
 PREFIX="${top_dir}/contrib/install-android/arm64"
 SDKROOT="${ANDROID_NDK}/platforms/android-21/arch-arm64"
 
+tar xvzf ../../zlib-1.2.8.tar.gz
+mv zlib-1.2.8 zlib && touch zlib
+
+cd zlib
+
+export CC="aarch64-linux-android-gcc --sysroot=${SDKROOT}"
+export CXX="aarch64-linux-android-g++ --sysroot=${SDKROOT}"
+export LD="aarch64-linux-android-ld"
+export AR="aarch64-linux-android-ar"
+export CCAS="aarch64-linux-android-gcc --sysroot=${SDKROOT} -c"
+export RANLIB="aarch64-linux-android-ranlib"
+export STRIP="aarch64-linux-android-strip"
+export PATH="${PREFIX}/bin:${PATH}"
+export CPPFLAGS=" -fpic -ffunction-sections  -funwind-tables  -fstack-protector  -no-canonical-prefixes -I${PREFIX}/include -O3 -DNDEBUG"
+export CFLAGS=" -fpic -ffunction-sections  -funwind-tables  -fstack-protector  -no-canonical-prefixes -I${PREFIX}/include -O3 -DNDEBUG"
+export CXXFLAGS=" -fpic -ffunction-sections  -funwind-tables  -fstack-protector  -no-canonical-prefixes -I${PREFIX}/include -O3 -DNDEBUG"
+export LDFLAGS=" -no-canonical-prefixes -L${PREFIX}/lib"
+export CHOST=aarch64-linux-android
+export CFLAGS=" -fpic -ffunction-sections  -funwind-tables  -fstack-protector  -no-canonical-prefixes -I${PREFIX}/include -O3 -DNDEBUG -fPIC"
+./configure --prefix=${PREFIX} --static --zprefix
+/Applications/Xcode.app/Contents/Developer/usr/bin/make install
+
+cd .. 
+
 tar xvzf ../../libzip-rel-1-5-2.tar.gz
 mv libzip-rel-1-5-2 zip && touch zip
 cd zip

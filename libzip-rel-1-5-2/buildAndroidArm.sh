@@ -16,6 +16,30 @@ cd android-arm
 PREFIX="${top_dir}/contrib/install-android/arm"
 SDKROOT="${ANDROID_NDK}/platforms/android-14/arch-arm"
 
+tar xvzf ../../zlib-1.2.8.tar.gz
+mv zlib-1.2.8 zlib && touch zlib
+
+cd zlib
+export CC="arm-linux-androideabi-gcc --sysroot=${SDKROOT}"
+export CXX="arm-linux-androideabi-g++ --sysroot=${SDKROOT}"
+export LD="arm-linux-androideabi-ld"
+export AR="arm-linux-androideabi-ar"
+export CCAS="arm-linux-androideabi-gcc --sysroot=${SDKROOT} -c"
+export RANLIB="arm-linux-androideabi-ranlib"
+export STRIP="arm-linux-androideabi-strip"
+export  PATH="${PREFIX}/bin:${PATH}"
+export CPPFLAGS=" -ffunction-sections -funwind-tables -fstack-protector -no-canonical-prefixes  -march=armv5te -mtune=xscale -msoft-float  -mthumb -fomit-frame-pointer -fno-strict-aliasing -DANDROID  -Wa,--noexecstack -Wformat  -I${PREFIX}/include -O3 -DNDEBUG"
+export CFLAGS=" -ffunction-sections -funwind-tables -fstack-protector -no-canonical-prefixes  -march=armv5te -mtune=xscale -msoft-float  -mthumb -fomit-frame-pointer -fno-strict-aliasing -DANDROID  -Wa,--noexecstack -Wformat  -I${PREFIX}/include -O3 -DNDEBUG"
+export CXXFLAGS=" -ffunction-sections -funwind-tables -fstack-protector -no-canonical-prefixes  -march=armv5te -mtune=xscale -msoft-float  -mthumb -fomit-frame-pointer -fno-strict-aliasing -DANDROID  -Wa,--noexecstack -Wformat  -I${PREFIX}/include -O3 -DNDEBUG"
+export LDFLAGS=" -L${PREFIX}/lib"
+export CHOST=arm-linux-androideabi
+export CFLAGS=" -ffunction-sections -funwind-tables -fstack-protector -no-canonical-prefixes  -march=armv5te -mtune=xscale -msoft-float  -mthumb -fomit-frame-pointer -fno-strict-aliasing -DANDROID  -Wa,--noexecstack -Wformat  -I${PREFIX}/include -O3 -DNDEBUG -fPIC"
+./configure --prefix=${PREFIX} --static --zprefix
+
+/Applications/Xcode.app/Contents/Developer/usr/bin/make install
+
+cd .. 
+
 tar xvzf ../../libzip-rel-1-5-2.tar.gz
 mv libzip-rel-1-5-2 zip && touch zip
 cd zip

@@ -16,6 +16,30 @@ cd android-armv7
 PREFIX="${top_dir}/contrib/install-android/armv7"
 SDKROOT="${ANDROID_NDK}/platforms/android-14/arch-arm"
 
+tar xvzf ../../zlib-1.2.8.tar.gz
+mv zlib-1.2.8 zlib && touch zlib
+
+cd zlib
+export CC="arm-linux-androideabi-gcc --sysroot=${SDKROOT}"
+export CXX="arm-linux-androideabi-g++ --sysroot=${SDKROOT}"
+export LD="arm-linux-androideabi-ld"
+export AR="arm-linux-androideabi-ar"
+export CCAS="arm-linux-androideabi-gcc --sysroot=${SDKROOT} -c"
+export RANLIB="arm-linux-androideabi-ranlib"
+export STRIP="arm-linux-androideabi-strip"
+export  PATH="${PREFIX}/bin:${PATH}"
+export CPPFLAGS=" -march=armv7-a -mfpu=neon -mfloat-abi=softfp  -mthumb -fomit-frame-pointer -fno-strict-aliasing -DANDROID  -Wa,--noexecstack -Wformat  -I${PREFIX}/include -O3 -DNDEBUG"
+export CFLAGS=" -march=armv7-a -mfpu=neon -mfloat-abi=softfp  -mthumb -fomit-frame-pointer -fno-strict-aliasing -DANDROID  -Wa,--noexecstack -Wformat  -I${PREFIX}/include -O3 -DNDEBUG"
+export CXXFLAGS=" -march=armv7-a -mfpu=neon -mfloat-abi=softfp  -mthumb -fomit-frame-pointer -fno-strict-aliasing -DANDROID  -Wa,--noexecstack -Wformat  -I${PREFIX}/include -O3 -DNDEBUG"
+export LDFLAGS=" -march=armv7-a -Wl,--fix-cortex-a8 -L${PREFIX}/lib"
+export CHOST=arm-linux-androideabi
+export CFLAGS=" -march=armv7-a -mfpu=neon -mfloat-abi=softfp  -mthumb -fomit-frame-pointer -fno-strict-aliasing -DANDROID  -Wa,--noexecstack -Wformat  -I${PREFIX}/include -O3 -DNDEBUG -fPIC"
+./configure --prefix=${PREFIX} --static --zprefix
+
+/Applications/Xcode.app/Contents/Developer/usr/bin/make install
+
+cd .. 
+
 tar xvzf ../../libzip-rel-1-5-2.tar.gz
 mv libzip-rel-1-5-2 zip && touch zip
 cd zip
