@@ -36,7 +36,7 @@ export  CXXFLAGS="-isysroot ${SDKROOT} -arch armv7 -miphoneos-version-min=8.0   
 export  LDFLAGS="-L${SDKROOT}/usr/lib -arch armv7 -isysroot ${SDKROOT} -miphoneos-version-min=8.0 -L${PREFIX}/lib"
 export  CHOST=arm-apple-darwin
 export  CFLAGS="-isysroot ${SDKROOT} -arch armv7 -miphoneos-version-min=8.0   -mcpu=cortex-a8 -I${PREFIX}/include -O3 -DNDEBUG"
-./configure --prefix=${PREFIX} --static --zprefix
+./configure --prefix=${PREFIX} --static
 /Applications/Xcode.app/Contents/Developer/usr/bin/make install
 
 cd ..
@@ -104,7 +104,7 @@ export  CXXFLAGS=" -isysroot ${SDKROOT} -arch arm64 -miphoneos-version-min=8.0  
 export  LDFLAGS=" -L${SDKROOT}/usr/lib -arch arm64 -isysroot ${SDKROOT} -miphoneos-version-min=8.0 -L${PREFIX}/lib"
 export  CHOST=arm-apple-darwin 
 export  CFLAGS=" -isysroot ${SDKROOT} -arch arm64 -miphoneos-version-min=8.0  -I${PREFIX}/include -O3 -DNDEBUG "
-./configure --prefix=${PREFIX} --static --zprefix
+./configure --prefix=${PREFIX} --static
 
 /Applications/Xcode.app/Contents/Developer/usr/bin/make install
 
@@ -174,7 +174,7 @@ export  CXXFLAGS=" -isysroot ${SDKROOT} -arch i386 -miphoneos-version-min=8.0  -
 export  LDFLAGS=" -L${SDKROOT}/usr/lib -arch i386 -isysroot ${SDKROOT} -miphoneos-version-min=8.0 -L${PREFIX}/lib"
 export   CHOST=i386-apple-darwin 
 export  CFLAGS=" -isysroot ${SDKROOT} -arch i386 -miphoneos-version-min=8.0  -I${PREFIX}/include -O3 -DNDEBUG "
-./configure --prefix=${PREFIX} --static --zprefix
+./configure --prefix=${PREFIX} --static
 /Applications/Xcode.app/Contents/Developer/usr/bin/make install
 
 
@@ -242,7 +242,7 @@ export CXXFLAGS=" -isysroot ${SDKROOT} -arch x86_64 -miphoneos-version-min=8.0  
 export LDFLAGS=" -L${SDKROOT}/usr/lib -arch x86_64 -isysroot ${SDKROOT} -miphoneos-version-min=8.0 -L${PREFIX}/lib"
 export CHOST=x86_64-apple-darwin export
 CFLAGS=" -isysroot ${SDKROOT} -arch x86_64 -miphoneos-version-min=8.0  -I${PREFIX}/include -O3 -DNDEBUG "
-./configure --prefix=${PREFIX} --static --zprefix
+./configure --prefix=${PREFIX} --static
 
 
 /Applications/Xcode.app/Contents/Developer/usr/bin/make install
@@ -286,3 +286,4 @@ cmake . -DCMAKE_TOOLCHAIN_FILE=${CMAKE_TOOLCHAIN_PATH}/toolchain.cmake -DCMAKE_I
 cd ../..
 ##############################################################################################
 lipo -create install-ios/armv7/lib/libzip.a install-ios/arm64/lib/libzip.a install-ios/x86_64/lib/libzip.a install-ios/i386/lib/libzip.a -output install-ios/libzip.a
+lipo -create install-ios/armv7/lib/libz.a install-ios/arm64/lib/libz.a install-ios/x86_64/lib/libz.a install-ios/i386/lib/libz.a -output install-ios/libz.a
