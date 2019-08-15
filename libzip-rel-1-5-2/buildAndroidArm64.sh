@@ -35,7 +35,7 @@ export CXXFLAGS=" -fpic -ffunction-sections  -funwind-tables  -fstack-protector 
 export LDFLAGS=" -no-canonical-prefixes -L${PREFIX}/lib"
 export CHOST=aarch64-linux-android
 export CFLAGS=" -fpic -ffunction-sections  -funwind-tables  -fstack-protector  -no-canonical-prefixes -I${PREFIX}/include -O3 -DNDEBUG -fPIC"
-./configure --prefix=${PREFIX} --static --zprefix
+./configure --prefix=${PREFIX} --static
 /Applications/Xcode.app/Contents/Developer/usr/bin/make install
 
 cd .. 

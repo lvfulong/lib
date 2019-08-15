@@ -34,7 +34,7 @@ export CXXFLAGS=" -ffunction-sections -funwind-tables -fstack-protector -no-cano
 export LDFLAGS=" -L${PREFIX}/lib"
 export CHOST=arm-linux-androideabi
 export CFLAGS=" -ffunction-sections -funwind-tables -fstack-protector -no-canonical-prefixes  -march=armv5te -mtune=xscale -msoft-float  -mthumb -fomit-frame-pointer -fno-strict-aliasing -DANDROID  -Wa,--noexecstack -Wformat  -I${PREFIX}/include -O3 -DNDEBUG -fPIC"
-./configure --prefix=${PREFIX} --static --zprefix
+./configure --prefix=${PREFIX} --static
 
 /Applications/Xcode.app/Contents/Developer/usr/bin/make install
 

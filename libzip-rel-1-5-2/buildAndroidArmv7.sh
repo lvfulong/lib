@@ -34,7 +34,7 @@ export CXXFLAGS=" -march=armv7-a -mfpu=neon -mfloat-abi=softfp  -mthumb -fomit-f
 export LDFLAGS=" -march=armv7-a -Wl,--fix-cortex-a8 -L${PREFIX}/lib"
 export CHOST=arm-linux-androideabi
 export CFLAGS=" -march=armv7-a -mfpu=neon -mfloat-abi=softfp  -mthumb -fomit-frame-pointer -fno-strict-aliasing -DANDROID  -Wa,--noexecstack -Wformat  -I${PREFIX}/include -O3 -DNDEBUG -fPIC"
-./configure --prefix=${PREFIX} --static --zprefix
+./configure --prefix=${PREFIX} --static
 
 /Applications/Xcode.app/Contents/Developer/usr/bin/make install
 

@@ -33,7 +33,7 @@ export CXXFLAGS=" -ffunction-sections -funwind-tables -fstack-protector -no-cano
 export LDFLAGS=" -L${PREFIX}/lib"
 export CHOST=i686-linux-android
 export CFLAGS=" -ffunction-sections -funwind-tables -fstack-protector -no-canonical-prefixes  -fomit-frame-pointer -fstrict-aliasing -DANDROID  -Wa,--noexecstack -Wformat  -I{PREFIX}/include -O1 -DNDEBUG -fPIC"
-./configure --prefix=${PREFIX} --static --zprefix
+./configure --prefix=${PREFIX} --static
 
 /Applications/Xcode.app/Contents/Developer/usr/bin/make install
 
