@@ -1,0 +1,1 @@
+cmake -G "Visual Studio 14" .. -DBUILD_SHARED_LIBS=OFF -DZLIB_INCLUDE_DIR:PATH=..\..\bin\zlib\win
