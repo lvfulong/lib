@@ -5,7 +5,7 @@ PATH="${current_dir}/..:${PATH}"
 mkdir Contrib
 cd Contrib
 
-export ANDROID_NDK=/Users/layabox_mac/Public/lib/android-ndk-r10e
+export ANDROID_NDK=/Users/helloworldlv/Downloads/android-ndk-r10e
 PATH="${ANDROID_NDK}/toolchains/x86-4.9/prebuilt/darwin-x86_64/bin:${PATH}"
 ##############################################################################################
 rm -rf android-x86
@@ -39,6 +39,21 @@ export CFLAGS=" -ffunction-sections -funwind-tables -fstack-protector -no-canoni
 
 cd .. 
 
+CMAKE_TOOLCHAIN_PATH=`pwd`
+echo "set(_CMAKE_TOOLCHAIN_PREFIX i686-linux-android-)" >> toolchain.cmake
+echo "set(CMAKE_SYSTEM_NAME Linux)" >> toolchain.cmake
+echo "set(CMAKE_CXX_SYSROOT_FLAG \"\")" >> toolchain.cmake
+echo "set(CMAKE_C_SYSROOT_FLAG \"\")" >> toolchain.cmake
+echo "include_directories(${ANDROID_NDK}/sources/cxx-stl/gnu-libstdc++/4.9/include  \
+${ANDROID_NDK}/sources/cxx-stl/gnu-libstdc++/4.9/libs/x86/include \
+${ANDROID_NDK}/sources/cxx-stl/gnu-libstdc++/4.9/include/backward)"  >> toolchain.cmake
+echo "set(CMAKE_C_COMPILER i686-linux-android-gcc --sysroot=${SDKROOT})" >> toolchain.cmake
+echo "set(CMAKE_CXX_COMPILER i686-linux-android-g++ --sysroot=${SDKROOT})" >> toolchain.cmake
+echo "set(CMAKE_FIND_ROOT_PATH ${PREFIX})" >> toolchain.cmake
+echo "set(CMAKE_FIND_ROOT_PATH_MODE_PROGRAM NEVER)" >> toolchain.cmake
+echo "set(CMAKE_FIND_ROOT_PATH_MODE_LIBRARY ONLY)" >> toolchain.cmake
+echo "set(CMAKE_FIND_ROOT_PATH_MODE_INCLUDE ONLY)" >> toolchain.cmake
+
 tar xvzf ../../libzip-rel-1-5-2.tar.gz
 mv libzip-rel-1-5-2 zip && touch zip
 cd zip
@@ -55,9 +70,9 @@ export CPPFLAGS=" -ffunction-sections -funwind-tables -fstack-protector -no-cano
 export CFLAGS=" -ffunction-sections -funwind-tables -fstack-protector -no-canonical-prefixes  -fomit-frame-pointer -fstrict-aliasing -DANDROID  -Wa,--noexecstack -Wformat  -I${PREFIX}/include -O1 -DNDEBUG -DHAVE_CONFIG_H=1"
 export CXXFLAGS=" -ffunction-sections -funwind-tables -fstack-protector -no-canonical-prefixes  -fomit-frame-pointer -fstrict-aliasing -DANDROID  -Wa,--noexecstack -Wformat  -I${PREFIX}/include -O1 -DNDEBUG -DHAVE_CONFIG_H=1"
 export LDFLAGS=" -L${PREFIX}/lib"
-./configure --prefix=${PREFIX} --datarootdir="${PREFIX}/share" --includedir="${PREFIX}/include" --libdir="${PREFIX}/lib" --build="x86_64-apple-darwin14" --host="i686-linux-android" --target="i686-linux-android" --program-prefix="" --enable-static --disable-shared --disable-dependency-tracking --with-pic
+cmake . -DCMAKE_TOOLCHAIN_FILE=${CMAKE_TOOLCHAIN_PATH}/toolchain.cmake -DCMAKE_INSTALL_PREFIX=${PREFIX} -DBUILD_SHARED_LIBS=OFF
 
-/Applications/Xcode.app/Contents/Developer/usr/bin/make install
+/Applications/Xcode.app/Contents/Developer/usr/bin/make VERBOSE=1 install
 cd ../..
 
 ##############################################################################################

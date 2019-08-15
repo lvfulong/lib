@@ -6,7 +6,7 @@ top_dir=$current_dir
 mkdir Contrib
 cd Contrib
 
-export ANDROID_NDK=/Users/layabox_mac/Public/lib/android-ndk-r10e
+export ANDROID_NDK=/Users/helloworldlv/Downloads/android-ndk-r10e
 PATH="${ANDROID_NDK}/toolchains/arm-linux-androideabi-4.9/prebuilt/darwin-x86_64/bin:${PATH}"
 ##############################################################################################
 rm -rf android-arm
@@ -40,6 +40,22 @@ export CFLAGS=" -ffunction-sections -funwind-tables -fstack-protector -no-canoni
 
 cd .. 
 
+CMAKE_TOOLCHAIN_PATH=`pwd`
+rm -f toolchain.cmake
+echo "set(_CMAKE_TOOLCHAIN_PREFIX arm-linux-androideabi-)" >> toolchain.cmake
+echo "set(CMAKE_SYSTEM_NAME Linux)" >> toolchain.cmake
+echo "set(CMAKE_CXX_SYSROOT_FLAG \"\")" >> toolchain.cmake
+echo "set(CMAKE_C_SYSROOT_FLAG \"\")" >> toolchain.cmake
+echo "include_directories(${ANDROID_NDK}/sources/cxx-stl/gnu-libstdc++/4.9/include  \
+${ANDROID_NDK}/sources/cxx-stl/gnu-libstdc++/4.9/libs/armeabi/include \
+${ANDROID_NDK}/sources/cxx-stl/gnu-libstdc++/4.9/include/backward)"  >> toolchain.cmake
+echo "set(CMAKE_C_COMPILER arm-linux-androideabi-gcc --sysroot=${SDKROOT})" >> toolchain.cmake
+echo "set(CMAKE_CXX_COMPILER arm-linux-androideabi-g++ --sysroot=${SDKROOT})" >> toolchain.cmake
+echo "set(CMAKE_FIND_ROOT_PATH ${PREFIX})" >> toolchain.cmake
+echo "set(CMAKE_FIND_ROOT_PATH_MODE_PROGRAM NEVER)" >> toolchain.cmake
+echo "set(CMAKE_FIND_ROOT_PATH_MODE_LIBRARY ONLY)" >> toolchain.cmake
+echo "set(CMAKE_FIND_ROOT_PATH_MODE_INCLUDE ONLY)" >> toolchain.cmake
+
 tar xvzf ../../libzip-rel-1-5-2.tar.gz
 mv libzip-rel-1-5-2 zip && touch zip
 cd zip
@@ -56,10 +72,9 @@ export CPPFLAGS=" -ffunction-sections -funwind-tables -fstack-protector -no-cano
 export CFLAGS=" -ffunction-sections -funwind-tables -fstack-protector -no-canonical-prefixes  -march=armv5te -mtune=xscale -msoft-float  -mthumb -fomit-frame-pointer -fno-strict-aliasing -DANDROID  -Wa,--noexecstack -Wformat  -I${PREFIX}/include -O3 -DNDEBUG -DHAVE_CONFIG_H=1"
 export CXXFLAGS=" -ffunction-sections -funwind-tables -fstack-protector -no-canonical-prefixes  -march=armv5te -mtune=xscale -msoft-float  -mthumb -fomit-frame-pointer -fno-strict-aliasing -DANDROID  -Wa,--noexecstack -Wformat  -I${PREFIX}/include -O3 -DNDEBUG -DHAVE_CONFIG_H=1"
 export LDFLAGS=" -L${PREFIX}/lib"
-./configure --prefix=${PREFIX} --datarootdir="${PREFIX}/share" --includedir="${PREFIX}/include" --libdir="${PREFIX}/lib" --build="x86_64-apple-darwin14" --host="arm-linux-androideabi" --target="arm-linux-androideabi" --program-prefix="" --enable-static --disable-shared --disable-dependency-tracking --with-pic
+cmake . -DCMAKE_TOOLCHAIN_FILE=${CMAKE_TOOLCHAIN_PATH}/toolchain.cmake -DCMAKE_INSTALL_PREFIX=${PREFIX} -DBUILD_SHARED_LIBS=OFF
 
-
-/Applications/Xcode.app/Contents/Developer/usr/bin/make install
+/Applications/Xcode.app/Contents/Developer/usr/bin/make VERBOSE=1 install
 cd ../..
 
 ##############################################################################################
