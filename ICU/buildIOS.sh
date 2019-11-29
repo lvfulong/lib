@@ -23,7 +23,7 @@ SDKROOT=`xcode-select -print-path`/Platforms/iPhone${IOS_PLATFORM}.platform/Deve
 tar xvzf ../../icu4c-65_1-src22.zip
 mv icu4c-65_1-src22 icu4c && touch icu4c
 
-cd icu4c
+cd icu/source
 export  CC="xcrun clang"
 export  CXX="xcrun clang++" 
 export  LD="xcrun ld" 
@@ -39,7 +39,7 @@ export  LDFLAGS="-L${SDKROOT}/usr/lib -arch armv7 -isysroot ${SDKROOT} -miphoneo
 ./configure --prefix=${PREFIX} --datarootdir="${PREFIX}/share" --includedir="${PREFIX}/include" --libdir="${PREFIX}/lib" --build="x86_64-apple-darwin14" --host="arm-apple-darwin" --target="arm-apple-darwin" --program-prefix="" --enable-static --disable-shared --disable-dependency-tracking --with-pic
 
 /Applications/Xcode.app/Contents/Developer/usr/bin/make install
-cd ../..
+cd ../../..
 
 ##############################################################################################
 rm -rf ios-arm64
@@ -54,7 +54,7 @@ SDKROOT=`xcode-select -print-path`/Platforms/iPhone${IOS_PLATFORM}.platform/Deve
 tar xvzf ../../icu4c-65_1-src22.zip
 mv icu4c-65_1-src22 icu4c && touch icu4c
 
-cd icu4c
+cd icu/source
 export  CC="xcrun clang" 
 export  CXX="xcrun clang++" 
 export  LD="xcrun ld" 
@@ -71,7 +71,7 @@ export  LDFLAGS=" -L${SDKROOT}/usr/lib -arch arm64 -isysroot ${SDKROOT} -miphone
 
 
 /Applications/Xcode.app/Contents/Developer/usr/bin/make install
-cd ../..
+cd ../../..
 ##############################################################################################
 rm -rf ios-i386
 mkdir ios-i386
@@ -84,7 +84,7 @@ SDKROOT=`xcode-select -print-path`/Platforms/iPhone${IOS_PLATFORM}.platform/Deve
 tar xvzf ../../icu4c-65_1-src22.zip
 mv icu4c-65_1-src22 icu4c && touch icu4c
 
-cd icu4c
+cd icu/source
 export  CC="xcrun clang" 
 export  CXX="xcrun clang++" 
 export  LD="xcrun ld" 
@@ -100,7 +100,7 @@ export  LDFLAGS=" -L${SDKROOT}/usr/lib -arch i386 -isysroot ${SDKROOT} -miphoneo
 ./configure --prefix=${PREFIX} --datarootdir="${PREFIX}/share" --includedir="${PREFIX}/include" --libdir="${PREFIX}/lib" --build="x86_64-apple-darwin14" --host="i386-apple-darwin" --target="i386-apple-darwin" --program-prefix="" --enable-static --disable-shared --disable-dependency-tracking --with-pic
 
 /Applications/Xcode.app/Contents/Developer/usr/bin/make install
-cd ../..
+cd ../../..
 ##############################################################################################
 rm -rf ios-x86_64
 mkdir ios-x86_64
@@ -113,7 +113,7 @@ SDKROOT=`xcode-select -print-path`/Platforms/iPhone${IOS_PLATFORM}.platform/Deve
 tar xvzf ../../icu4c-65_1-src22.zip
 mv icu4c-65_1-src22 icu4c && touch icu4c
 
-cd icu4c
+cd icu/source
 export CC="xcrun clang"
 export CXX="xcrun clang++"
 export LD="xcrun ld"
@@ -129,6 +129,6 @@ export LDFLAGS=" -L${SDKROOT}/usr/lib -arch x86_64 -isysroot ${SDKROOT} -miphone
 
 
 /Applications/Xcode.app/Contents/Developer/usr/bin/make install
-cd ../..
+cd ../../..
 ##############################################################################################
 #lipo -create install-ios/armv7/lib/libzip.a install-ios/arm64/lib/libzip.a install-ios/x86_64/lib/libzip.a install-ios/i386/lib/libzip.a -output install-ios/libzip.a
