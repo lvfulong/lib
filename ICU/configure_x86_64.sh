@@ -19,5 +19,5 @@ export LDFLAGS="-stdlib=libc++ -L$SDKROOT/usr/lib/ -isysroot $SDKROOT -Wl,-dead_
 
 [ -e Makefile ] && make distclean
 PREFIX="$(pwd)"
-sh $ICU_PATH/source/configure --prefix=${PREFIX} --host=i686-apple-darwin11 --enable-static --disable-shared -with-cross-build=$ICU_PATH/../../build-host
+sh $ICU_PATH/source/configure --prefix=${PREFIX} --host=i686-apple-darwin14 --enable-static --disable-shared -with-cross-build=$ICU_PATH/../../build-host
 /Applications/Xcode.app/Contents/Developer/usr/bin/make install
