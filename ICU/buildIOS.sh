@@ -28,13 +28,13 @@ cd Contrib
 mkdir -p build-armv7 && cd build-armv7 && gnumake
 
 
-#cd $ICU_ROOT
-
-#../configure_armv7s.sh
-#mkdir -p build-armv7s && cd build-armv7s && gnumake
+cd $ICU_ROOT
+cd Contrib
+../configure_i386.sh
+#mkdir -p build-i386 && cd build-i386 && gnumake
 
 
 cd $ICU_ROOT
-echo "Combining x86 64, armv7, armv7s, and arm64 libraries."
+echo "Combining x86 64, armv7, i386, and arm64 libraries."
 
 ./make_universal.sh
