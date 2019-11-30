@@ -7,10 +7,12 @@ mkdir Contrib
 cd Contrib
 
 tar xvzf ../harfbuzz-2.6.4.tar
-
+cd harfbuzz-2.6.4
+ ./autogen.sh
+ 
 cd $ICU_ROOT
-../configure_x86_64.sh
-mkdir -p build-x86_64 && cd build-x86_64 && gnumake
+./configure_x86_64.sh
+
 
 #cd $ICU_ROOT
 #cd Contrib
