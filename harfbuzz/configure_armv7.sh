@@ -35,7 +35,7 @@ export  PATH="${PREFIX}/bin:${PATH}"
 export  CPPFLAGS="-isysroot ${SDKROOT} -arch armv7 -miphoneos-version-min=8.0 -mcpu=cortex-a8 -I${FREETYPE_PREFIX}/include/freetype2 -I${ICU_PREFIX}/include -I${PREFIX}/include -O3 -DNDEBUG -DHAVE_CONFIG_H=1"
 export  CFLAGS="-isysroot ${SDKROOT} -arch armv7 -miphoneos-version-min=8.0 -mcpu=cortex-a8  -I${FREETYPE_PREFIX}/include/freetype2 -I${ICU_PREFIX}/include -I${PREFIX}/include -O3 -DNDEBUG -DHAVE_CONFIG_H=1"
 export  CXXFLAGS="-isysroot ${SDKROOT} -arch armv7 -miphoneos-version-min=8.0 -mcpu=cortex-a8  -I${FREETYPE_PREFIX}/include/freetype2 -I${ICU_PREFIX}/include -I${PREFIX}/include -O3 -DNDEBUG -DHAVE_CONFIG_H=1"
-export  LDFLAGS="-lfreetype -lbz2 -L${FREETYPE_PREFIX}/lib -L${ICU_PREFIX}/lib -L${SDKROOT}/usr/lib -arch armv7 -isysroot ${SDKROOT} -miphoneos-version-min=8.0"
+export  LDFLAGS="-lpng -lfreetype -lbz2 -L${PNG_PREFIX}/lib -L${FREETYPE_PREFIX}/lib -L${ICU_PREFIX}/lib -L${SDKROOT}/usr/lib -arch armv7 -isysroot ${SDKROOT} -miphoneos-version-min=8.0"
 
 [ -e Makefile ] && make distclean
 ./configure --prefix=${PREFIX} --datarootdir="${PREFIX}/share" --includedir="${PREFIX}/include" --libdir="${PREFIX}/lib" --build="x86_64-apple-darwin14" --host="arm-apple-darwin" --target="arm-apple-darwin" --program-prefix="" --enable-static --disable-shared --disable-dependency-tracking --with-pic
