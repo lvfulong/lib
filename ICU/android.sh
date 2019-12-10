@@ -1,10 +1,28 @@
-mkdir android
-cd android
-../icu/source/runConfigureICU MacOSX --prefix=`pwd`/prebuilts CFLAGS="-Os" CXXFLAGS="--std=c++11" --enable-static --enable-shared=no --enable-extras=no --enable-strict=no --enable-icuio=no --enable-layout=no --enable-layoutex=no --enable-tools=no --enable-tests=no --enable-samples=no --enable-dyload=no
+mkdir Contrib
+cd Contrib
+
+tar xvzf ../icu4c-65_1-src-for-android.zip
+mkdir host
+cd host
+../icu/source/runConfigureICU MacOSX \
+    --prefix=`pwd`../install-android/host \
+    CFLAGS="-Os" \
+    CXXFLAGS="--std=c++11" \
+    --enable-static \
+    --enable-shared=no \
+    --enable-extras=no \
+    --enable-strict=no \
+    --enable-icuio=no \
+    --enable-layout=no \
+    --enable-layoutex=no \
+    --enable-tools=no \
+    --enable-tests=no \
+    --enable-samples=no \
+    --enable-dyload=no
 gnumake
 
 
-export CROSS_BUILD_DIR=`pwd`/../android
+export CROSS_BUILD_DIR=`pwd`/../host
 export ANDROID_NDK=/Users/LayaBox/lvfulong/lib/android-ndk-r10e
 export ANDROID_TOOLCHAIN=$(pwd)/toolchain
 export PATH=$ANDROID_TOOLCHAIN/bin:$PATH
@@ -21,7 +39,7 @@ $ANDROID_NDK/build/tools/make-standalone-toolchain.sh \
     --toolchain=arm-linux-androideabi-4.9 \
     --llvm-version=3.6
 	
-../icu/source/configure --prefix=$(pwd)/prebuilt \
+../icu/source/configure --prefix=$(pwd)/../install-android/armv7a \
     --host=arm-linux-androideabi \
     --enable-static \
     --enable-shared=no \
@@ -57,7 +75,7 @@ $ANDROID_NDK/build/tools/make-standalone-toolchain.sh \
     --toolchain=x86-4.9 \
     --llvm-version=3.6
 
-../source/configure --prefix=$(pwd)/prebuilt \
+../icu/source/configure --prefix=$(pwd)/../install-android/x86 \
     --host=i686-linux-android \
     --enable-static \
     --enable-shared=no \
@@ -92,7 +110,7 @@ $ANDROID_NDK/build/tools/make-standalone-toolchain.sh \
     --install-dir=$ANDROID_TOOLCHAIN \
     --toolchain=aarch64-linux-android-clang3.6
 
-../source/configure --prefix=$(pwd)/prebuilt \
+../icu/source/configure --prefix=$(pwd)/../install-android/aarch64 \
     --host=aarch64-linux-android \
     --enable-static \
     --enable-shared=no \
