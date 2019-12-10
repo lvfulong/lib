@@ -4,7 +4,7 @@ cd android
 gnumake
 
 
-export CROSS_BUILD_DIR=`pwd`/../MacOSX
+export CROSS_BUILD_DIR=`pwd`/../android
 export ANDROID_NDK=/Users/LayaBox/lvfulong/lib/android-ndk-r10e
 export ANDROID_TOOLCHAIN=$(pwd)/toolchain
 export PATH=$ANDROID_TOOLCHAIN/bin:$PATH
@@ -21,7 +21,7 @@ $ANDROID_NDK/build/tools/make-standalone-toolchain.sh \
     --toolchain=arm-linux-androideabi-4.9 \
     --llvm-version=3.6
 	
-../source/configure --prefix=$(pwd)/prebuilt \
+../icu/source/configure --prefix=$(pwd)/prebuilt \
     --host=arm-linux-androideabi \
     --enable-static \
     --enable-shared=no \
@@ -45,4 +45,4 @@ $ANDROID_NDK/build/tools/make-standalone-toolchain.sh \
     --with-data-packaging=static
 	
 	
-	gnumake
+	gnumake install
