@@ -5,12 +5,12 @@ PATH="${current_dir}/..:${PATH}"
 mkdir Contrib
 cd Contrib
 
-export ANDROID_NDK=/Users/layabox_mac/Public/lib/android-ndk-r10e
+export ANDROID_NDK=/Users/LayaBox/lvfulong/lib/android-ndk-r10e
 PATH="${ANDROID_NDK}/toolchains/x86-4.9/prebuilt/darwin-x86_64/bin:${PATH}"
 ##############################################################################################
-PNG_PREFIX="${top_dir}/../png/Contrib/install-android/x86_64"
-ICU_PREFIX="${top_dir}/../ICU/Contrib/build-x86_64"
-FREETYPE_PREFIX="${top_dir}/../freetype/Contrib/install-android/x86_64"
+PNG_PREFIX="${top_dir}/../png/Contrib/install-android/x86"
+ICU_PREFIX="${top_dir}/../ICU/Contrib/install-android/x86"
+FREETYPE_PREFIX="${top_dir}/../freetype/Contrib/install-android/x86"
 PREFIX="${top_dir}/contrib/install-android/x86"
 SDKROOT="${ANDROID_NDK}/platforms/android-19/arch-x86"
 
@@ -31,12 +31,12 @@ export PATH="${PREFIX}/bin:${PATH}"
 export CPPFLAGS=" -ffunction-sections -funwind-tables -fstack-protector -no-canonical-prefixes  -fomit-frame-pointer -fstrict-aliasing -DANDROID  -Wa,--noexecstack -Wformat -I${FREETYPE_PREFIX}/include/freetype2 -I${ICU_PREFIX}/include -I${PREFIX}/include -O1 -DNDEBUG -DHAVE_CONFIG_H=1"
 export CFLAGS=" -ffunction-sections -funwind-tables -fstack-protector -no-canonical-prefixes  -fomit-frame-pointer -fstrict-aliasing -DANDROID  -Wa,--noexecstack -Wformat  -I${FREETYPE_PREFIX}/include/freetype2 -I${ICU_PREFIX}/include -I${PREFIX}/include -O1 -DNDEBUG -DHAVE_CONFIG_H=1"
 export CXXFLAGS=" -ffunction-sections -funwind-tables -fstack-protector -no-canonical-prefixes  -fomit-frame-pointer -fstrict-aliasing -DANDROID  -Wa,--noexecstack -Wformat  -I${FREETYPE_PREFIX}/include/freetype2 -I${ICU_PREFIX}/include -I${PREFIX}/include -O1 -DNDEBUG -DHAVE_CONFIG_H=1"
-export LDFLAGS="-lpng -lfreetype -lbz2 -L${PNG_PREFIX}/lib -L${FREETYPE_PREFIX}/lib -L${ICU_PREFIX}/lib  -L${PREFIX}/lib"
+export LDFLAGS="-lpng -lfreetype -L${PNG_PREFIX}/lib -L${FREETYPE_PREFIX}/lib -L${ICU_PREFIX}/lib  -L${PREFIX}/lib"
 
 [ -e Makefile ] && make distclean
-./configure --prefix=${PREFIX} --datarootdir="${PREFIX}/share" --includedir="${PREFIX}/include" --libdir="${PREFIX}/lib" --build="x86_64-apple-darwin14" --host="i686-linux-android" --target="i686-linux-android" --program-prefix="" --enable-static --disable-shared --disable-dependency-tracking --with-pic
+./configure --prefix=${PREFIX} --datarootdir="${PREFIX}/share" --includedir="${PREFIX}/include" --libdir="${PREFIX}/lib" --build="x86_64-apple-darwin14" --host="i686-linux-android" --target="i686-linux-android" --program-prefix="" --enable-static --disable-shared --disable-dependency-tracking --with-pic  --with-icu=no
 
 /Applications/Xcode.app/Contents/Developer/usr/bin/make install
-cd ../..
+
 
 ##############################################################################################

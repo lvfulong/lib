@@ -6,7 +6,7 @@ top_dir=$current_dir
 mkdir Contrib
 cd Contrib
 
-export ANDROID_NDK=/Users/layabox_mac/Public/lib/android-ndk-r10e
+export ANDROID_NDK=/Users/LayaBox/lvfulong/lib/android-ndk-r10e
 PATH="${ANDROID_NDK}/toolchains/arm-linux-androideabi-4.9/prebuilt/darwin-x86_64/bin:${PATH}"
 ##############################################################################################
 PNG_PREFIX="${top_dir}/../png/Contrib/install-ios/arm"
@@ -33,13 +33,12 @@ export PATH="${PREFIX}/bin:${PATH}"
 export CPPFLAGS=" -ffunction-sections -funwind-tables -fstack-protector -no-canonical-prefixes  -march=armv5te -mtune=xscale -msoft-float  -mthumb -fomit-frame-pointer -fno-strict-aliasing -DANDROID  -Wa,--noexecstack -Wformat -I${FREETYPE_PREFIX}/include/freetype2 -I${ICU_PREFIX}/include  -I${PREFIX}/include -O3 -DNDEBUG -DHAVE_CONFIG_H=1"
 export CFLAGS=" -ffunction-sections -funwind-tables -fstack-protector -no-canonical-prefixes  -march=armv5te -mtune=xscale -msoft-float  -mthumb -fomit-frame-pointer -fno-strict-aliasing -DANDROID  -Wa,--noexecstack -Wformat -I${FREETYPE_PREFIX}/include/freetype2 -I${ICU_PREFIX}/include  -I${PREFIX}/include -O3 -DNDEBUG -DHAVE_CONFIG_H=1"
 export CXXFLAGS=" -ffunction-sections -funwind-tables -fstack-protector -no-canonical-prefixes  -march=armv5te -mtune=xscale -msoft-float  -mthumb -fomit-frame-pointer -fno-strict-aliasing -DANDROID  -Wa,--noexecstack -Wformat -I${FREETYPE_PREFIX}/include/freetype2 -I${ICU_PREFIX}/include  -I${PREFIX}/include -O3 -DNDEBUG -DHAVE_CONFIG_H=1"
-export LDFLAGS="-lpng -lfreetype -lbz2 -L${PNG_PREFIX}/lib -L${FREETYPE_PREFIX}/lib -L${ICU_PREFIX}/lib  -L${PREFIX}/lib"
+export LDFLAGS="-lpng -lfreetype  -L${PNG_PREFIX}/lib -L${FREETYPE_PREFIX}/lib -L${ICU_PREFIX}/lib  -L${PREFIX}/lib"
 
 [ -e Makefile ] && make distclean
-./configure --prefix=${PREFIX} --datarootdir="${PREFIX}/share" --includedir="${PREFIX}/include" --libdir="${PREFIX}/lib" --build="x86_64-apple-darwin14" --host="arm-linux-androideabi" --target="arm-linux-androideabi" --program-prefix="" --enable-static --disable-shared --disable-dependency-tracking --with-pic
-
+./configure --prefix=${PREFIX} --datarootdir="${PREFIX}/share" --includedir="${PREFIX}/include" --libdir="${PREFIX}/lib" --build="x86_64-apple-darwin14" --host="arm-linux-androideabi" --target="arm-linux-androideabi" --program-prefix="" --enable-static --disable-shared --disable-dependency-tracking --with-pic  --with-icu=no
+ 
 
 /Applications/Xcode.app/Contents/Developer/usr/bin/make install
-cd ../..
 
 ##############################################################################################

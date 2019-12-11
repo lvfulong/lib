@@ -6,15 +6,13 @@ top_dir=$current_dir
 mkdir Contrib
 cd Contrib
 
-export ANDROID_NDK=/Users/layabox_mac/Public/lib/android-ndk-r10e
+export ANDROID_NDK=/Users/LayaBox/lvfulong/lib/android-ndk-r10e
 PATH="${ANDROID_NDK}/toolchains/arm-linux-androideabi-4.9/prebuilt/darwin-x86_64/bin:${PATH}"
 ##############################################################################################
-rm -rf android-armv7
-mkdir android-armv7
-cd android-armv7
+
 
 PNG_PREFIX="${top_dir}/../png/Contrib/install-android/armv7"
-ICU_PREFIX="${top_dir}/../ICU/Contrib/build-armv7"
+ICU_PREFIX="${top_dir}/../ICU/Contrib/install-android/armv7a"
 FREETYPE_PREFIX="${top_dir}/../freetype/Contrib/install-android/armv7"
 PREFIX="${top_dir}/contrib/install-android/armv7"
 SDKROOT="${ANDROID_NDK}/platforms/android-14/arch-arm"
@@ -33,16 +31,16 @@ export CCAS="arm-linux-androideabi-gcc --sysroot=${SDKROOT} -c"
 export RANLIB="arm-linux-androideabi-ranlib"
 export STRIP="arm-linux-androideabi-strip"
 export PATH="${PREFIX}/bin:${PATH}"
-export CPPFLAGS=" -march=armv7-a -mfpu=neon -mfloat-abi=softfp  -mthumb -fomit-frame-pointer -fno-strict-aliasing -DANDROID  -Wa,--noexecstack -Wformat  -I${FREETYPE_PREFIX}/include/freetype2 -I${ICU_PREFIX}/include -I${PREFIX}/include -O3 -DNDEBUG -DHAVE_CONFIG_H=1"
-export CFLAGS=" -march=armv7-a -mfpu=neon -mfloat-abi=softfp  -mthumb -fomit-frame-pointer -fno-strict-aliasing -DANDROID  -Wa,--noexecstack -Wformat  -I${FREETYPE_PREFIX}/include/freetype2 -I${ICU_PREFIX}/include -I${PREFIX}/include -O3 -DNDEBUG -DHAVE_CONFIG_H=1"
-export CXXFLAGS=" -march=armv7-a -mfpu=neon -mfloat-abi=softfp  -mthumb -fomit-frame-pointer -fno-strict-aliasing -DANDROID  -Wa,--noexecstack -Wformat  -I${FREETYPE_PREFIX}/include/freetype2 -I${ICU_PREFIX}/include -I${PREFIX}/include -O3 -DNDEBUG -DHAVE_CONFIG_H=1"
-export LDFLAGS="-lpng -lfreetype -lbz2 -L${PNG_PREFIX}/lib -L${FREETYPE_PREFIX}/lib -L${ICU_PREFIX}/lib  -march=armv7-a -Wl,--fix-cortex-a8 -L${PREFIX}/lib"
+export CPPFLAGS=" -march=armv7-a -mfpu=neon -mfloat-abi=softfp  -mthumb -fomit-frame-pointer -fno-strict-aliasing -DANDROID  -Wa,--noexecstack -Wformat  -I${FREETYPE_PREFIX}/include/freetype2 -I${ICU_PREFIX}/include -I${PREFIX}/include  -I${SDKROOT}/usr/include -O3 -DNDEBUG -DHAVE_CONFIG_H=1"
+export CFLAGS=" -march=armv7-a -mfpu=neon -mfloat-abi=softfp  -mthumb -fomit-frame-pointer -fno-strict-aliasing -DANDROID  -Wa,--noexecstack -Wformat  -I${FREETYPE_PREFIX}/include/freetype2 -I${ICU_PREFIX}/include -I${PREFIX}/include -I${SDKROOT}/usr/include -O3 -DNDEBUG -DHAVE_CONFIG_H=1"
+export CXXFLAGS="-march=armv7-a -mfpu=neon -mfloat-abi=softfp  -mthumb -fomit-frame-pointer -fno-strict-aliasing -DANDROID  -Wa,--noexecstack -Wformat  -I${FREETYPE_PREFIX}/include/freetype2 -I${ICU_PREFIX}/include -I${PREFIX}/include -I${SDKROOT}/usr/include -O3 -DNDEBUG -DHAVE_CONFIG_H=1"
+export LDFLAGS="-lpng -lfreetype -L${PNG_PREFIX}/lib -L${FREETYPE_PREFIX}/lib -L${ICU_PREFIX}/lib  -march=armv7-a -Wl,--fix-cortex-a8 -L${PREFIX}/lib"
 
 [ -e Makefile ] && make distclean
-./configure --prefix=${PREFIX} --datarootdir="${PREFIX}/share" --includedir="${PREFIX}/include" --libdir="${PREFIX}/lib" --build="x86_64-apple-darwin14" --host="arm-linux-androideabi" --target="arm-linux-androideabi" --program-prefix="" --enable-static --disable-shared --disable-dependency-tracking --with-pic
+./configure --prefix=${PREFIX} --datarootdir="${PREFIX}/share" --includedir="${PREFIX}/include" --libdir="${PREFIX}/lib" --build="x86_64-apple-darwin14" --host="arm-linux-androideabi" --target="arm-linux-androideabi" --program-prefix="" --enable-static --disable-shared --disable-dependency-tracking --with-pic --with-libstdc++=yes --with-sysroot="${SDKROOT}"  --with-icu=no
 
 
 /Applications/Xcode.app/Contents/Developer/usr/bin/make install
-cd ../..
+
 
 ##############################################################################################
