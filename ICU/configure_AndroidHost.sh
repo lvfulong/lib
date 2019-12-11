@@ -1,5 +1,5 @@
 mkdir -p build-host && cd build-host
-ICU_PATH="$(pwd)/../icu4c-65_1-src/icu"
+ICU_PATH="$(pwd)/../icu"
 
 export CXXFLAGS="-stdlib=libc++ -std=c++11 -DNDEBUG"
 export LDFLAGS="-stdlib=libc++  -lstdc++"

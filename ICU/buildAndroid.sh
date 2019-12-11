@@ -8,13 +8,13 @@ cd Contrib
 
 tar xvzf ../icu4c-65_1-src.tgz
 
-../configure_host.sh
+../configure_AndroidHost.sh
 mkdir -p build-host && cd build-host && gnumake
 
-#cd $ICU_ROOT
-#cd Contrib
-#../configure_x86_64.sh
-#mkdir -p build-x86_64 && cd build-x86_64 && gnumake
+cd $ICU_ROOT
+cd Contrib
+../buildAndroidArm.sh
+mkdir -p build-x86_64 && cd build-x86_64 && gnumake
 
 #cd $ICU_ROOT
 #cd Contrib
