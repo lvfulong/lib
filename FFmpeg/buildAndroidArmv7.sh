@@ -2,12 +2,11 @@
 current_dir=`pwd`
 top_dir=$current_dir
 #PATH="${current_dir}/..:${PATH}"
-export API=14
+export API=16
 mkdir Contrib
 cd Contrib
 
 export ANDROID_NDK=/Users/layabox_mac/Public/lib/android-ndk-r10e
-PATH="${ANDROID_NDK}/toolchains/arm-linux-androideabi-4.9/prebuilt/darwin-x86_64/bin:${PATH}"
 TOOLCHAIN=darwin-x86_64
  export PATH=$PATH:${ANDROID_NDK_ROOT}/toolchains/llvm/prebuilt/${TOOLCHAIN}/bin
 ##############################################################################################
