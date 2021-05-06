@@ -8,6 +8,8 @@ cd Contrib
 
 export ANDROID_NDK=/Users/layabox_mac/Public/lib/android-ndk-r10e
 PATH="${ANDROID_NDK}/toolchains/arm-linux-androideabi-4.9/prebuilt/darwin-x86_64/bin:${PATH}"
+TOOLCHAIN=darwin-x86_64
+ export PATH=$PATH:${ANDROID_NDK_ROOT}/toolchains/llvm/prebuilt/${TOOLCHAIN}/bin
 ##############################################################################################
 rm -rf android-armv7
 mkdir android-armv7
