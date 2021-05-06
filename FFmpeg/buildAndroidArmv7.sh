@@ -82,11 +82,9 @@ BUILD_LIBRARY_OPTIONS="--disable-static --enable-shared"
   ${ASM_OPTIONS} \
   --enable-cross-compile \
   --enable-pic \
-  --enable-jni \
   --enable-optimizations \
   --enable-swscale \
   ${BUILD_LIBRARY_OPTIONS} \
-  --enable-v4l2-m2m \
   --disable-outdev=fbdev \
   --disable-indev=fbdev \
   ${SIZE_OPTIONS} \
@@ -101,21 +99,13 @@ BUILD_LIBRARY_OPTIONS="--disable-static --enable-shared"
   --disable-manpages \
   --disable-podpages \
   --disable-txtpages \
-  --disable-sndio \
   --disable-schannel \
   --disable-securetransport \
   --disable-xlib \
-  --disable-cuda \
-  --disable-cuvid \
   --disable-nvenc \
   --disable-vaapi \
   --disable-vdpau \
   --disable-videotoolbox \
-  --disable-audiotoolbox \
-  --disable-appkit \
-  --disable-alsa \
-  --disable-cuda \
-  --disable-cuvid \
   --disable-nvenc \
   --disable-vaapi \
   --disable-vdpau 
