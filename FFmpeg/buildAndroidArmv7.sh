@@ -16,9 +16,9 @@ cd android-armv7
 PREFIX="${top_dir}/contrib/install-android/armv7"
 SDKROOT="${ANDROID_NDK}/platforms/android-14/arch-arm"
 
-tar xvzf ../../libzip-0.11.2.tar.gz
-mv libzip-0.11.2 zip && touch zip
-cd zip
+tar xvzf ../../FFmpeg-n3.0.zip
+mv FFmpeg-n3.0 FFmpeg && touch FFmpeg
+cd FFmpeg
 
 export CC="arm-linux-androideabi-gcc --sysroot=${SDKROOT}"
 export CXX="arm-linux-androideabi-g++ --sysroot=${SDKROOT}"
