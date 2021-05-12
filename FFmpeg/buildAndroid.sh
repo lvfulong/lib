@@ -70,3 +70,31 @@ PREFIX=$(pwd)/android/$CPU
 OPTIMIZE_CFLAGS="-march=$CPU"
 
 build_android
+
+#armv7
+export TARGET=armv7a-linux-android
+ARCH=arm
+CPU=armv7-a
+API=21
+CC=$TOOLCHAIN/bin/$TARGET$API-clang
+CXX=$TOOLCHAIN/bin/$TARGET$API-clang++
+SYSROOT=$TOOLCHAIN/sysroot
+CROSS_PREFIX=$TOOLCHAIN/bin/$TARGET-
+PREFIX=$(pwd)/android/$CPU
+OPTIMIZE_CFLAGS="-mfloat-abi=softfp -mfpu=vfp -marm -march=$CPU "
+
+build_android
+
+#x86
+export TARGET=i686-linux-android
+ARCH=x86
+CPU=x86
+API=21
+CC=$TOOLCHAIN/bin/$TARGET$API-clang
+CXX=$TOOLCHAIN/bin/$TARGET$API-clang++
+SYSROOT=$TOOLCHAIN/sysroot
+CROSS_PREFIX=$TOOLCHAIN/bin/$TARGET-
+PREFIX=$(pwd)/android/$CPU
+OPTIMIZE_CFLAGS="-march=$CPU"
+
+build_android
