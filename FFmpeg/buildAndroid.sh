@@ -1,8 +1,19 @@
 #!/bin/bash
 
-export NDK=/home/layabox/LayaBox/lvfulong/android-ndk-r20b #这里配置先你的 NDK 路径
-TOOLCHAIN=$NDK/toolchains/llvm/prebuilt/linux-x86_64
+export NDK=/Users/LayaBox/lvfulong/lib/android-ndk-r20b
+TOOLCHAIN=$NDK/toolchains/llvm/prebuilt/darwin-x86_64
 
+
+current_dir=`pwd`
+top_dir=$current_dir
+#PATH="${current_dir}/..:${PATH}"
+rm -rf Contrib
+mkdir Contrib
+cd Contrib
+
+tar xvzf ../ffmpeg-4.2.4.tar.xz
+mv ffmpeg-4.2.4 FFmpeg && touch FFmpeg
+cd FFmpeg
 
 function build_android
 {
@@ -19,7 +30,7 @@ function build_android
 --enable-mediacodec \
 --enable-decoder=h264_mediacodec \
 --enable-static \
---enable-shared \
+--disable-shared \
 --disable-doc \
 --enable-ffmpeg \
 --disable-ffplay \
@@ -47,13 +58,14 @@ echo "============================ build android arm64-v8a success =============
 }
 
 #arm64-v8a
+export TARGET=aarch64-linux-android
 ARCH=arm64
 CPU=armv8-a
 API=21
-CC=$TOOLCHAIN/bin/aarch64-linux-android$API-clang
-CXX=$TOOLCHAIN/bin/aarch64-linux-android$API-clang++
-SYSROOT=$NDK/toolchains/llvm/prebuilt/linux-x86_64/sysroot
-CROSS_PREFIX=$TOOLCHAIN/bin/aarch64-linux-android-
+CC=$TOOLCHAIN/bin/$TARGET$API-clang
+CXX=$TOOLCHAIN/bin/$TARGET$API-clang++
+SYSROOT=$TOOLCHAIN/sysroot
+CROSS_PREFIX=$TOOLCHAIN/bin/$TARGET-
 PREFIX=$(pwd)/android/$CPU
 OPTIMIZE_CFLAGS="-march=$CPU"
 
