@@ -38,6 +38,7 @@ function build_android
 --disable-avdevice \
 --disable-doc \
 --disable-symver \
+${ASM_OPTIONS} \
 --cross-prefix=$CROSS_PREFIX \
 --target-os=android \
 --arch=$ARCH \
@@ -70,13 +71,13 @@ SYSROOT=$TOOLCHAIN/sysroot
 CROSS_PREFIX=$TOOLCHAIN/bin/arm-linux-androideabi-
 PREFIX=$(pwd)/android/$CPU
 OPTIMIZE_CFLAGS="-mfloat-abi=softfp -mfpu=vfp -marm -march=$CPU "
-
+ASM_OPTIONS=" --disable-neon --enable-asm --enable-inline-asm"
 build_android
 
 #x86
 export TARGET=i686-linux-android
-ARCH=x86
-CPU=x86
+ARCH=i686
+CPU=i686
 API=21
 CC=$TOOLCHAIN/bin/$TARGET$API-clang
 CXX=$TOOLCHAIN/bin/$TARGET$API-clang++
@@ -84,8 +85,9 @@ SYSROOT=$TOOLCHAIN/sysroot
 CROSS_PREFIX=$TOOLCHAIN/bin/$TARGET-
 PREFIX=$(pwd)/android/$CPU
 OPTIMIZE_CFLAGS="-march=$CPU"
+ASM_OPTIONS=" --disable-neon --disable-asm --disable-inline-asm --disable-x86asm "
 
-#build_android
+build_android
 
 #arm64-v8a
 export TARGET=aarch64-linux-android
@@ -98,5 +100,5 @@ SYSROOT=$TOOLCHAIN/sysroot
 CROSS_PREFIX=$TOOLCHAIN/bin/$TARGET-
 PREFIX=$(pwd)/android/$CPU
 OPTIMIZE_CFLAGS="-march=$CPU"
-
-#build_android
+ASM_OPTIONS=" --enable-neon --enable-asm --enable-inline-asm"
+build_android
