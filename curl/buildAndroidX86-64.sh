@@ -4,7 +4,7 @@ PATH="${current_dir}/..:${PATH}"
 
 mkdir Contrib
 cd Contrib
-export ANDROID_NDK=/Users/layabox_mac/Public/lib/android-ndk-r10e
+export ANDROID_NDK=/Users/joychina/Desktop/lvfulong/android-ndk-r10e
 PATH="${ANDROID_NDK}/toolchains/x86_64-4.9/prebuilt/darwin-x86_64/bin:${PATH}"
 ##############################################################################################
 rm -rf android-x86_64
@@ -40,7 +40,6 @@ export CXXFLAGS=" -ffunction-sections -funwind-tables -fstack-protector -no-cano
 export LDFLAGS=" -L${PREFIX}/lib"
 ./Configure android-x86_64 --prefix=${PREFIX}  no-shared no-unit-test
 
-
 /Applications/Xcode.app/Contents/Developer/usr/bin/make install_sw
 cd ..
 
@@ -64,31 +63,14 @@ export LDFLAGS=" -L${PREFIX}/lib"
 export CHOST=x86_64-linux-android
 export CFLAGS=" -ffunction-sections -funwind-tables -fstack-protector -no-canonical-prefixes  -fomit-frame-pointer -fstrict-aliasing -DANDROID  -Wa,--noexecstack -Wformat  -I${PREFIX}/include -O1 -DNDEBUG -fPIC"
 ./configure --prefix=${PREFIX} --static
-
 /Applications/Xcode.app/Contents/Developer/usr/bin/make install
-
 cd ..
 
-CMAKE_TOOLCHAIN_PATH=`pwd`
-echo "set(_CMAKE_TOOLCHAIN_PREFIX x86_64-linux-android-)" >> toolchain.cmake
-echo "set(CMAKE_SYSTEM_NAME Linux)" >> toolchain.cmake
-echo "set(CMAKE_CXX_SYSROOT_FLAG \"\")" >> toolchain.cmake
-echo "set(CMAKE_C_SYSROOT_FLAG \"\")" >> toolchain.cmake
-echo "include_directories(${ANDROID_NDK}/sources/cxx-stl/gnu-libstdc++/4.9/include  \
-${ANDROID_NDK}/sources/cxx-stl/gnu-libstdc++/4.9/libs/x86_64/include \
-${ANDROID_NDK}/sources/cxx-stl/gnu-libstdc++/4.9/include/backward)"  >> toolchain.cmake
-echo "set(CMAKE_C_COMPILER x86_64-linux-android-gcc --sysroot=${SDKROOT})" >> toolchain.cmake
-echo "set(CMAKE_CXX_COMPILER x86_64-linux-android-g++ --sysroot=${SDKROOT})" >> toolchain.cmake
-echo "set(CMAKE_FIND_ROOT_PATH ${PREFIX})" >> toolchain.cmake
-echo "set(CMAKE_FIND_ROOT_PATH_MODE_PROGRAM NEVER)" >> toolchain.cmake
-echo "set(CMAKE_FIND_ROOT_PATH_MODE_LIBRARY ONLY)" >> toolchain.cmake
-echo "set(CMAKE_FIND_ROOT_PATH_MODE_INCLUDE ONLY)" >> toolchain.cmake
-
-
-tar xvzf ../../libwebsockets-2.3.0.zip
-mv libwebsockets-2.3.0 websockets && touch websockets
-cd websockets
-
+tar xvzf ../../curl-7.56.0.tar.gz
+mv curl-7.56.0 curl && touch curl
+#tar xvzf ../../curl-7.52.1.tar.gz
+#mv curl-7.52.1 curl && touch curl
+mkdir -p -- ${PREFIX}/share/aclocal && cd curl && autoreconf -fiv -I${PREFIX}/share/aclocal
 export CC="x86_64-linux-android-gcc --sysroot=${SDKROOT}"
 export CXX="x86_64-linux-android-g++ --sysroot=${SDKROOT}"
 export LD="x86_64-linux-android-ld"
@@ -97,12 +79,14 @@ export CCAS="x86_64-linux-android-gcc --sysroot=${SDKROOT} -c"
 export RANLIB="x86_64-linux-android-ranlib"
 export STRIP="x86_64-linux-android-strip"
 export PATH="${PREFIX}/bin:${PATH}"
-export CPPFLAGS=" -ffunction-sections -funwind-tables -fstack-protector -no-canonical-prefixes  -fomit-frame-pointer -fstrict-aliasing -DANDROID  -Wa,--noexecstack -Wformat  -I${PREFIX}/include -O1 -DNDEBUG"
-export CFLAGS=" -ffunction-sections -funwind-tables -fstack-protector -no-canonical-prefixes  -fomit-frame-pointer -fstrict-aliasing -DANDROID  -Wa,--noexecstack -Wformat  -I${PREFIX}/include -O1 -DNDEBUG"
-export CXXFLAGS=" -ffunction-sections -funwind-tables -fstack-protector -no-canonical-prefixes  -fomit-frame-pointer -fstrict-aliasing -DANDROID  -Wa,--noexecstack -Wformat  -I${PREFIX}/include -O1 -DNDEBUG"
-export LDFLAGS=" -L${PREFIX}/lib"
+export CPPFLAGS=" -ffunction-sections -funwind-tables -fstack-protector -no-canonical-prefixes  -fomit-frame-pointer -fstrict-aliasing -DANDROID  -Wa,--noexecstack -Wformat  -I${PREFIX}/include -O1 -DNDEBUG -fPIC"
 export CFLAGS=" -ffunction-sections -funwind-tables -fstack-protector -no-canonical-prefixes  -fomit-frame-pointer -fstrict-aliasing -DANDROID  -Wa,--noexecstack -Wformat  -I${PREFIX}/include -O1 -DNDEBUG -fPIC"
-cmake . -DCMAKE_TOOLCHAIN_FILE=${CMAKE_TOOLCHAIN_PATH}/toolchain.cmake -DCMAKE_INSTALL_PREFIX=${PREFIX} -DLWS_WITH_SSL=1 -DLWS_WITHOUT_SERVER=0 -DLWS_WITH_SHARED=0 -DLWS_WITHOUT_TEST_SERVER=1 -DLWS_WITHOUT_TEST_SERVER_EXTPOLL=1 -DLWS_WITHOUT_TEST_PING=1 -DLWS_WITHOUT_TEST_ECHO=1 -DLWS_WITHOUT_TEST_FRAGGLE=1 -DLWS_IPV6=1
-
-
-/Applications/Xcode.app/Contents/Developer/usr/bin/make VERBOSE=1 install
+export CXXFLAGS=" -ffunction-sections -funwind-tables -fstack-protector -no-canonical-prefixes  -fomit-frame-pointer -fstrict-aliasing -DANDROID  -Wa,--noexecstack -Wformat  -I${PREFIX}/include -O1 -DNDEBUG -fPIC"
+export LDFLAGS=" -L${PREFIX}/lib"
+./configure --prefix=${PREFIX} --datarootdir="${PREFIX}/share" --includedir="${PREFIX}/include" --libdir="${PREFIX}/lib" --build="x86_64-apple-darwin14" --host="x86_64-linux-android" --target="x86_64-linux-android" --program-prefix="" --enable-static --disable-shared --disable-dependency-tracking --with-pic \
+--with-ssl=${PREFIX} \
+--with-zlib \
+--enable-ipv6 \
+--disable-ldap \
+--without-libidn --without-librtmp
+/Applications/Xcode.app/Contents/Developer/usr/bin/make install
