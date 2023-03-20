@@ -6,7 +6,7 @@ PATH="${current_dir}/..:${PATH}"
 mkdir Contrib
 cd Contrib
 
-export ANDROID_NDK=/Users/LayaBox/lvfulong/lib/android-ndk-r20b
+export ANDROID_NDK=/Users/joychina/Desktop/lvfulong/NDK9519653/ndk
 PATH="${ANDROID_NDK}/toolchains/arm-linux-androideabi-4.9/prebuilt/darwin-x86_64/bin:${PATH}"
 ##############################################################################################
 rm -rf android-x86_64
