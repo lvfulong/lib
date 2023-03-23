@@ -8,6 +8,7 @@ https://download.savannah.gnu.org/releases/freetype/freetype-2.13.0.tar.gz
 https://github.com/google/brotli/archive/refs/tags/v1.0.9.tar.gz
 
 #png
+http://www.libpng.org/pub/png/libpng.html
 https://sourceforge.net/projects/libpng/files/libpng16/1.6.39/libpng-1.6.39.tar.gz
 
 #libzip
