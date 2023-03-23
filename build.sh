@@ -216,6 +216,78 @@ function build_png {
 	cd ${root_dir}
 }
 
+
+function build_jpeg {
+	local build_type=$1
+    local arch=$2
+    local platform=$3
+
+	local lib_name=jpeg
+	local build_dir_root="${root_dir}/build/${platform}-${build_type}-${arch}"
+    local build_dir="${build_dir_root}/${lib_name}"
+	mkdir -p "${build_dir}"
+	cd ${lib_name}
+	local lib_source_dir=jpegsrc.v9e
+	rm -rf ${lib_source_dir}
+	tar xvzf ${lib_source_dir}.tar.gz
+
+	cd ..
+	cd ${build_dir}
+	
+
+	#-DPLATFORM_NAME="${platform}"
+	#-DCMAKE_BUILD_TYPE=${build_type} 
+	if [[ "$3" == "windows" ]]; then	
+
+		make
+		make install
+	fi
+	
+	if [[ "$3" == "iphoneos" ]] || [[ "$3" == "iphonesimulator" ]]; then
+		local TOOLSET=
+		if [[ "$2" == "arm64" ]]; then
+			TOOLSET=arm-apple-darwin
+		fi	
+
+		if [[ "$2" == "x86_64" ]]; then
+			TOOLSET=x86_64-apple-darwin
+		fi			
+		./configure --host=$TOOLSET \
+			--target=$TOOLSET \
+			--prefix=${build_dir_root} \
+			--disable-shared \
+			--enable-static
+		
+		make
+		make install
+	fi
+	
+	if [[ "$3" == "android" ]]; then
+		local android_abi=
+		if [[ "$2" == "aarch64" ]]; then
+			android_abi=arm64-v8a
+		fi
+	
+		if [[ "$2" == "arm7" ]]; then
+			android_abi=armeabi-v7a
+		fi
+	
+		if [[ "$2" == "x86" ]]; then
+			android_abi=x86
+		fi
+	
+		if [[ "$2" == "x86_64" ]]; then
+			android_abi=x86_64
+		fi
+
+		make
+		make install
+	fi
+	
+	rm -rf ${root_dir}/${lib_name}/${lib_source_dir}
+	cd ${root_dir}
+}
+
 function archive_ios {
 
 	local build_type=$1
@@ -236,10 +308,13 @@ function archive_ios {
 #build_png Release "win64" windows
 
 
-build_png release arm64 iphoneos
-build_png release x86_64 iphonesimulator
-archive_ios release iphoneos arm64 iphonesimulator x86_64
+#build_png release arm64 iphoneos
+#build_png release x86_64 iphonesimulator
+#archive_ios release iphoneos arm64 iphonesimulator x86_64
 
+build_jpeg release arm64 iphoneos
+build_jpeg release x86_64 iphonesimulator
+archive_ios release iphoneos arm64 iphonesimulator x86_64
 
 #build_png release "aarch64" android
 #build_png release "arm7" android
