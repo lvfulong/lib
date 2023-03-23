@@ -1,5 +1,6 @@
 root_dir=`pwd`
-
+ios_fat=${root_dir}/build/ios-fat
+mkdir -p "${ios_fat}"
 
 
 export ANDROID_HOME=/Users/joychina/Desktop/lvfulong/android-ndk-r21e
@@ -44,6 +45,7 @@ function build_zlib {
 		#-DCMAKE_BUILD_TYPE=${build_type} 
 		cmake -G "${generator}" \
 			-DCMAKE_INSTALL_PREFIX=${build_dir_root} \
+			-DCMAKE_PREFIX_PATH=${build_dir_root} \
 			../../../${lib_name}/${lib_source_dir}
 	
 		cmake --build . --config ${build_type} --target install
@@ -55,7 +57,8 @@ function build_zlib {
 			-DCMAKE_BUILD_TYPE="${build_type}" \
 			-DIOS_ARCH="${arch}" \
 			-DPLATFORM_NAME="${platform}" \
-			-DCMAKE_INSTALL_PREFIX=${build_dir} \
+			-DCMAKE_INSTALL_PREFIX=${build_dir_root} \
+			-DCMAKE_PREFIX_PATH=${build_dir_root} \
 			-DCMAKE_TOOLCHAIN_FILE=../../../CMake/clang/iOS.cmake \
 			-DCMAKE_SYSTEM_NAME=iOS \
 			../../../${lib_name}/${lib_source_dir}
@@ -82,7 +85,8 @@ function build_zlib {
 		fi
 		#-DCMAKE_ARCHIVE_OUTPUT_DIRECTORY=../android-${build_type}/Conch why not work?
 		cmake -G "Unix Makefiles" \
-			-DCMAKE_INSTALL_PREFIX=${build_dir} \
+			-DCMAKE_INSTALL_PREFIX=${build_dir_root} \
+			-DCMAKE_PREFIX_PATH=${build_dir_root} \
 			-DCMAKE_BUILD_TYPE=${build_type} \
 			-DCMAKE_TOOLCHAIN_FILE=${CONCH_NDK_PATH}/build/cmake/android.toolchain.cmake \
 			-DANDROID_ABI=${android_abi} \
@@ -98,7 +102,7 @@ function build_zlib {
 			-DANDROID_TOOLCHAIN=clang \
 			../../../${lib_name}/${lib_source_dir}
 
-		cmake --build . --target ${build_type} install
+		cmake --build . --config ${build_type} --target install
 	fi
 	
 	rm -rf ${root_dir}/${lib_name}/${lib_source_dir}
@@ -205,21 +209,38 @@ function build_png {
 			-DPNG_TESTS=OFF \
 			../../../${lib_name}/${lib_source_dir}
 
-		cmake --build . --target ${build_type} install
+		cmake --build . --config ${build_type} --target install
 	fi
 	
 	rm -rf ${root_dir}/${lib_name}/${lib_source_dir}
 	cd ${root_dir}
 }
 
+function archive_ios {
 
+	local build_type=$1
+	local platform0=$2
+	local arch0=$3
+	local platform1=$4
+	local arch1=$5
+	
+	local build_dir0="${root_dir}/build/${platform0}-${build_type}-${arch0}"
+	local build_dir1="${root_dir}/build/${platform1}-${build_type}-${arch1}"
+	lipo -create  "${build_dir0}/lib/libz.a"  "${build_dir1}/lib/libz.a"  -output "${root_dir}/build/ios-fat/libz.a"
+	lipo -create  "${build_dir0}/lib/libpng16.a"  "${build_dir1}/lib/libpng16.a"  -output "${root_dir}/build/ios-fat/libpng.a"
+}
 
 #check_android_environment
 
-build_png Release "win32" windows
-build_png Release "win64" windows
-#build_png release arm64 iphoneos
-#build_png release x86_64 iphonesimulator
+#build_png Release "win32" windows
+#build_png Release "win64" windows
+
+
+build_png release arm64 iphoneos
+build_png release x86_64 iphonesimulator
+archive_ios release iphoneos arm64 iphonesimulator x86_64
+
+
 #build_png release "aarch64" android
 #build_png release "arm7" android
 #build_png release "x86_64" android
@@ -233,6 +254,8 @@ build_png Release "win64" windows
 #build_zlib release "arm7" android
 #build_zlib release "x86_64" android
 #build_zlib release "x86" android
+
+
 
 
 
