@@ -112,12 +112,14 @@ function build_zlib_windows {
 	local build_type=$1
     local arch=$2
     #local platform=$3
-    local build_dir="${root_dir}/build/windows-${build_type}-${arch}"
+	local lib_name=zlib
+	local build_dir_root="${root_dir}/build/windows-${build_type}-${arch}"
+    local build_dir="${build_dir_root}/${lib_name}"
 	mkdir -p "${build_dir}"
-	cd zlib
-	local zlibVersion=zlib-1.2.13
-	rm -rf ${zlibVersion}
-	tar xvzf ${zlibVersion}.tar.gz
+	cd ${lib_name}
+	local lib_source_dir=zlib-1.2.13
+	rm -rf ${lib_source_dir}
+	tar xvzf ${lib_source_dir}.tar.gz
 
 	cd ..
 	cd ${build_dir}
@@ -129,12 +131,12 @@ function build_zlib_windows {
 	#-DPLATFORM_NAME="${platform}"
 	#-DCMAKE_BUILD_TYPE=${build_type} 
 	cmake -G "${generator}" \
-	-DCMAKE_INSTALL_PREFIX=${build_dir} \
-	../../zlib/${zlibVersion}
+	-DCMAKE_INSTALL_PREFIX=${build_dir_root} \
+	../../../${lib_name}/${lib_source_dir}
 	
 	cmake --build . --config ${build_type} --target install
-	#make
-	cd ../..
+	rm -rf ${root_dir}/${lib_name}/${lib_source_dir}
+	cd ${root_dir}
 }
 
 function build_png_windows {
@@ -143,12 +145,14 @@ function build_png_windows {
     #local platform=$3
 	#depends zlib
 	build_zlib_windows ${build_type} ${arch}
-    local build_dir="${root_dir}/build/windows-${build_type}-${arch}"
+	local lib_name=png
+	local build_dir_root="${root_dir}/build/windows-${build_type}-${arch}"
+    local build_dir="${build_dir_root}/${lib_name}"
 	mkdir -p "${build_dir}"
-	cd png
-	local libVersion=libpng-1.6.39
-	rm -rf ${libVersion}
-	tar xvzf ${libVersion}.tar.gz
+	cd ${lib_name}
+	local lib_source_dir=libpng-1.6.39
+	rm -rf ${lib_source_dir}
+	tar xvzf ${lib_source_dir}.tar.gz
 
 	cd ..
 	cd ${build_dir}
@@ -160,28 +164,32 @@ function build_png_windows {
 	#-DPLATFORM_NAME="${platform}"
 	#-DCMAKE_BUILD_TYPE=${build_type} 
 	cmake -G "${generator}" \
-	-DCMAKE_INSTALL_PREFIX=${build_dir} \
-	-DCMAKE_PREFIX_PATH=${build_dir} \
+	-DCMAKE_INSTALL_PREFIX=${build_dir_root} \
+	-DCMAKE_PREFIX_PATH=${build_dir_root} \
 	-DPNG_STATIC=ON \
 	-DPNG_SHARED=OFF \
 	-DPNG_EXECUTABLES=OFF \
 	-DPNG_TESTS=OFF \
-	../../png/${libVersion}
+	../../../${lib_name}/${lib_source_dir}
 	
 	cmake --build . --config ${build_type} --target install
-	#make
-	cd ../..
+	rm -rf ${root_dir}/${lib_name}/${lib_source_dir}
+	cd ${root_dir}
 }
-check_android_environment
 
-build_zlib_windows Release "win32"
-build_zlib_windows Release "win64"
 
-build_zlib_android release "aarch64"
-build_zlib_android release "arm7"
-build_zlib_android release "x86_64"
-build_zlib_android release "x86"
 
-build_zlib_iOS release arm64 iphoneos
-build_zlib_iOS release x86_64 iphonesimulator
+#check_android_environment
+#build_zlib_windows Release "win32"
+#build_zlib_windows Release "win64"
+
+#build_png_windows Release "win32"
+
+#build_zlib_android release "aarch64"
+#build_zlib_android release "arm7"
+#build_zlib_android release "x86_64"
+#build_zlib_android release "x86"
+
+#build_zlib_iOS release arm64 iphoneos
+#build_zlib_iOS release x86_64 iphonesimulator
 
