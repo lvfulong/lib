@@ -1,7 +1,6 @@
 root_dir=`pwd`
 
 
-
 function build_zlib_iOS {
 	local build_type=$1
     local arch=$2
@@ -132,6 +131,42 @@ function build_zlib_windows {
 	cmake -G "${generator}" \
 	-DCMAKE_INSTALL_PREFIX=${build_dir} \
 	../../zlib/${zlibVersion}
+	
+	cmake --build . --config ${build_type} --target install
+	#make
+	cd ../..
+}
+
+function build_png_windows {
+	local build_type=$1
+    local arch=$2
+    #local platform=$3
+	#depends zlib
+	build_zlib_windows ${build_type} ${arch}
+    local build_dir="${root_dir}/build/windows-${build_type}-${arch}"
+	mkdir -p "${build_dir}"
+	cd png
+	local libVersion=libpng-1.6.39
+	rm -rf ${libVersion}
+	tar xvzf ${libVersion}.tar.gz
+
+	cd ..
+	cd ${build_dir}
+	
+	local generator="Visual Studio 14 2015"
+	if [[ "$2" == "win64" ]]; then
+		generator="Visual Studio 14 2015 Win64"
+	fi
+	#-DPLATFORM_NAME="${platform}"
+	#-DCMAKE_BUILD_TYPE=${build_type} 
+	cmake -G "${generator}" \
+	-DCMAKE_INSTALL_PREFIX=${build_dir} \
+	-DCMAKE_PREFIX_PATH=${build_dir} \
+	-DPNG_STATIC=ON \
+	-DPNG_SHARED=OFF \
+	-DPNG_EXECUTABLES=OFF \
+	-DPNG_TESTS=OFF \
+	../../png/${libVersion}
 	
 	cmake --build . --config ${build_type} --target install
 	#make
