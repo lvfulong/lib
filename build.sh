@@ -49,7 +49,7 @@ function build_zlib {
 		cmake --build . --config ${build_type} --target install
 	fi
 	
-	if [[ "$3" == "iphoneos" ] || [ "$3" == "iphonesimulator" ]]; then
+	if [[ "$3" == "iphoneos" ]] || [[ "$3" == "iphonesimulator" ]]; then
 		cmake \
 			-G "Unix Makefiles" \
 			-DCMAKE_BUILD_TYPE="${build_type}" \
@@ -144,7 +144,7 @@ function build_png {
 		cmake --build . --config ${build_type} --target install
 	fi
 	
-	if [[ "$3" == "iphoneos" ] || [ "$3" == "iphonesimulator" ]]; then
+	if [[ "$3" == "iphoneos" ] || [[ "$3" == "iphonesimulator" ]]; then
 		cmake \
 			-G "Unix Makefiles" \
 			-DCMAKE_BUILD_TYPE="${build_type}" \
