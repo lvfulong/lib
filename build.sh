@@ -105,13 +105,42 @@ function build_zlib_android {
 
 		cmake --build . --target install
 		
-		#cp ${CONCH_NDK_PATH}/sources/cxx-stl/llvm-libc++/libs/${android_abi}/libc++_shared.so ../../publish/nativetools/template/android_studio/app/libs/${android_abi}
-		#cp Conch/libconch.so  ../../publish/nativetools/template/android_studio/app/libs/${android_abi}
 	
 		cd ../..
 }
 
+function build_zlib_windows {
+	local build_type=$1
+    local arch=$2
+    #local platform=$3
+    local build_dir="${root_dir}/build/windows-${build_type}-${arch}"
+	mkdir -p "${build_dir}"
+	cd zlib
+	local zlibVersion=zlib-1.2.13
+	rm -rf ${zlibVersion}
+	tar xvzf ${zlibVersion}.tar.gz
+
+	cd ..
+	cd ${build_dir}
+	
+	local generator="Visual Studio 14 2015"
+	if [[ "$2" == "win64" ]]; then
+		generator="Visual Studio 14 2015 Win64"
+	fi
+	#-DPLATFORM_NAME="${platform}"
+	#-DCMAKE_BUILD_TYPE=${build_type} 
+	cmake -G "${generator}" \
+	-DCMAKE_INSTALL_PREFIX=${build_dir} \
+	../../zlib/${zlibVersion}
+	
+	cmake --build . --config ${build_type} --target install
+	#make
+	cd ../..
+}
 check_android_environment
+
+build_zlib_windows Release "win32"
+build_zlib_windows Release "win64"
 
 build_zlib_android release "aarch64"
 build_zlib_android release "arm7"
