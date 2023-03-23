@@ -108,12 +108,12 @@ function build_zlib_android {
 		cd ../..
 }
 
-function build_zlib_windows {
+function build_zlib {
 	local build_type=$1
     local arch=$2
-    #local platform=$3
+    local platform=$3
 	local lib_name=zlib
-	local build_dir_root="${root_dir}/build/windows-${build_type}-${arch}"
+	local build_dir_root="${root_dir}/build/${platform}-${build_type}-${arch}"
     local build_dir="${build_dir_root}/${lib_name}"
 	mkdir -p "${build_dir}"
 	cd ${lib_name}
@@ -123,30 +123,32 @@ function build_zlib_windows {
 
 	cd ..
 	cd ${build_dir}
+	if [[ "$3" == "windows" ]]; then
+		local generator="Visual Studio 14 2015"
+		if [[ "$2" == "win64" ]]; then
+			generator="Visual Studio 14 2015 Win64"
+		fi
+		#-DPLATFORM_NAME="${platform}"
+		#-DCMAKE_BUILD_TYPE=${build_type} 
+		cmake -G "${generator}" \
+			-DCMAKE_INSTALL_PREFIX=${build_dir_root} \
+			../../../${lib_name}/${lib_source_dir}
 	
-	local generator="Visual Studio 14 2015"
-	if [[ "$2" == "win64" ]]; then
-		generator="Visual Studio 14 2015 Win64"
+		cmake --build . --config ${build_type} --target install
 	fi
-	#-DPLATFORM_NAME="${platform}"
-	#-DCMAKE_BUILD_TYPE=${build_type} 
-	cmake -G "${generator}" \
-	-DCMAKE_INSTALL_PREFIX=${build_dir_root} \
-	../../../${lib_name}/${lib_source_dir}
 	
-	cmake --build . --config ${build_type} --target install
 	rm -rf ${root_dir}/${lib_name}/${lib_source_dir}
 	cd ${root_dir}
 }
 
-function build_png_windows {
+function build_png {
 	local build_type=$1
     local arch=$2
-    #local platform=$3
+    local platform=$3
 	#depends zlib
-	build_zlib_windows ${build_type} ${arch}
+	build_zlib ${build_type} ${arch} ${platform}
 	local lib_name=png
-	local build_dir_root="${root_dir}/build/windows-${build_type}-${arch}"
+	local build_dir_root="${root_dir}/build/${platform}-${build_type}-${arch}"
     local build_dir="${build_dir_root}/${lib_name}"
 	mkdir -p "${build_dir}"
 	cd ${lib_name}
@@ -157,22 +159,27 @@ function build_png_windows {
 	cd ..
 	cd ${build_dir}
 	
-	local generator="Visual Studio 14 2015"
-	if [[ "$2" == "win64" ]]; then
-		generator="Visual Studio 14 2015 Win64"
-	fi
+
 	#-DPLATFORM_NAME="${platform}"
 	#-DCMAKE_BUILD_TYPE=${build_type} 
-	cmake -G "${generator}" \
-	-DCMAKE_INSTALL_PREFIX=${build_dir_root} \
-	-DCMAKE_PREFIX_PATH=${build_dir_root} \
-	-DPNG_STATIC=ON \
-	-DPNG_SHARED=OFF \
-	-DPNG_EXECUTABLES=OFF \
-	-DPNG_TESTS=OFF \
-	../../../${lib_name}/${lib_source_dir}
+	if [[ "$3" == "windows" ]]; then	
 	
-	cmake --build . --config ${build_type} --target install
+		local generator="Visual Studio 14 2015"
+		if [[ "$2" == "win64" ]]; then
+			generator="Visual Studio 14 2015 Win64"
+		fi
+		cmake -G "${generator}" \
+			-DCMAKE_INSTALL_PREFIX=${build_dir_root} \
+			-DCMAKE_PREFIX_PATH=${build_dir_root} \
+			-DPNG_STATIC=ON \
+			-DPNG_SHARED=OFF \
+			-DPNG_EXECUTABLES=OFF \
+			-DPNG_TESTS=OFF \
+			../../../${lib_name}/${lib_source_dir}
+	
+		cmake --build . --config ${build_type} --target install
+	fi
+	
 	rm -rf ${root_dir}/${lib_name}/${lib_source_dir}
 	cd ${root_dir}
 }
@@ -180,10 +187,10 @@ function build_png_windows {
 
 
 #check_android_environment
-#build_zlib_windows Release "win32"
-#build_zlib_windows Release "win64"
+#build_zlib Release "win32" windows
+#build_zlib Release "win64" windows
 
-#build_png_windows Release "win32"
+build_png Release "win32" windows
 
 #build_zlib_android release "aarch64"
 #build_zlib_android release "arm7"
