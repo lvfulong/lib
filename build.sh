@@ -480,6 +480,11 @@ function build_zip {
 			-DCMAKE_INSTALL_PREFIX=${build_dir_root} \
 			-DCMAKE_PREFIX_PATH=${build_dir_root} \
 			-DBUILD_SHARED_LIBS=OFF \
+			-DBUILD_TOOLS=OFF \
+			-DBUILD_REGRESS=OFF \
+			-DBUILD_TOOLS=OFF \
+			-DBUILD_EXAMPLES=OFF \
+			-DBUILD_DOC=OFF \
 			../../../${lib_name}/${lib_source_dir}
 		
 		cmake --build . --config ${build_type} --target install
