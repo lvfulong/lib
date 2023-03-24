@@ -2,6 +2,7 @@
 http://www.zlib.net/fossils/zlib-1.2.13.tar.gz
 
 #freetype
+deps png ?
 https://download.savannah.gnu.org/releases/freetype/freetype-2.13.0.tar.gz
 
 #brotli
