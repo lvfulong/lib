@@ -24,6 +24,8 @@ https://github.com/openssl/openssl/releases/download/openssl-3.0.8/openssl-3.0.8
 
 https://curl.se/download/curl-7.88.1.tar.gz
 
+#libjpeg-turbo
+https://github.com/libjpeg-turbo/libjpeg-turbo/archive/refs/tags/2.1.5.1.tar.gz
 
 png android find system zlib why ?
 -- Found ZLIB: /Users/joychina/Desktop/lvfulong/android-ndk-r21e/toolchains/llvm/prebuilt/darwin-x86_64/sysroot/usr/lib/i686-linux-android/libz.a (found version "1.2.7")
