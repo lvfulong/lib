@@ -227,13 +227,13 @@ function build_jpeg {
     local build_dir="${build_dir_root}/${lib_name}"
 	mkdir -p "${build_dir}"
 	cd ${lib_name}
-	local lib_source_dir=jpegsrc.v9e
+	local lib_source_dir=jpeg-9e
 	rm -rf ${lib_source_dir}
-	tar xvzf ${lib_source_dir}.tar.gz
+	tar xvzf jpegsrc.v9e.tar.gz
 
-	cd ..
-	cd ${build_dir}
-	
+	#cd ..
+	#cd ${build_dir}
+	cd ${lib_source_dir}
 
 	#-DPLATFORM_NAME="${platform}"
 	#-DCMAKE_BUILD_TYPE=${build_type} 
@@ -244,17 +244,38 @@ function build_jpeg {
 	fi
 	
 	if [[ "$3" == "iphoneos" ]] || [[ "$3" == "iphonesimulator" ]]; then
-		local TOOLSET=
-		if [[ "$2" == "arm64" ]]; then
-			TOOLSET=arm-apple-darwin
-		fi	
+		XCODE_TOOLCHAIN=$(xcode-select --print-path)/Toolchains/XcodeDefault.xctoolchain
+		IOS_PLATFORM=$3
 
-		if [[ "$2" == "x86_64" ]]; then
-			TOOLSET=x86_64-apple-darwin
-		fi			
-		./configure --host=$TOOLSET \
-			--target=$TOOLSET \
-			--prefix=${build_dir_root} \
+		IOS_SDK=$(xcrun -sdk ${IOS_PLATFORM} -show-sdk-path)
+
+		#export PATH := ${CURDIR}/build/macOS/x86_64/bin:${PATH}
+
+		export PREFIX=${build_dir_root}
+
+		export CXX="${XCODE_TOOLCHAIN}/usr/bin/clang++"
+		export CC="${XCODE_TOOLCHAIN}/usr/bin/clang"
+		export CFLAGS="-arch ${arch} -isysroot ${IOS_SDK} -miphoneos-version-min=8.0 -O3 -DNDEBUG -I${PREFIX}/include"
+		export CPPFLAGS="-arch ${arch} -isysroot ${IOS_SDK} -miphoneos-version-min=8.0 -O3 -DNDEBUG -I${PREFIX}/include"
+		export CXXFLAGS="-arch ${arch} -isysroot ${IOS_SDK} -miphoneos-version-min=8.0 -O3 -DNDEBUG -I${PREFIX}/include"
+		export LDFLAGS="-arch ${arch} -isysroot ${IOS_SDK} -miphoneos-version-min=8.0 -O3 -DNDEBUG -L${PREFIX}/lib -L${IOS_SDK}/usr/lib"
+		HOST=arm-apple-darwin
+
+
+		#local TOOLSET=
+		#local BUILD=
+		#if [[ "$2" == "arm64" ]]; then
+		#	TOOLSET=arm-apple-darwin
+		#	BUILD=x86_64-apple-darwwin14
+		#fi	
+
+		#if [[ "$2" == "x86_64" ]]; then
+		#	TOOLSET=x86_64-apple-darwin
+		#	BUILD=x86_64-apple-darwwin14
+		#fi	
+
+		./configure --host=${HOST} \
+			--prefix=${PREFIX} \
 			--disable-shared \
 			--enable-static
 		
@@ -300,8 +321,8 @@ function archive_ios {
 	local build_dir1="${root_dir}/build/${platform1}-${build_type}-${arch1}"
 	lipo -create  "${build_dir0}/lib/libz.a"  "${build_dir1}/lib/libz.a"  -output "${root_dir}/build/ios-fat/libz.a"
 	lipo -create  "${build_dir0}/lib/libpng16.a"  "${build_dir1}/lib/libpng16.a"  -output "${root_dir}/build/ios-fat/libpng.a"
+	lipo -create  "${build_dir0}/lib/libjpeg.a"  "${build_dir1}/lib/libjpeg.a"  -output "${root_dir}/build/ios-fat/libjpeg.a"
 }
-
 #check_android_environment
 
 #build_png Release "win32" windows
