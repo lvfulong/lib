@@ -329,8 +329,7 @@ function build_jpeg_turbo {
 
 	#-DPLATFORM_NAME="${platform}"
 	#-DCMAKE_BUILD_TYPE=${build_type} 
-	if [[ "$3" == "windows" ]]; then	
-	
+	if [[ "$3" == "windows" ]]; then
 		local generator="Visual Studio 14 2015"
 		if [[ "$2" == "win64" ]]; then
 			generator="Visual Studio 14 2015 Win64"
@@ -346,6 +345,27 @@ function build_jpeg_turbo {
 	fi
 	
 	if [[ "$3" == "iphoneos" ]] || [[ "$3" == "iphonesimulator" ]]; then
+
+		# libjpeg-turbo-2.1.5.1\BUILDING.md
+		#-DCMAKE_SYSTEM_PROCESSOR=${arch} \
+
+		XCODE_TOOLCHAIN=$(xcode-select --print-path)/Toolchains/XcodeDefault.xctoolchain
+		IOS_PLATFORM=$3
+
+		IOS_SDK=$(xcrun -sdk ${IOS_PLATFORM} -show-sdk-path)
+
+
+		IOS_PLATFORMDIR=
+		IOS_SYSROOT=
+		if [[ "$3" == "iphoneos" ]]; then
+			IOS_PLATFORMDIR=/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform
+    		IOS_SYSROOT=($IOS_PLATFORMDIR/Developer/SDKs/iPhoneOS*.sdk)
+		fi
+		if [[ "$3" == "iphonesimulator" ]]; then
+			IOS_PLATFORMDIR=/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform
+    		IOS_SYSROOT=($IOS_PLATFORMDIR/Developer/SDKs/iPhoneSimulator*.sdk)
+		fi
+    	export CFLAGS="-Wall -arch ${arch} -miphoneos-version-min=8.0 -funwind-tables"
 		cmake \
 			-G "Unix Makefiles" \
 			-DCMAKE_BUILD_TYPE="${build_type}" \
@@ -358,6 +378,8 @@ function build_jpeg_turbo {
 			-DCMAKE_PREFIX_PATH=${build_dir_root} \
 			-DENABLE_STATIC=ON \
 			-DENABLE_SHARED=OFF \
+			-DCMAKE_OSX_SYSROOT=${IOS_SDK} \
+			-DCMAKE_SYSTEM_PROCESSOR=${arch} \
 			../../../${lib_name}/${lib_source_dir}
 		
 		cmake --build . --config ${build_type} --target install
@@ -405,7 +427,7 @@ function build_jpeg_turbo {
 		cmake --build . --config ${build_type} --target install
 	fi
 	
-	rm -rf ${root_dir}/${lib_name}/${lib_source_dir}
+	#rm -rf ${root_dir}/${lib_name}/${lib_source_dir}
 	cd ${root_dir}
 }
 
@@ -422,6 +444,7 @@ function archive_ios {
 	lipo -create  "${build_dir0}/lib/libz.a"  "${build_dir1}/lib/libz.a"  -output "${root_dir}/build/ios-fat/libz.a"
 	lipo -create  "${build_dir0}/lib/libpng16.a"  "${build_dir1}/lib/libpng16.a"  -output "${root_dir}/build/ios-fat/libpng.a"
 	lipo -create  "${build_dir0}/lib/libjpeg.a"  "${build_dir1}/lib/libjpeg.a"  -output "${root_dir}/build/ios-fat/libjpeg.a"
+    lipo -create  "${build_dir0}/lib/libturbojpeg.a"  "${build_dir1}/lib/libturbojpeg.a"  -output "${root_dir}/build/ios-fat/libturbojpeg.a"
 }
 #check_android_environment
 
