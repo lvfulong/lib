@@ -25,6 +25,9 @@ https://github.com/openssl/openssl/releases/download/openssl-3.0.8/openssl-3.0.8
 
 https://curl.se/download/curl-7.88.1.tar.gz
 
+
+http://www.mpg123.de/download/mpg123-1.31.3.tar.bz2
+
 #libjpeg-turbo
 https://github.com/libjpeg-turbo/libjpeg-turbo/archive/refs/tags/2.1.5.1.tar.gz
 
