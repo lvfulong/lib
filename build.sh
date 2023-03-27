@@ -643,7 +643,7 @@ function build_freetype {
 	#rm -rf ${root_dir}/${lib_name}/${lib_source_dir}
 	cd ${root_dir}
 }
-
+#todo
 function build_mgp123 {
 	local build_type=$1
     local arch=$2
