@@ -646,15 +646,15 @@ function build_freetype {
 	cd ${root_dir}
 }
 #todo
-function build_mgp123 {
-}
+#function build_mgp123 {
+#}
 function build_openssl {
 	local build_type=$1
     local arch=$2
     local platform=$3
 	#depends zlib
 	build_zlib ${build_type} ${arch} ${platform}
-	local lib_name=png
+	local lib_name=openssl
 	local build_dir_root="${root_dir}/build/${platform}-${build_type}-${arch}"
     local build_dir="${build_dir_root}/${lib_name}"
 	mkdir -p "${build_dir}"
@@ -663,9 +663,9 @@ function build_openssl {
 	rm -rf ${lib_source_dir}
 	tar xvzf ${lib_source_dir}.tar.gz
 
-	cd ..
-	cd ${build_dir}
-	
+	#cd ..
+	#cd ${build_dir}
+	cd ${lib_source_dir}
 
 	#-DPLATFORM_NAME="${platform}"
 	#-DCMAKE_BUILD_TYPE=${build_type} 
@@ -679,7 +679,7 @@ function build_openssl {
 	fi
 	
 	if [[ "$3" == "iphoneos" ]] || [[ "$3" == "iphonesimulator" ]]; then
-		#TODO
+		TODO
 	fi
 	
 	if [[ "$3" == "android" ]]; then
@@ -698,10 +698,12 @@ function build_openssl {
 	
 		if [[ "$2" == "x86_64" ]]; then
 			android_abi=x86_64
-			export ANDROID_SYSROOT=${ANDROID_NDK}/toolchains/llvm/prebuilt/darwin-x86_64/sysroot
+			export ANDROID_SYSROOT=${CONCH_NDK_PATH}/toolchains/llvm/prebuilt/darwin-x86_64/sysroot
 			export NDK_SYSROOT=${ANDROID_SYSROOT}
+            export ANDROID_NDK_ROOT=${CONCH_NDK_PATH}
 			export ANDROID_NDK_SYSROOT=${ANDROID_SYSROOT}
-			./Configure android-x86_64 -m64 -D__ANDROID_API__=21 --prefix=${PREFIX}  no-shared no-unit-test
+            PATH="${CONCH_NDK_PATH}/toolchains/llvm/prebuilt/darwin-x86_64/bin:${CONCH_NDK_PATH}/toolchains/x86_64-4.9/prebuilt/darwin-x86_64/bin:${PATH}"
+			./Configure android-x86_64 -m64 -D__ANDROID_API__=21 --prefix=${build_dir_root}  no-shared no-unit-test
 		fi
 		/Applications/Xcode.app/Contents/Developer/usr/bin/make install_sw
 	fi
@@ -717,7 +719,7 @@ function build_websocket {
 	#depends zlib
 	build_zlib ${build_type} ${arch} ${platform}
 	build_openssl ${build_type} ${arch} ${platform}
-	local lib_name=png
+	local lib_name=websocket
 	local build_dir_root="${root_dir}/build/${platform}-${build_type}-${arch}"
     local build_dir="${build_dir_root}/${lib_name}"
 	mkdir -p "${build_dir}"
@@ -815,14 +817,14 @@ function build_websocket {
 			-DANDROID_TOOLCHAIN=clang \
 			-DCMAKE_INSTALL_PREFIX=${build_dir_root} \
 			-DCMAKE_PREFIX_PATH=${build_dir_root} \
+            -DCMAKE_FIND_ROOT_PATH=${build_dir_root} \
 			-DLWS_WITH_SSL=1 \
 			-DLWS_WITHOUT_SERVER=0 \
 			-DLWS_WITH_SHARED=0 \
 			-DLWS_WITHOUT_TEST_SERVER=1 \
 			-DLWS_WITHOUT_TEST_SERVER_EXTPOLL=1 \
 			-DLWS_WITHOUT_TEST_PING=1 \
-			-DLWS_WITHOUT_TEST_ECHO=1 \ 
-			-DLWS_WITHOUT_TEST_FRAGGLE=1 \
+			-DLWS_WITHOUT_TEST_ECHO=1 \
 			-DLWS_IPV6=1 \
 			../../../${lib_name}/${lib_source_dir}
 
