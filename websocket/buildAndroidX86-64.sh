@@ -4,43 +4,44 @@ PATH="${current_dir}/..:${PATH}"
 
 mkdir Contrib
 cd Contrib
-export ANDROID_NDK=/Users/layabox_mac/Public/lib/android-ndk-r10e
-PATH="${ANDROID_NDK}/toolchains/x86_64-4.9/prebuilt/darwin-x86_64/bin:${PATH}"
+
+export ANDROID_NDK=/Users/joychina/Desktop/lvfulong/android-ndk-r21e
+export ANDROID_NDK_ROOT=/Users/joychina/Desktop/lvfulong/android-ndk-r21e
+PATH="${ANDROID_NDK}/toolchains/llvm/prebuilt/darwin-x86_64/bin:${ANDROID_NDK}/toolchains/x86_64-4.9/prebuilt/darwin-x86_64/bin:${PATH}"
 ##############################################################################################
 rm -rf android-x86_64
 mkdir android-x86_64
 cd android-x86_64
 
 PREFIX="${top_dir}/contrib/install-android/x86_64"
-SDKROOT="${ANDROID_NDK}/platforms/android-21/arch-x86_64"
+SDKROOT="${ANDROID_NDK}/toolchains/llvm/prebuilt/darwin-x86_64/sysroot"
 
-tar xvzf ../../openssl-OpenSSL_1_1_0f.tar.gz
-mv openssl-OpenSSL_1_1_0f openssl && touch openssl
+tar xvzf ../../openssl-3.1.0.tar.gz
+mv openssl-3.1.0 openssl && touch openssl
 
 cd openssl
 
-export ANDROID_SYSROOT=${ANDROID_NDK}/platforms/android-21/arch-x86_64
-export SYSROOT=${ANDROID_SYSROOT}
+export ANDROID_SYSROOT=${ANDROID_NDK}/toolchains/llvm/prebuilt/darwin-x86_64/sysroot
+#export SYSROOT=${ANDROID_SYSROOT}
 export NDK_SYSROOT=${ANDROID_SYSROOT}
 export ANDROID_NDK_SYSROOT=${ANDROID_SYSROOT}
-export CROSS_SYSROOT=${ANDROID_SYSROOT}
+#export CROSS_SYSROOT=${ANDROID_SYSROOT}
 
 
-export CC="x86_64-linux-android-gcc --sysroot=${SDKROOT}"
-export CXX="x86_64-linux-android-g++ --sysroot=${SDKROOT}"
-export LD="x86_64-linux-android-ld"
-export AR="x86_64-linux-android-ar"
-export CCAS="x86_64-linux-android-gcc --sysroot=${SDKROOT} -c"
-export RANLIB="x86_64-linux-android-ranlib"
-export STRIP="x86_64-linux-android-strip"
-export PATH="${PREFIX}/bin:${PATH}"
-export CPPFLAGS=" -ffunction-sections -funwind-tables -fstack-protector -no-canonical-prefixes  -fomit-frame-pointer -fstrict-aliasing -DANDROID  -Wa,--noexecstack -Wformat  -I${PREFIX}/include -O1 -DNDEBUG -fPIC"
-export CFLAGS=" -ffunction-sections -funwind-tables -fstack-protector -no-canonical-prefixes  -fomit-frame-pointer -fstrict-aliasing -DANDROID  -Wa,--noexecstack -Wformat  -I${PREFIX}/include -O1 -DNDEBUG -fPIC"
-export CXXFLAGS=" -ffunction-sections -funwind-tables -fstack-protector -no-canonical-prefixes  -fomit-frame-pointer -fstrict-aliasing -DANDROID  -Wa,--noexecstack -Wformat  -I${PREFIX}/include -O1 -DNDEBUG -fPIC"
-export LDFLAGS=" -L${PREFIX}/lib"
-./Configure android-x86_64 --prefix=${PREFIX}  no-shared no-unit-test
-
-
+#export CC="x86_64-linux-android-gcc --sysroot=${SDKROOT}"
+#export CXX="x86_64-linux-android-g++ --sysroot=${SDKROOT}"
+#export LD="x86_64-linux-android-ld"
+#export AR="x86_64-linux-android-ar"
+#export CCAS="x86_64-linux-android-gcc --sysroot=${SDKROOT} -c"
+##export RANLIB="x86_64-linux-android-ranlib"
+#export STRIP="x86_64-linux-android-strip"
+#export PATH="${PREFIX}/bin:${PATH}"
+#export CPPFLAGS=" -ffunction-sections -funwind-tables -fstack-protector -no-canonical-prefixes  -fomit-frame-pointer -fstrict-aliasing -DANDROID  -Wa,--noexecstack -Wformat  -I${PREFIX}/include -O1 -DNDEBUG -fPIC"
+#export CFLAGS=" -ffunction-sections -funwind-tables -fstack-protector -no-canonical-prefixes  -fomit-frame-pointer -fstrict-aliasing -DANDROID  -Wa,--noexecstack -Wformat  -I${PREFIX}/include -O1 -DNDEBUG -fPIC"
+#export CXXFLAGS=" -ffunction-sections -funwind-tables -fstack-protector -no-canonical-prefixes  -fomit-frame-pointer -fstrict-aliasing -DANDROID  -Wa,--noexecstack -Wformat  -I${PREFIX}/include -O1 -DNDEBUG -fPIC"
+#export LDFLAGS=" -L${PREFIX}/lib"
+./Configure android-x86_64 -m64 -D__ANDROID_API__=21 --prefix=${PREFIX}  no-shared no-unit-test
+#/Applications/Xcode.app/Contents/Developer/usr/bin/make
 /Applications/Xcode.app/Contents/Developer/usr/bin/make install_sw
 cd ..
 
