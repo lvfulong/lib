@@ -587,10 +587,11 @@ function build_freetype {
 			-DCMAKE_SYSTEM_NAME=iOS \
 			-DCMAKE_INSTALL_PREFIX=${build_dir_root} \
 			-DCMAKE_PREFIX_PATH=${build_dir_root} \
-			-DPNG_STATIC=ON \
-			-DPNG_SHARED=OFF \
-			-DPNG_EXECUTABLES=OFF \
-			-DPNG_TESTS=OFF \
+            -DFT_REQUIRE_ZLIB=TRUE \
+            -DFT_REQUIRE_BZIP2=FALSE \
+            -DFT_REQUIRE_PNG=TRUE \
+            -DFT_REQUIRE_HARFBUZZ=FALSE \
+            -DFT_REQUIRE_BROTLI=FALSE \
 			../../../${lib_name}/${lib_source_dir}
 		
 		cmake --build . --config ${build_type} --target install
@@ -631,111 +632,22 @@ function build_freetype {
 			-DANDROID_TOOLCHAIN=clang \
 			-DCMAKE_INSTALL_PREFIX=${build_dir_root} \
 			-DCMAKE_PREFIX_PATH=${build_dir_root} \
-			-DPNG_STATIC=ON \
-			-DPNG_SHARED=OFF \
-			-DPNG_EXECUTABLES=OFF \
-			-DPNG_TESTS=OFF \
+            -DFT_REQUIRE_ZLIB=FALSE \
+            -DFT_REQUIRE_BZIP2=FALSE \
+            -DFT_REQUIRE_PNG=FALSE \
+            -DFT_REQUIRE_HARFBUZZ=FALSE \
+            -DFT_REQUIRE_BROTLI=FALSE \
 			../../../${lib_name}/${lib_source_dir}
 
 		cmake --build . --config ${build_type} --target install
 	fi
 	
-	#rm -rf ${root_dir}/${lib_name}/${lib_source_dir}
+	rm -rf ${root_dir}/${lib_name}/${lib_source_dir}
 	cd ${root_dir}
 }
 #todo
 function build_mgp123 {
-	local build_type=$1
-    local arch=$2
-    local platform=$3
-
-	local lib_name=jpeg
-	local build_dir_root="${root_dir}/build/${platform}-${build_type}-${arch}"
-    local build_dir="${build_dir_root}/${lib_name}"
-	mkdir -p "${build_dir}"
-	cd ${lib_name}
-	local lib_source_dir=mpg123-1.26.2
-	rm -rf ${lib_source_dir}
-	tar xvzf mpg123-1.26.2.tar.bz2
-
-	#cd ..
-	#cd ${build_dir}
-	cd ${lib_source_dir}
-
-	#-DPLATFORM_NAME="${platform}"
-	#-DCMAKE_BUILD_TYPE=${build_type} 
-	if [[ "$3" == "windows" ]]; then	
-
-		make
-		make install
-	fi
-	
-	if [[ "$3" == "iphoneos" ]] || [[ "$3" == "iphonesimulator" ]]; then
-		XCODE_TOOLCHAIN=$(xcode-select --print-path)/Toolchains/XcodeDefault.xctoolchain
-		IOS_PLATFORM=$3
-
-		IOS_SDK=$(xcrun -sdk ${IOS_PLATFORM} -show-sdk-path)
-
-		#export PATH := ${CURDIR}/build/macOS/x86_64/bin:${PATH}
-
-		export PREFIX=${build_dir_root}
-
-		export CXX="${XCODE_TOOLCHAIN}/usr/bin/clang++"
-		export CC="${XCODE_TOOLCHAIN}/usr/bin/clang"
-		export CFLAGS="-arch ${arch} -isysroot ${IOS_SDK} -miphoneos-version-min=8.0 -O3 -DNDEBUG -I${PREFIX}/include"
-		export CPPFLAGS="-arch ${arch} -isysroot ${IOS_SDK} -miphoneos-version-min=8.0 -O3 -DNDEBUG -I${PREFIX}/include"
-		export CXXFLAGS="-arch ${arch} -isysroot ${IOS_SDK} -miphoneos-version-min=8.0 -O3 -DNDEBUG -I${PREFIX}/include"
-		export LDFLAGS="-arch ${arch} -isysroot ${IOS_SDK} -miphoneos-version-min=8.0 -O3 -DNDEBUG -L${PREFIX}/lib -L${IOS_SDK}/usr/lib"
-		HOST=arm-apple-darwin
-
-
-		#local TOOLSET=
-		#local BUILD=
-		#if [[ "$2" == "arm64" ]]; then
-		#	TOOLSET=arm-apple-darwin
-		#	BUILD=x86_64-apple-darwwin14
-		#fi	
-
-		#if [[ "$2" == "x86_64" ]]; then
-		#	TOOLSET=x86_64-apple-darwin
-		#	BUILD=x86_64-apple-darwwin14
-		#fi	
-
-		./configure --host=${HOST} \
-			--prefix=${PREFIX} \
-			--disable-shared \
-			--enable-static
-		
-		make
-		make install
-	fi
-	
-	if [[ "$3" == "android" ]]; then
-		local android_abi=
-		if [[ "$2" == "aarch64" ]]; then
-			android_abi=arm64-v8a
-		fi
-	
-		if [[ "$2" == "arm7" ]]; then
-			android_abi=armeabi-v7a
-		fi
-	
-		if [[ "$2" == "x86" ]]; then
-			android_abi=x86
-		fi
-	
-		if [[ "$2" == "x86_64" ]]; then
-			android_abi=x86_64
-		fi
-
-		make
-		make install
-	fi
-	
-	rm -rf ${root_dir}/${lib_name}/${lib_source_dir}
-	cd ${root_dir}
 }
-
 function archive_ios {
 
 	local build_type=$1
@@ -750,6 +662,7 @@ function archive_ios {
 	lipo -create  "${build_dir0}/lib/libpng16.a"  "${build_dir1}/lib/libpng16.a"  -output "${root_dir}/build/ios-fat/libpng.a"
 	lipo -create  "${build_dir0}/lib/libjpeg.a"  "${build_dir1}/lib/libjpeg.a"  -output "${root_dir}/build/ios-fat/libjpeg.a"
     lipo -create  "${build_dir0}/lib/libturbojpeg.a"  "${build_dir1}/lib/libturbojpeg.a"  -output "${root_dir}/build/ios-fat/libturbojpeg.a"
+    lipo -create  "${build_dir0}/lib/libfreetype.a"  "${build_dir1}/lib/libfreetype.a"  -output "${root_dir}/build/ios-fat/libfreetype.a"
 }
 #check_android_environment
 
