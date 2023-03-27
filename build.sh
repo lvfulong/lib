@@ -648,6 +648,190 @@ function build_freetype {
 #todo
 function build_mgp123 {
 }
+function build_openssl {
+	local build_type=$1
+    local arch=$2
+    local platform=$3
+	#depends zlib
+	build_zlib ${build_type} ${arch} ${platform}
+	local lib_name=png
+	local build_dir_root="${root_dir}/build/${platform}-${build_type}-${arch}"
+    local build_dir="${build_dir_root}/${lib_name}"
+	mkdir -p "${build_dir}"
+	cd ${lib_name}
+	local lib_source_dir=openssl-3.1.0
+	rm -rf ${lib_source_dir}
+	tar xvzf ${lib_source_dir}.tar.gz
+
+	cd ..
+	cd ${build_dir}
+	
+
+	#-DPLATFORM_NAME="${platform}"
+	#-DCMAKE_BUILD_TYPE=${build_type} 
+	if [[ "$3" == "windows" ]]; then	
+	
+		local generator="Visual Studio 14 2015"
+		if [[ "$2" == "win64" ]]; then
+			generator="Visual Studio 14 2015 Win64"
+		fi
+		#TODO
+	fi
+	
+	if [[ "$3" == "iphoneos" ]] || [[ "$3" == "iphonesimulator" ]]; then
+		#TODO
+	fi
+	
+	if [[ "$3" == "android" ]]; then
+		local android_abi=
+		if [[ "$2" == "aarch64" ]]; then
+			android_abi=arm64-v8a
+		fi
+	
+		if [[ "$2" == "arm7" ]]; then
+			android_abi=armeabi-v7a
+		fi
+	
+		if [[ "$2" == "x86" ]]; then
+			android_abi=x86
+		fi
+	
+		if [[ "$2" == "x86_64" ]]; then
+			android_abi=x86_64
+			export ANDROID_SYSROOT=${ANDROID_NDK}/toolchains/llvm/prebuilt/darwin-x86_64/sysroot
+			export NDK_SYSROOT=${ANDROID_SYSROOT}
+			export ANDROID_NDK_SYSROOT=${ANDROID_SYSROOT}
+			./Configure android-x86_64 -m64 -D__ANDROID_API__=21 --prefix=${PREFIX}  no-shared no-unit-test
+		fi
+		/Applications/Xcode.app/Contents/Developer/usr/bin/make install_sw
+	fi
+	
+	rm -rf ${root_dir}/${lib_name}/${lib_source_dir}
+	cd ${root_dir}
+}
+
+function build_websocket {
+	local build_type=$1
+    local arch=$2
+    local platform=$3
+	#depends zlib
+	build_zlib ${build_type} ${arch} ${platform}
+	build_openssl ${build_type} ${arch} ${platform}
+	local lib_name=png
+	local build_dir_root="${root_dir}/build/${platform}-${build_type}-${arch}"
+    local build_dir="${build_dir_root}/${lib_name}"
+	mkdir -p "${build_dir}"
+	cd ${lib_name}
+	local lib_source_dir=libwebsockets-2.3.0
+	rm -rf ${lib_source_dir}
+	tar xvzf ${lib_source_dir}.zip
+
+	cd ..
+	cd ${build_dir}
+	
+
+	#-DPLATFORM_NAME="${platform}"
+	#-DCMAKE_BUILD_TYPE=${build_type} 
+	if [[ "$3" == "windows" ]]; then	
+	
+		local generator="Visual Studio 14 2015"
+		if [[ "$2" == "win64" ]]; then
+			generator="Visual Studio 14 2015 Win64"
+		fi
+		cmake -G "${generator}" \
+			-DCMAKE_INSTALL_PREFIX=${build_dir_root} \
+			-DCMAKE_PREFIX_PATH=${build_dir_root} \
+			-DLWS_WITH_SSL=1 \
+			-DLWS_WITHOUT_SERVER=0 \
+			-DLWS_WITH_SHARED=0 \
+			-DLWS_WITHOUT_TEST_SERVER=1 \
+			-DLWS_WITHOUT_TEST_SERVER_EXTPOLL=1 \
+			-DLWS_WITHOUT_TEST_PING=1 \
+			-DLWS_WITHOUT_TEST_ECHO=1 \ 
+			-DLWS_WITHOUT_TEST_FRAGGLE=1 \
+			-DLWS_IPV6=1 \
+			../../../${lib_name}/${lib_source_dir}
+	
+		cmake --build . --config ${build_type} --target install
+	fi
+	
+	if [[ "$3" == "iphoneos" ]] || [[ "$3" == "iphonesimulator" ]]; then
+		cmake \
+			-G "Unix Makefiles" \
+			-DCMAKE_BUILD_TYPE="${build_type}" \
+			-DIOS_ARCH="${arch}" \
+			-DPLATFORM_NAME="${platform}" \
+			-DCMAKE_INSTALL_PREFIX=${build_dir} \
+			-DCMAKE_TOOLCHAIN_FILE=../../../CMake/clang/iOS.cmake \
+			-DCMAKE_SYSTEM_NAME=iOS \
+			-DCMAKE_INSTALL_PREFIX=${build_dir_root} \
+			-DCMAKE_PREFIX_PATH=${build_dir_root} \
+			-DLWS_WITH_SSL=1 \
+			-DLWS_WITHOUT_SERVER=0 \
+			-DLWS_WITH_SHARED=0 \
+			-DLWS_WITHOUT_TEST_SERVER=1 \
+			-DLWS_WITHOUT_TEST_SERVER_EXTPOLL=1 \
+			-DLWS_WITHOUT_TEST_PING=1 \
+			-DLWS_WITHOUT_TEST_ECHO=1 \ 
+			-DLWS_WITHOUT_TEST_FRAGGLE=1 \
+			-DLWS_IPV6=1 \
+			../../../${lib_name}/${lib_source_dir}
+		
+		cmake --build . --config ${build_type} --target install
+	fi
+	
+	if [[ "$3" == "android" ]]; then
+		local android_abi=
+		if [[ "$2" == "aarch64" ]]; then
+			android_abi=arm64-v8a
+		fi
+	
+		if [[ "$2" == "arm7" ]]; then
+			android_abi=armeabi-v7a
+		fi
+	
+		if [[ "$2" == "x86" ]]; then
+			android_abi=x86
+		fi
+	
+		if [[ "$2" == "x86_64" ]]; then
+			android_abi=x86_64
+		fi
+		#-DCMAKE_ARCHIVE_OUTPUT_DIRECTORY=../android-${build_type}/Conch why not work?
+		cmake -G "Unix Makefiles" \
+			-DCMAKE_INSTALL_PREFIX=${build_dir} \
+			-DCMAKE_BUILD_TYPE=${build_type} \
+			-DCMAKE_TOOLCHAIN_FILE=${CONCH_NDK_PATH}/build/cmake/android.toolchain.cmake \
+			-DANDROID_ABI=${android_abi} \
+			-DANDROID_NDK=${CONCH_NDK_PATH} \
+			-DCMAKE_ANDROID_ARCH_ABI=${android_abi} \
+			-DCMAKE_ANDROID_NDK=${CONCH_NDK_PATH} \
+			-DCMAKE_EXPORT_COMPILE_COMMANDS=ON \
+			-DCMAKE_SYSTEM_NAME=Android \
+			-DCMAKE_SYSTEM_VERSION=19 \
+			-DANDROID_STL=c++_shared \
+			-DANDROID_PLATFORM=${CONCH_ANDROID_MINI_SDK_VERSION} \
+			-DANDROID_ARM_NEON=TRUE \
+			-DANDROID_TOOLCHAIN=clang \
+			-DCMAKE_INSTALL_PREFIX=${build_dir_root} \
+			-DCMAKE_PREFIX_PATH=${build_dir_root} \
+			-DLWS_WITH_SSL=1 \
+			-DLWS_WITHOUT_SERVER=0 \
+			-DLWS_WITH_SHARED=0 \
+			-DLWS_WITHOUT_TEST_SERVER=1 \
+			-DLWS_WITHOUT_TEST_SERVER_EXTPOLL=1 \
+			-DLWS_WITHOUT_TEST_PING=1 \
+			-DLWS_WITHOUT_TEST_ECHO=1 \ 
+			-DLWS_WITHOUT_TEST_FRAGGLE=1 \
+			-DLWS_IPV6=1 \
+			../../../${lib_name}/${lib_source_dir}
+
+		cmake --build . --config ${build_type} --target install
+	fi
+	
+	rm -rf ${root_dir}/${lib_name}/${lib_source_dir}
+	cd ${root_dir}
+}
 function archive_ios {
 
 	local build_type=$1
@@ -731,6 +915,9 @@ function archive_ios {
 #build_zlib release "arm7" android
 #build_zlib release "x86_64" android
 #build_zlib release "x86" android
+
+
+#build_websocket release "x86_64" android
 
 
 
