@@ -16,8 +16,8 @@ cd android-arm64
 PREFIX="${top_dir}/contrib/install-android/arm64"
 SDKROOT="${ANDROID_NDK}/platforms/android-21/arch-arm64"
 
-tar xvzf ../../mpg123-1.26.2.tar.bz2
-mv mpg123-1.26.2 mpg123 && touch mpg123
+tar xvzf ../../mpg123-1.31.3.tar.bz2
+mv mpg123-1.31.3 mpg123 && touch mpg123
 cd mpg123
 
 

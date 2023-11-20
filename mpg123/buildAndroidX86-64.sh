@@ -15,8 +15,8 @@ cd android-x86_64
 PREFIX="${top_dir}/contrib/install-android/x86_64"
 SDKROOT="${ANDROID_NDK}/platforms/android-21/arch-x86_64"
 
-tar xvzf ../../mpg123-1.26.2.tar.bz2
-mv mpg123-1.26.2 mpg123 && touch mpg123
+tar xvzf ../../mpg123-1.31.3.tar.bz2
+mv mpg123-1.31.3 mpg123 && touch mpg123
 cd mpg123
 
 export CC="x86_64-linux-android-gcc --sysroot=${SDKROOT}"

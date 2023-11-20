@@ -20,8 +20,8 @@ IOS_PLATFORM=OS
 SDKROOT=`xcode-select -print-path`/Platforms/iPhone${IOS_PLATFORM}.platform/Developer/SDKs/iPhone${IOS_PLATFORM}${SDK_VERSION}.sdk
 
 
-tar xvzf ../../mpg123-1.26.2.tar.bz2
-mv mpg123-1.26.2 mpg123 && touch mpg123
+tar xvzf ../../mpg123-1.31.3.tar.bz2
+mv mpg123-1.31.3 mpg123 && touch mpg123
 
 cd mpg123
 export  CC="xcrun clang"
@@ -51,8 +51,8 @@ IOS_PLATFORM=OS
 SDKROOT=`xcode-select -print-path`/Platforms/iPhone${IOS_PLATFORM}.platform/Developer/SDKs/iPhone${IOS_PLATFORM}${SDK_VERSION}.sdk
 
 
-tar xvzf ../../mpg123-1.26.2.tar.bz2
-mv mpg123-1.26.2 mpg123 && touch mpg123
+tar xvzf ../../mpg123-1.31.3.tar.bz2
+mv mpg123-1.31.3 mpg123 && touch mpg123
 
 cd mpg123
 export  CC="xcrun clang" 
@@ -81,8 +81,8 @@ PREFIX="${top_dir}/contrib/install-ios/i386"
 IOS_PLATFORM=Simulator
 SDKROOT=`xcode-select -print-path`/Platforms/iPhone${IOS_PLATFORM}.platform/Developer/SDKs/iPhone${IOS_PLATFORM}${SDK_VERSION}.sdk
 
-tar xvzf ../../mpg123-1.26.2.tar.bz2
-mv mpg123-1.26.2 mpg123 && touch mpg123
+tar xvzf ../../mpg123-1.31.3.tar.bz2
+mv mpg123-1.31.3 mpg123 && touch mpg123
 
 cd mpg123
 export  CC="xcrun clang" 
@@ -110,8 +110,8 @@ PREFIX="${top_dir}/contrib/install-ios/x86_64"
 IOS_PLATFORM=Simulator
 SDKROOT=`xcode-select -print-path`/Platforms/iPhone${IOS_PLATFORM}.platform/Developer/SDKs/iPhone${IOS_PLATFORM}${SDK_VERSION}.sdk
 
-tar xvzf ../../mpg123-1.26.2.tar.bz2
-mv mpg123-1.26.2 mpg123 && touch mpg123
+tar xvzf ../../mpg123-1.31.3.tar.bz2
+mv mpg123-1.31.3 mpg123 && touch mpg123
 
 cd mpg123
 export CC="xcrun clang"
