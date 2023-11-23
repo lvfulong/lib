@@ -834,6 +834,48 @@ function build_websocket {
 	rm -rf ${root_dir}/${lib_name}/${lib_source_dir}
 	cd ${root_dir}
 }
+function build_curl {
+	local build_type=$1
+    local arch=$2
+    local platform=$3
+	#depends zlib
+	#TODO build_zlib ${build_type} ${arch} ${platform}
+	#TODO build_openssl ${build_type} ${arch} ${platform}
+	local lib_name=curl
+	local build_dir_root="${root_dir}/build/${platform}-${build_type}-${arch}"
+    local build_dir="${build_dir_root}/${lib_name}"
+	mkdir -p "${build_dir}"
+	cd ${lib_name}
+	local lib_source_dir=curl-7.56.0
+	rm -rf ${lib_source_dir}
+	tar xvzf ${lib_source_dir}.tar.gz
+
+	cd ..
+	cd ${build_dir}
+	
+
+	#-DPLATFORM_NAME="${platform}"
+	#-DCMAKE_BUILD_TYPE=${build_type} 
+	if [[ "$3" == "windows" ]]; then	
+	
+		cmake . -G "Visual Studio 17 2022" \
+			-A${arch} \
+			-DCMAKE_INSTALL_PREFIX=${build_dir_root} \
+			-DCMAKE_PREFIX_PATH=${build_dir_root} \
+		  	-DCURL_ZLIB=OFF \
+		   	-DCMAKE_USE_OPENSSL=OFF \
+		   	-DENABLE_IPV6=ON \
+		   	-DCURL_STATICLIB=ON \
+		   	-DBUILD_CURL_EXE=OFF \
+		    -DBUILD_TESTING=OFF \
+			../../../${lib_name}/${lib_source_dir}
+
+		cmake --build . --config ${build_type} --target install
+	fi
+	
+	rm -rf ${root_dir}/${lib_name}/${lib_source_dir}
+	cd ${root_dir}
+}
 function archive_ios {
 
 	local build_type=$1
@@ -920,6 +962,9 @@ function archive_ios {
 
 
 #build_websocket release "x86_64" android
+
+
+#build_curl Release "win32" windows
 
 
 
