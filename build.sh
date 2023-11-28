@@ -105,6 +105,18 @@ function build_zlib {
 		cmake --build . --config ${build_type} --target install
 	fi
 	
+
+	if [[ "$3" == "linux" ]]; then
+		cmake \
+			-G "Unix Makefiles" \
+			-DCMAKE_BUILD_TYPE="${build_type}" \
+			-DCMAKE_INSTALL_PREFIX=${build_dir_root} \
+			-DCMAKE_PREFIX_PATH=${build_dir_root} \
+			../../../${lib_name}/${lib_source_dir}
+		
+		cmake --build . --config ${build_type} --target install
+	fi
+
 	rm -rf ${root_dir}/${lib_name}/${lib_source_dir}
 	cd ${root_dir}
 }
@@ -959,7 +971,7 @@ function archive_ios {
 #build_zlib release "arm7" android
 #build_zlib release "x86_64" android
 #build_zlib release "x86" android
-
+build_zlib release "x86_64" linux
 
 #build_websocket release "x86_64" android
 
