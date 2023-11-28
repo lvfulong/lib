@@ -738,9 +738,12 @@ function build_openssl {
 	fi
 	
 	if [[ "$3" == "linux" ]]; then
-		./Configure --prefix=${build_dir_root} --openssldir=${build_dir_root} no-shared no-unit-test \
-        '-Wl,-rpath,$(LIBRPATH)'
-		make install_sw
+		#./Configure --prefix=${build_dir_root} --openssldir=${build_dir_root} no-shared no-unit-test \
+        #'-Wl,-rpath,$(LIBRPATH)'
+		#make install_sw
+
+		./configure --prefix=${build_dir_root} --openssldir=${build_dir_root} no-shared no-unit-test
+		make install
 	fi
 
 	rm -rf ${root_dir}/${lib_name}/${lib_source_dir}
