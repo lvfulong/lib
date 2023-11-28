@@ -739,7 +739,7 @@ function build_openssl {
 	
 	if [[ "$3" == "linux" ]]; then
 		./Configure --prefix=${build_dir_root} --openssldir=${build_dir_root} no-shared no-unit-test \
-        '-Wl,--enable-new-dtags,-rpath,$(LIBRPATH)'
+        '-Wl,-rpath,$(LIBRPATH)'
 		make install_sw
 	fi
 
