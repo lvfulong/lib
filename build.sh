@@ -737,6 +737,11 @@ function build_openssl {
 		/Applications/Xcode.app/Contents/Developer/usr/bin/make install_sw
 	fi
 	
+	if [[ "$3" == "linux" ]]; then
+		./Configure --prefix=${build_dir_root} --openssldir=${build_dir_root} no-shared no-unit-test \
+        '-Wl,--enable-new-dtags,-rpath,$(LIBRPATH)'
+	fi
+
 	rm -rf ${root_dir}/${lib_name}/${lib_source_dir}
 	cd ${root_dir}
 }
@@ -955,7 +960,7 @@ function archive_ios {
 #build_zip release "arm7" android
 #build_zip release "x86_64" android
 #build_zip release "x86" android
-build_zip release "x86_64" linux
+#build_zip release "x86_64" linux
 
 #build_freetype Release "win32" windows
 #build_freetype Release "win64" windows
@@ -995,7 +1000,7 @@ build_zip release "x86_64" linux
 
 #build_curl Release "win32" windows
 
-
+build_openssl release "x86_64" linux
 
 
 
