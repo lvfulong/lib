@@ -742,7 +742,7 @@ function build_openssl {
         #'-Wl,-rpath,$(LIBRPATH)'
 		#make install_sw
 
-		./configure --prefix=${build_dir_root} --openssldir=${build_dir_root} no-shared no-unit-test
+		./Configure --prefix=${build_dir_root} --openssldir=${build_dir_root} no-shared no-unit-test
 		make install
 	fi
 
