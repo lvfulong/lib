@@ -727,11 +727,11 @@ function build_freetype {
 	cd ${root_dir}
 }
 
-function build_mgp123 {
+function build_mpg123 {
 	local build_type=$1
     local arch=$2
     local platform=$3
-	local lib_name=mgp123
+	local lib_name=mpg123
 	local build_dir_root="${root_dir}/build/${platform}-${build_type}-${arch}"
     local build_dir="${build_dir_root}/${lib_name}"
 	mkdir -p "${build_dir}"
@@ -1093,7 +1093,7 @@ function archive_ios {
 #build_freetype release "x86_64" linux
 
 
-build_mgp123 release "x86_64" linux
+build_mpg123 release "x86_64" linux
 
 #build_jpeg release "x86_64" linux
 #build_jpeg release arm64 iphoneos
