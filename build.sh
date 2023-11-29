@@ -1031,14 +1031,15 @@ function build_curl {
 	rm -rf ${lib_source_dir}
 	tar xvzf ${lib_source_dir}.tar.gz
 
-	cd ..
-	cd ${build_dir}
+	#cd ..
+	#cd ${build_dir}
 	
 
 	#-DPLATFORM_NAME="${platform}"
 	#-DCMAKE_BUILD_TYPE=${build_type} 
 	if [[ "$3" == "windows" ]]; then	
-	
+		cd ..
+		cd ${build_dir}
 		cmake . -G "Visual Studio 17 2022" \
 			-A${arch} \
 			-DCMAKE_INSTALL_PREFIX=${build_dir_root} \
@@ -1075,6 +1076,7 @@ function build_curl {
 
 		#cmake --build . --config ${build_type} --target install
 
+		cd ${lib_source_dir}
 		./configure --prefix=${build_dir_root} --with-openssl=${build_dir_root} --with-zlib=${build_dir_root} --disable-shared
 		make
 		make install
