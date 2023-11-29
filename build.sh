@@ -1075,7 +1075,7 @@ function build_curl {
 		#	../../../${lib_name}/${lib_source_dir}
 
 		#cmake --build . --config ${build_type} --target install
-		export PKG_CONFIG_PATH=${build_dir_root}:$PKG_CONFIG_PATH
+		export PKG_CONFIG_PATH=${build_dir_root}/lib64/pkgconfig:$PKG_CONFIG_PATH
 		cd ${lib_source_dir}
 		./configure --prefix=${build_dir_root} --target=x86_64 --with-ssl=${build_dir_root} --with-zlib=${build_dir_root} --disable-shared
 		make
