@@ -738,7 +738,7 @@ function build_mpg123 {
 	cd ${lib_name}
 	local lib_source_dir=mpg123-1.31.3
 	rm -rf ${lib_source_dir}
-	tar xvzf ${lib_source_dir}.tar.bz2
+	tar -jxvf ${lib_source_dir}.tar.bz2
 
 	cd ..
 	cd ${build_dir}
