@@ -20,6 +20,8 @@ function check_android_environment {
 	
 	#TODO
 }
+BUILD_LIB_TYPE=""
+
 
 function build_zlib {
 	local build_type=$1
@@ -868,8 +870,8 @@ function build_websocket {
     local arch=$2
     local platform=$3
 	#depends zlib
-	build_zlib ${build_type} ${arch} ${platform}
-	build_openssl ${build_type} ${arch} ${platform}
+	#build_zlib ${build_type} ${arch} ${platform}
+	#build_openssl ${build_type} ${arch} ${platform}
 	local lib_name=websocket
 	local build_dir_root="${root_dir}/build/${platform}-${build_type}-${arch}"
     local build_dir="${build_dir_root}/${lib_name}"
@@ -901,7 +903,8 @@ function build_websocket {
 			-DLWS_WITHOUT_TEST_SERVER_EXTPOLL=1 \
 			-DLWS_WITHOUT_TEST_PING=1 \
 			-DLWS_WITHOUT_TEST_ECHO=1 \ 
-			-DLWS_WITHOUT_TEST_FRAGGLE=1 \
+			-DLWS_WITHOUT_TEST_CLIENT=1 \
+ 			-DLWS_WITHOUT_TEST_FRAGGLE=1 \
 			-DLWS_IPV6=1 \
 			../../../${lib_name}/${lib_source_dir}
 	
@@ -926,7 +929,8 @@ function build_websocket {
 			-DLWS_WITHOUT_TEST_SERVER_EXTPOLL=1 \
 			-DLWS_WITHOUT_TEST_PING=1 \
 			-DLWS_WITHOUT_TEST_ECHO=1 \ 
-			-DLWS_WITHOUT_TEST_FRAGGLE=1 \
+			-DLWS_WITHOUT_TEST_CLIENT=1 \
+ 			-DLWS_WITHOUT_TEST_FRAGGLE=1 \
 			-DLWS_IPV6=1 \
 			../../../${lib_name}/${lib_source_dir}
 		
@@ -976,6 +980,8 @@ function build_websocket {
 			-DLWS_WITHOUT_TEST_SERVER_EXTPOLL=1 \
 			-DLWS_WITHOUT_TEST_PING=1 \
 			-DLWS_WITHOUT_TEST_ECHO=1 \
+			-DLWS_WITHOUT_TEST_CLIENT=1 \
+ 			-DLWS_WITHOUT_TEST_FRAGGLE=1 \
 			-DLWS_IPV6=1 \
 			../../../${lib_name}/${lib_source_dir}
 
@@ -995,6 +1001,8 @@ function build_websocket {
 			-DLWS_WITHOUT_TEST_SERVER_EXTPOLL=1 \
 			-DLWS_WITHOUT_TEST_PING=1 \
 			-DLWS_WITHOUT_TEST_ECHO=1 \
+			-DLWS_WITHOUT_TEST_CLIENT=1 \
+ 			-DLWS_WITHOUT_TEST_FRAGGLE=1 \
 			-DLWS_IPV6=1 \
 			-DLWS_ZLIB_LIBRARIES="${build_dir_root}/lib" \
 			-DLWS_ZLIB_INCLUDE_DIRS="${build_dir_root}/include" \
@@ -1081,6 +1089,40 @@ function archive_ios {
 }
 
 pushd "$(dirname "$0")" > /dev/null
+
+while getopts ":ht:" opt; do
+    case ${opt} in
+        h)
+            print_help
+            exit 1
+            ;;
+        \?)
+            echo "Invalid option: -${OPTARG}" >&2
+            echo ""
+            print_help
+            exit 1
+            ;;
+        :)
+            echo "Option -${OPTARG} requires an argument." >&2
+            echo ""
+            print_help
+            exit 1
+            ;;
+		t)	
+			BUILD_LIB_TYPE = ${OPTARG}
+		 	echo "option t: -${OPTARG}" >&2
+            ;;
+    esac
+done
+
+
+    case ${BUILD_LIB_TYPE} in
+        websocket)
+           	build_websocket  release "x86_64" linux
+            exit 1
+            ;;
+    esac
+
 #check_android_environment
 
 #build_png Release "win32" windows
@@ -1154,7 +1196,7 @@ pushd "$(dirname "$0")" > /dev/null
 #build_zlib release "x86_64" linux
 
 #build_websocket release "x86_64" android
-build_websocket  release "x86_64" linux
+#build_websocket  release "x86_64" linux
 
 #build_curl Release "win32" windows
 
