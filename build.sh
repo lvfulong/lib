@@ -166,7 +166,7 @@ function build_png {
 			-DCMAKE_BUILD_TYPE="${build_type}" \
 			-DIOS_ARCH="${arch}" \
 			-DPLATFORM_NAME="${platform}" \
-			-DCMAKE_INSTALL_PREFIX=${build_dir} \
+			#-DCMAKE_INSTALL_PREFIX=${build_dir} \
 			-DCMAKE_TOOLCHAIN_FILE=../../../CMake/clang/iOS.cmake \
 			-DCMAKE_SYSTEM_NAME=iOS \
 			-DCMAKE_INSTALL_PREFIX=${build_dir_root} \
@@ -199,7 +199,7 @@ function build_png {
 		fi
 		#-DCMAKE_ARCHIVE_OUTPUT_DIRECTORY=../android-${build_type}/Conch why not work?
 		cmake -G "Unix Makefiles" \
-			-DCMAKE_INSTALL_PREFIX=${build_dir} \
+			#-DCMAKE_INSTALL_PREFIX=${build_dir} \
 			-DCMAKE_BUILD_TYPE=${build_type} \
 			-DCMAKE_TOOLCHAIN_FILE=${CONCH_NDK_PATH}/build/cmake/android.toolchain.cmake \
 			-DANDROID_ABI=${android_abi} \
@@ -407,7 +407,7 @@ function build_jpeg_turbo {
 			-DCMAKE_BUILD_TYPE="${build_type}" \
 			-DIOS_ARCH="${arch}" \
 			-DPLATFORM_NAME="${platform}" \
-			-DCMAKE_INSTALL_PREFIX=${build_dir} \
+			#-DCMAKE_INSTALL_PREFIX=${build_dir} \
 			-DCMAKE_TOOLCHAIN_FILE=../../../CMake/clang/iOS.cmake \
 			-DCMAKE_SYSTEM_NAME=iOS \
 			-DCMAKE_INSTALL_PREFIX=${build_dir_root} \
@@ -440,7 +440,7 @@ function build_jpeg_turbo {
 		fi
 		#-DCMAKE_ARCHIVE_OUTPUT_DIRECTORY=../android-${build_type}/Conch why not work?
 		cmake -G "Unix Makefiles" \
-			-DCMAKE_INSTALL_PREFIX=${build_dir} \
+			#-DCMAKE_INSTALL_PREFIX=${build_dir} \
 			-DCMAKE_BUILD_TYPE=${build_type} \
 			-DCMAKE_TOOLCHAIN_FILE=${CONCH_NDK_PATH}/build/cmake/android.toolchain.cmake \
 			-DANDROID_ABI=${android_abi} \
@@ -463,6 +463,18 @@ function build_jpeg_turbo {
 		cmake --build . --config ${build_type} --target install
 	fi
 	
+	if [[ "$3" == "linux" ]]; then
+		cmake -G "Unix Makefiles" \
+			-DCMAKE_BUILD_TYPE=${build_type} \
+			-DCMAKE_INSTALL_PREFIX=${build_dir_root} \
+			-DCMAKE_PREFIX_PATH=${build_dir_root} \
+			-DENABLE_STATIC=ON \
+			-DENABLE_SHARED=OFF \
+			../../../${lib_name}/${lib_source_dir}
+
+		cmake --build . --config ${build_type} --target install
+	fi
+
 	#rm -rf ${root_dir}/${lib_name}/${lib_source_dir}
 	cd ${root_dir}
 }
@@ -510,7 +522,7 @@ function build_zip {
 			-DCMAKE_BUILD_TYPE="${build_type}" \
 			-DIOS_ARCH="${arch}" \
 			-DPLATFORM_NAME="${platform}" \
-			-DCMAKE_INSTALL_PREFIX=${build_dir} \
+			#-DCMAKE_INSTALL_PREFIX=${build_dir} \
 			-DCMAKE_TOOLCHAIN_FILE=../../../CMake/clang/iOS.cmake \
 			-DCMAKE_SYSTEM_NAME=iOS \
 			-DCMAKE_INSTALL_PREFIX=${build_dir_root} \
@@ -545,7 +557,7 @@ function build_zip {
 		fi
 		#-DCMAKE_ARCHIVE_OUTPUT_DIRECTORY=../android-${build_type}/Conch why not work?
 		cmake -G "Unix Makefiles" \
-			-DCMAKE_INSTALL_PREFIX=${build_dir} \
+			#-DCMAKE_INSTALL_PREFIX=${build_dir} \
 			-DCMAKE_BUILD_TYPE=${build_type} \
 			-DCMAKE_TOOLCHAIN_FILE=${CONCH_NDK_PATH}/build/cmake/android.toolchain.cmake \
 			-DANDROID_ABI=${android_abi} \
@@ -635,7 +647,7 @@ function build_freetype {
 			-DCMAKE_BUILD_TYPE="${build_type}" \
 			-DIOS_ARCH="${arch}" \
 			-DPLATFORM_NAME="${platform}" \
-			-DCMAKE_INSTALL_PREFIX=${build_dir} \
+			#-DCMAKE_INSTALL_PREFIX=${build_dir} \
 			-DCMAKE_TOOLCHAIN_FILE=../../../CMake/clang/iOS.cmake \
 			-DCMAKE_SYSTEM_NAME=iOS \
 			-DCMAKE_INSTALL_PREFIX=${build_dir_root} \
@@ -669,7 +681,7 @@ function build_freetype {
 		fi
 		#-DCMAKE_ARCHIVE_OUTPUT_DIRECTORY=../android-${build_type}/Conch why not work?
 		cmake -G "Unix Makefiles" \
-			-DCMAKE_INSTALL_PREFIX=${build_dir} \
+			#-DCMAKE_INSTALL_PREFIX=${build_dir} \
 			-DCMAKE_BUILD_TYPE=${build_type} \
 			-DCMAKE_TOOLCHAIN_FILE=${CONCH_NDK_PATH}/build/cmake/android.toolchain.cmake \
 			-DANDROID_ABI=${android_abi} \
@@ -825,7 +837,7 @@ function build_websocket {
 			-DCMAKE_BUILD_TYPE="${build_type}" \
 			-DIOS_ARCH="${arch}" \
 			-DPLATFORM_NAME="${platform}" \
-			-DCMAKE_INSTALL_PREFIX=${build_dir} \
+			#-DCMAKE_INSTALL_PREFIX=${build_dir} \
 			-DCMAKE_TOOLCHAIN_FILE=../../../CMake/clang/iOS.cmake \
 			-DCMAKE_SYSTEM_NAME=iOS \
 			-DCMAKE_INSTALL_PREFIX=${build_dir_root} \
@@ -863,7 +875,7 @@ function build_websocket {
 		fi
 		#-DCMAKE_ARCHIVE_OUTPUT_DIRECTORY=../android-${build_type}/Conch why not work?
 		cmake -G "Unix Makefiles" \
-			-DCMAKE_INSTALL_PREFIX=${build_dir} \
+			#-DCMAKE_INSTALL_PREFIX=${build_dir} \
 			-DCMAKE_BUILD_TYPE=${build_type} \
 			-DCMAKE_TOOLCHAIN_FILE=${CONCH_NDK_PATH}/build/cmake/android.toolchain.cmake \
 			-DANDROID_ABI=${android_abi} \
@@ -975,7 +987,7 @@ function archive_ios {
 #build_jpeg_turbo release "arm7" android
 #build_jpeg_turbo release "x86_64" android
 #build_jpeg_turbo release "x86" android
-
+build_jpeg_turbo release "x86_64" linux
 
 #build_zip Release "win32" windows
 #build_zip Release "win64" windows
@@ -1003,7 +1015,7 @@ function archive_ios {
 #build_freetype release "x86" android
 
 
-build_jpeg release "x86_64" linux
+#build_jpeg release "x86_64" linux
 #build_jpeg release arm64 iphoneos
 #build_jpeg release x86_64 iphonesimulator
 #archive_ios release iphoneos arm64 iphonesimulator x86_64
