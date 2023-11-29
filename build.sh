@@ -21,7 +21,7 @@ function check_android_environment {
 	#TODO
 }
 BUILD_LIB_TYPE=""
-
+ISSUE_CLEAN=false
 
 function build_zlib {
 	local build_type=$1
@@ -1095,9 +1095,14 @@ function archive_ios {
     lipo -create  "${build_dir0}/lib/libfreetype.a"  "${build_dir1}/lib/libfreetype.a"  -output "${root_dir}/build/ios-fat/libfreetype.a"
 }
 
+function build_clean {
+    echo "Cleaning build directories..."
+    rm -Rf ${build_dir_root}
+}
+
 pushd "$(dirname "$0")" > /dev/null
 
-while getopts ":ht:" opt; do
+while getopts ":hct:" opt; do
     case ${opt} in
         h)
             print_help
@@ -1115,6 +1120,9 @@ while getopts ":ht:" opt; do
             print_help
             exit 1
             ;;
+		c)	
+			ISSUE_CLEAN=true
+            ;;
 		t)	
 			BUILD_LIB_TYPE=${OPTARG}
 		 	echo "option t: -${OPTARG}" >&2
@@ -1127,7 +1135,9 @@ if [[ "$#" == "0" ]]; then
     exit 1
 fi
 
-
+if [[ "${ISSUE_CLEAN}" == "true" ]]; then
+    clean
+fi
     case ${BUILD_LIB_TYPE} in
         websocket)
            	build_websocket  release "x86_64" linux
