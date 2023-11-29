@@ -707,6 +707,22 @@ function build_freetype {
 		cmake --build . --config ${build_type} --target install
 	fi
 	
+
+	if [[ "$3" == "linux" ]]; then
+		cmake  -G "Unix Makefiles" \
+			-DCMAKE_BUILD_TYPE=${build_type} \
+			-DCMAKE_INSTALL_PREFIX=${build_dir_root} \
+			-DCMAKE_PREFIX_PATH=${build_dir_root} \
+            -DFT_REQUIRE_ZLIB=FALSE \
+            -DFT_REQUIRE_BZIP2=FALSE \
+            -DFT_REQUIRE_PNG=FALSE \
+            -DFT_REQUIRE_HARFBUZZ=FALSE \
+            -DFT_REQUIRE_BROTLI=FALSE \
+			../../../${lib_name}/${lib_source_dir}
+		
+		cmake --build . --config ${build_type} --target install
+	fi
+
 	rm -rf ${root_dir}/${lib_name}/${lib_source_dir}
 	cd ${root_dir}
 }
@@ -987,7 +1003,7 @@ function archive_ios {
 #build_jpeg_turbo release "arm7" android
 #build_jpeg_turbo release "x86_64" android
 #build_jpeg_turbo release "x86" android
-build_jpeg_turbo release "x86_64" linux
+#build_jpeg_turbo release "x86_64" linux
 
 #build_zip Release "win32" windows
 #build_zip Release "win64" windows
@@ -1013,7 +1029,7 @@ build_jpeg_turbo release "x86_64" linux
 #build_freetype release "arm7" android
 #build_freetype release "x86_64" android
 #build_freetype release "x86" android
-
+build_freetype release "x86_64" linux
 
 #build_jpeg release "x86_64" linux
 #build_jpeg release arm64 iphoneos
