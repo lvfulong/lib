@@ -868,8 +868,8 @@ function build_websocket {
     local arch=$2
     local platform=$3
 	#depends zlib
-	#build_zlib ${build_type} ${arch} ${platform}
-	#build_openssl ${build_type} ${arch} ${platform}
+	build_zlib ${build_type} ${arch} ${platform}
+	build_openssl ${build_type} ${arch} ${platform}
 	local lib_name=websocket
 	local build_dir_root="${root_dir}/build/${platform}-${build_type}-${arch}"
     local build_dir="${build_dir_root}/${lib_name}"
@@ -877,7 +877,7 @@ function build_websocket {
 	cd ${lib_name}
 	local lib_source_dir=libwebsockets-2.3.0
 	rm -rf ${lib_source_dir}
-	tar xvzf ${lib_source_dir}.zip
+	unzip ${lib_source_dir}.zip
 
 	cd ..
 	cd ${build_dir}
