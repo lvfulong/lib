@@ -981,7 +981,30 @@ function build_websocket {
 
 		cmake --build . --config ${build_type} --target install
 	fi
-	
+	if [[ "$3" == "linux" ]]; then
+		cmake -G "Unix Makefiles" \
+			#-DCMAKE_INSTALL_PREFIX=${build_dir} \
+			-DCMAKE_BUILD_TYPE=${build_type} \
+			-DCMAKE_INSTALL_PREFIX=${build_dir_root} \
+			-DCMAKE_PREFIX_PATH=${build_dir_root} \
+            -DCMAKE_FIND_ROOT_PATH=${build_dir_root} \
+			-DLWS_WITH_ZLIB=1 \
+			-DLWS_WITH_SSL=1 \
+			-DLWS_WITHOUT_SERVER=0 \
+			-DLWS_WITH_SHARED=0 \
+			-DLWS_WITHOUT_TEST_SERVER=1 \
+			-DLWS_WITHOUT_TEST_SERVER_EXTPOLL=1 \
+			-DLWS_WITHOUT_TEST_PING=1 \
+			-DLWS_WITHOUT_TEST_ECHO=1 \
+			-DLWS_IPV6=1 \
+			-DLWS_ZLIB_LIBRARIES=${build_dir_root}\lib \
+			-DLWS_ZLIB_INCLUDE_DIRS=${build_dir_root}\include \
+			-DLWS_OPENSSL_LIBRARIES=${build_dir_root}\lib64 \
+			-DLWS_OPENSSL_INCLUDE_DIRS=${build_dir_root}\include \
+			../../../${lib_name}/${lib_source_dir}
+
+		cmake --build . --config ${build_type} --target install
+	fi
 	rm -rf ${root_dir}/${lib_name}/${lib_source_dir}
 	cd ${root_dir}
 }
@@ -990,8 +1013,8 @@ function build_curl {
     local arch=$2
     local platform=$3
 	#depends zlib
-	#TODO build_zlib ${build_type} ${arch} ${platform}
-	#TODO build_openssl ${build_type} ${arch} ${platform}
+	build_zlib ${build_type} ${arch} ${platform}
+	build_openssl ${build_type} ${arch} ${platform}
 	local lib_name=curl
 	local build_dir_root="${root_dir}/build/${platform}-${build_type}-${arch}"
     local build_dir="${build_dir_root}/${lib_name}"
@@ -1013,8 +1036,8 @@ function build_curl {
 			-A${arch} \
 			-DCMAKE_INSTALL_PREFIX=${build_dir_root} \
 			-DCMAKE_PREFIX_PATH=${build_dir_root} \
-		  	-DCURL_ZLIB=OFF \
-		   	-DCMAKE_USE_OPENSSL=OFF \
+		  	-DCURL_ZLIB=ON \
+		   	-DCMAKE_USE_OPENSSL=ON \
 		   	-DENABLE_IPV6=ON \
 		   	-DCURL_STATICLIB=ON \
 		   	-DBUILD_CURL_EXE=OFF \
@@ -1023,7 +1046,21 @@ function build_curl {
 
 		cmake --build . --config ${build_type} --target install
 	fi
-	
+	if [[ "$3" == "linux" ]]; then
+		cmake -G "Unix Makefiles" \
+			-A${arch} \
+			-DCMAKE_INSTALL_PREFIX=${build_dir_root} \
+			-DCMAKE_PREFIX_PATH=${build_dir_root} \
+		  	-DCURL_ZLIB=ON \
+		   	-DCMAKE_USE_OPENSSL=ON \
+		   	-DENABLE_IPV6=ON \
+		   	-DCURL_STATICLIB=ON \
+		   	-DBUILD_CURL_EXE=OFF \
+		    -DBUILD_TESTING=OFF \
+			../../../${lib_name}/${lib_source_dir}
+
+		cmake --build . --config ${build_type} --target install
+	fi
 	rm -rf ${root_dir}/${lib_name}/${lib_source_dir}
 	cd ${root_dir}
 }
@@ -1093,7 +1130,7 @@ function archive_ios {
 #build_freetype release "x86_64" linux
 
 
-build_mpg123 release "x86_64" linux
+#build_mpg123 release "x86_64" linux
 
 #build_jpeg release "x86_64" linux
 #build_jpeg release arm64 iphoneos
@@ -1116,7 +1153,7 @@ build_mpg123 release "x86_64" linux
 #build_zlib release "x86_64" linux
 
 #build_websocket release "x86_64" android
-
+build_websocket  release "x86_64" linux
 
 #build_curl Release "win32" windows
 
