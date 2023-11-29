@@ -1109,7 +1109,7 @@ while getopts ":ht:" opt; do
             exit 1
             ;;
 		t)	
-			BUILD_LIB_TYPE = ${OPTARG}
+			BUILD_LIB_TYPE=${OPTARG}
 		 	echo "option t: -${OPTARG}" >&2
             ;;
     esac
