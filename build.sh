@@ -1059,7 +1059,6 @@ function build_curl {
 	fi
 	if [[ "$3" == "linux" ]]; then
 		cmake -G "Unix Makefiles" \
-			-A${arch} \
 			-DCMAKE_INSTALL_PREFIX=${build_dir_root} \
 			-DCMAKE_PREFIX_PATH=${build_dir_root} \
 		  	-DCURL_ZLIB=ON \
