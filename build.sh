@@ -1049,6 +1049,10 @@ function build_curl {
 		   	-DCURL_STATICLIB=ON \
 		   	-DBUILD_CURL_EXE=OFF \
 		    -DBUILD_TESTING=OFF \
+			-DZLIB_LIBRARIES="${build_dir_root}/lib" \
+			-DZLIB_INCLUDE_DIRS="${build_dir_root}/include" \
+	        -DOPENSSL_LIBRARIES="${build_dir_root}/lib64" \
+			-DOPENSSL_INCLUDE_DIR="${build_dir_root}/include" \
 			../../../${lib_name}/${lib_source_dir}
 
 		cmake --build . --config ${build_type} --target install
@@ -1064,6 +1068,10 @@ function build_curl {
 		   	-DCURL_STATICLIB=ON \
 		   	-DBUILD_CURL_EXE=OFF \
 		    -DBUILD_TESTING=OFF \
+			-DZLIB_LIBRARIES="${build_dir_root}/lib" \
+			-DZLIB_INCLUDE_DIRS="${build_dir_root}/include" \
+			-DOPENSSL_LIBRARIES="${build_dir_root}/lib64" \
+			-DOPENSSL_INCLUDE_DIR="${build_dir_root}/include" \
 			../../../${lib_name}/${lib_source_dir}
 
 		cmake --build . --config ${build_type} --target install
@@ -1114,11 +1122,20 @@ while getopts ":ht:" opt; do
             ;;
     esac
 done
+# 命令行未提供参数
+if [[ "$#" == "0" ]]; then
+    print_help
+    exit 1
+fi
 
 
     case ${BUILD_LIB_TYPE} in
         websocket)
            	build_websocket  release "x86_64" linux
+            exit 1
+            ;;
+		curl)
+           	build_curl  release "x86_64" linux
             exit 1
             ;;
     esac
