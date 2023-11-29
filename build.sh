@@ -223,6 +223,21 @@ function build_png {
 
 		cmake --build . --config ${build_type} --target install
 	fi
+
+	if [[ "$3" == "linux" ]]; then
+		cmake \
+			-G "Unix Makefiles" \
+			-DCMAKE_BUILD_TYPE="${build_type}" \
+			-DCMAKE_INSTALL_PREFIX=${build_dir_root} \
+			-DCMAKE_PREFIX_PATH=${build_dir_root} \
+			-DPNG_STATIC=ON \
+			-DPNG_SHARED=OFF \
+			-DPNG_EXECUTABLES=OFF \
+			-DPNG_TESTS=OFF \
+			../../../${lib_name}/${lib_source_dir}
+		
+		cmake --build . --config ${build_type} --target install
+	fi
 	
 	rm -rf ${root_dir}/${lib_name}/${lib_source_dir}
 	cd ${root_dir}
@@ -934,7 +949,7 @@ function archive_ios {
 
 #build_png Release "win32" windows
 #build_png Release "win64" windows
-
+build_png release "x86_64" linux
 
 #build_png release arm64 iphoneos
 #build_png release x86_64 iphonesimulator
@@ -1004,7 +1019,7 @@ function archive_ios {
 
 #build_curl Release "win32" windows
 
-build_openssl release "x86_64" linux
+#build_openssl release "x86_64" linux
 
 
 
