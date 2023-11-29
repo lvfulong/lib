@@ -782,7 +782,7 @@ function build_mgp123 {
 			-DCMAKE_BUILD_TYPE=${build_type} \
 			-DCMAKE_INSTALL_PREFIX=${build_dir_root} \
 			-DCMAKE_PREFIX_PATH=${build_dir_root} \
-			../../../${lib_name}/${lib_source_dir/ports/cmake
+			../../../${lib_name}/${lib_source_dir}/ports/cmake
 		
 		cmake --build . --config ${build_type} --target install
 	fi
