@@ -736,7 +736,7 @@ function build_mgp123 {
     local build_dir="${build_dir_root}/${lib_name}"
 	mkdir -p "${build_dir}"
 	cd ${lib_name}
-	local lib_source_dir=mpg123-1.31.3.tar.bz2
+	local lib_source_dir=mpg123-1.31.3
 	rm -rf ${lib_source_dir}
 	tar xvzf ${lib_source_dir}.tar.bz2
 
