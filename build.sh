@@ -332,6 +332,15 @@ function build_jpeg {
 		make install
 	fi
 	
+	if [[ "$3" == "linux" ]]; then
+		./configure --prefix=${build_dir_root} \
+			--disable-shared \
+			--enable-static
+		
+		make
+		make install
+	fi
+
 	rm -rf ${root_dir}/${lib_name}/${lib_source_dir}
 	cd ${root_dir}
 }
@@ -949,7 +958,7 @@ function archive_ios {
 
 #build_png Release "win32" windows
 #build_png Release "win64" windows
-build_png release "x86_64" linux
+#build_png release "x86_64" linux
 
 #build_png release arm64 iphoneos
 #build_png release x86_64 iphonesimulator
@@ -994,7 +1003,7 @@ build_png release "x86_64" linux
 #build_freetype release "x86" android
 
 
-
+build_jpeg release "x86_64" linux
 #build_jpeg release arm64 iphoneos
 #build_jpeg release x86_64 iphonesimulator
 #archive_ios release iphoneos arm64 iphonesimulator x86_64
