@@ -726,9 +726,70 @@ function build_freetype {
 	rm -rf ${root_dir}/${lib_name}/${lib_source_dir}
 	cd ${root_dir}
 }
-#todo
-#function build_mgp123 {
-#}
+
+function build_mgp123 {
+	local build_type=$1
+    local arch=$2
+    local platform=$3
+	local lib_name=mgp123
+	local build_dir_root="${root_dir}/build/${platform}-${build_type}-${arch}"
+    local build_dir="${build_dir_root}/${lib_name}"
+	mkdir -p "${build_dir}"
+	cd ${lib_name}
+	local lib_source_dir=mpg123-1.31.3.tar.bz2
+	rm -rf ${lib_source_dir}
+	tar xvzf ${lib_source_dir}.tar.bz2
+
+	cd ..
+	cd ${build_dir}
+	
+
+	#-DPLATFORM_NAME="${platform}"
+	#-DCMAKE_BUILD_TYPE=${build_type} 
+	if [[ "$3" == "windows" ]]; then	
+	
+		local generator="Visual Studio 14 2015"
+		if [[ "$2" == "win64" ]]; then
+			generator="Visual Studio 14 2015 Win64"
+		fi
+	fi
+	
+	if [[ "$3" == "iphoneos" ]] || [[ "$3" == "iphonesimulator" ]]; then
+	fi
+	
+	if [[ "$3" == "android" ]]; then
+		local android_abi=
+		if [[ "$2" == "aarch64" ]]; then
+			android_abi=arm64-v8a
+		fi
+	
+		if [[ "$2" == "arm7" ]]; then
+			android_abi=armeabi-v7a
+		fi
+	
+		if [[ "$2" == "x86" ]]; then
+			android_abi=x86
+		fi
+	
+		if [[ "$2" == "x86_64" ]]; then
+			android_abi=x86_64
+		fi
+	fi
+	
+
+	if [[ "$3" == "linux" ]]; then
+		cmake  -G "Unix Makefiles" \
+			-DCMAKE_BUILD_TYPE=${build_type} \
+			-DCMAKE_INSTALL_PREFIX=${build_dir_root} \
+			-DCMAKE_PREFIX_PATH=${build_dir_root} \
+			../../../${lib_name}/${lib_source_dir/ports/cmake
+		
+		cmake --build . --config ${build_type} --target install
+	fi
+
+	rm -rf ${root_dir}/${lib_name}/${lib_source_dir}
+	cd ${root_dir}
+}
 function build_openssl {
 	local build_type=$1
     local arch=$2
@@ -1029,7 +1090,10 @@ function archive_ios {
 #build_freetype release "arm7" android
 #build_freetype release "x86_64" android
 #build_freetype release "x86" android
-build_freetype release "x86_64" linux
+#build_freetype release "x86_64" linux
+
+
+build_mgp123 release "x86_64" linux
 
 #build_jpeg release "x86_64" linux
 #build_jpeg release arm64 iphoneos
