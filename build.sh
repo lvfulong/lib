@@ -997,10 +997,10 @@ function build_websocket {
 			-DLWS_WITHOUT_TEST_PING=1 \
 			-DLWS_WITHOUT_TEST_ECHO=1 \
 			-DLWS_IPV6=1 \
-			-DLWS_ZLIB_LIBRARIES=${build_dir_root}/lib \
-			-DLWS_ZLIB_INCLUDE_DIRS=${build_dir_root}/include \
-			-DLWS_OPENSSL_LIBRARIES=${build_dir_root}/lib64 \
-			-DLWS_OPENSSL_INCLUDE_DIRS=${build_dir_root}/include \
+			-DLWS_ZLIB_LIBRARIES="${build_dir_root}/lib" \
+			-DLWS_ZLIB_INCLUDE_DIRS="${build_dir_root}/include" \
+			-DLWS_OPENSSL_LIBRARIES="${build_dir_root}/lib64" \
+			-DLWS_OPENSSL_INCLUDE_DIRS="${build_dir_root}/include" \
 			../../../${lib_name}/${lib_source_dir}
 
 		cmake --build . --config ${build_type} --target install
