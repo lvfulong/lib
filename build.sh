@@ -754,8 +754,8 @@ function build_mgp123 {
 		fi
 	fi
 	
-	if [[ "$3" == "iphoneos" ]] || [[ "$3" == "iphonesimulator" ]]; then
-	fi
+	#if [[ "$3" == "iphoneos" ]] || [[ "$3" == "iphonesimulator" ]]; then
+	#fi
 	
 	if [[ "$3" == "android" ]]; then
 		local android_abi=
