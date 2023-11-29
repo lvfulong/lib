@@ -1058,22 +1058,26 @@ function build_curl {
 		cmake --build . --config ${build_type} --target install
 	fi
 	if [[ "$3" == "linux" ]]; then
-		cmake -G "Unix Makefiles" \
-			-DCMAKE_INSTALL_PREFIX=${build_dir_root} \
-			-DCMAKE_PREFIX_PATH=${build_dir_root} \
-		  	-DCURL_ZLIB=ON \
-		   	-DCMAKE_USE_OPENSSL=ON \
-		   	-DENABLE_IPV6=ON \
-		   	-DCURL_STATICLIB=ON \
-		   	-DBUILD_CURL_EXE=OFF \
-		    -DBUILD_TESTING=OFF \
-			-DZLIB_LIBRARIES="${build_dir_root}/lib" \
-			-DZLIB_INCLUDE_DIRS="${build_dir_root}/include" \
-			-DOPENSSL_LIBRARIES="${build_dir_root}/lib64" \
-			-DOPENSSL_INCLUDE_DIR="${build_dir_root}/include" \
-			../../../${lib_name}/${lib_source_dir}
+		#cmake -G "Unix Makefiles" \
+		#	-DCMAKE_INSTALL_PREFIX=${build_dir_root} \
+		#	-DCMAKE_PREFIX_PATH=${build_dir_root} \
+		#  	-DCURL_ZLIB=ON \
+		#   	-DCMAKE_USE_OPENSSL=ON \
+		#   	-DENABLE_IPV6=ON \
+		#   	-DCURL_STATICLIB=ON \
+		#   	-DBUILD_CURL_EXE=OFF \
+		#    -DBUILD_TESTING=OFF \
+		#	-DZLIB_LIBRARIES="${build_dir_root}/lib" \
+		#	-DZLIB_INCLUDE_DIRS="${build_dir_root}/include" \
+		#	-DOPENSSL_LIBRARIES="${build_dir_root}/lib64" \
+		#	-DOPENSSL_INCLUDE_DIR="${build_dir_root}/include" \
+		#	../../../${lib_name}/${lib_source_dir}
 
-		cmake --build . --config ${build_type} --target install
+		#cmake --build . --config ${build_type} --target install
+
+		./configure --prefix=${build_dir_root} --with-openssl=${build_dir_root} --with-zlib=${build_dir_root} --disable-shared
+		make
+		make install
 	fi
 	rm -rf ${root_dir}/${lib_name}/${lib_source_dir}
 	cd ${root_dir}
