@@ -859,8 +859,6 @@ function build_openssl {
 
 		./Configure --prefix=${build_dir_root} --openssldir=${build_dir_root} no-shared no-unit-test
 		make install
-		mv ${build_dir_root}/lib64/libss.a  ${build_dir_root}/lib
-		mv ${build_dir_root}/lib64/libcrypto.a  ${build_dir_root}/libs
 	fi
 
 	rm -rf ${root_dir}/${lib_name}/${lib_source_dir}
@@ -1008,7 +1006,7 @@ function build_websocket {
 			-DLWS_IPV6=1 \
 			-DLWS_ZLIB_LIBRARIES="${build_dir_root}/lib" \
 			-DLWS_ZLIB_INCLUDE_DIRS="${build_dir_root}/include" \
-			-DLWS_OPENSSL_LIBRARIES="${build_dir_root}/lib" \
+			-DLWS_OPENSSL_LIBRARIES="${build_dir_root}/lib64" \
 			-DLWS_OPENSSL_INCLUDE_DIRS="${build_dir_root}/include" \
 			../../../${lib_name}/${lib_source_dir}
 
@@ -1054,7 +1052,7 @@ function build_curl {
 		    -DBUILD_TESTING=OFF \
 			-DZLIB_LIBRARIES="${build_dir_root}/lib" \
 			-DZLIB_INCLUDE_DIRS="${build_dir_root}/include" \
-	        -DOPENSSL_LIBRARIES="${build_dir_root}/lib" \
+	        -DOPENSSL_LIBRARIES="${build_dir_root}/lib64" \
 			-DOPENSSL_INCLUDE_DIR="${build_dir_root}/include" \
 			../../../${lib_name}/${lib_source_dir}
 
@@ -1072,7 +1070,7 @@ function build_curl {
 		#    -DBUILD_TESTING=OFF \
 		#	-DZLIB_LIBRARIES="${build_dir_root}/lib" \
 		#	-DZLIB_INCLUDE_DIRS="${build_dir_root}/include" \
-		#	-DOPENSSL_LIBRARIES="${build_dir_root}/lib" \
+		#	-DOPENSSL_LIBRARIES="${build_dir_root}/lib64" \
 		#	-DOPENSSL_INCLUDE_DIR="${build_dir_root}/include" \
 		#	../../../${lib_name}/${lib_source_dir}
 
