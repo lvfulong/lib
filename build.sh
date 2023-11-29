@@ -983,7 +983,6 @@ function build_websocket {
 	fi
 	if [[ "$3" == "linux" ]]; then
 		cmake -G "Unix Makefiles" \
-			#-DCMAKE_INSTALL_PREFIX=${build_dir} \
 			-DCMAKE_BUILD_TYPE=${build_type} \
 			-DCMAKE_INSTALL_PREFIX=${build_dir_root} \
 			-DCMAKE_PREFIX_PATH=${build_dir_root} \
@@ -1080,6 +1079,8 @@ function archive_ios {
     lipo -create  "${build_dir0}/lib/libturbojpeg.a"  "${build_dir1}/lib/libturbojpeg.a"  -output "${root_dir}/build/ios-fat/libturbojpeg.a"
     lipo -create  "${build_dir0}/lib/libfreetype.a"  "${build_dir1}/lib/libfreetype.a"  -output "${root_dir}/build/ios-fat/libfreetype.a"
 }
+
+pushd "$(dirname "$0")" > /dev/null
 #check_android_environment
 
 #build_png Release "win32" windows
