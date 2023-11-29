@@ -1077,7 +1077,7 @@ function build_curl {
 		#cmake --build . --config ${build_type} --target install
 
 		cd ${lib_source_dir}
-		./configure --prefix=${build_dir_root} --with-ssl=${build_dir_root} --with-zlib=${build_dir_root} --disable-shared
+		./configure --prefix=${build_dir_root} --target=x86_64 --with-ssl=${build_dir_root} --with-zlib=${build_dir_root} --disable-shared
 		make
 		make install
 	fi
