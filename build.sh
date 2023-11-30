@@ -1166,6 +1166,10 @@ fi
            	build_zip  release "x86_64" linux
             exit 1
             ;;
+		png)
+           	build_png  release "x86_64" linux
+            exit 1
+            ;;
     esac
 
 #check_android_environment
