@@ -754,6 +754,8 @@ function build_mpg123 {
 		if [[ "$2" == "win64" ]]; then
 			generator="Visual Studio 14 2015 Win64"
 		fi
+
+		./windows-builds.sh x86
 	fi
 	
 	#if [[ "$3" == "iphoneos" ]] || [[ "$3" == "iphonesimulator" ]]; then
