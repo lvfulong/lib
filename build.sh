@@ -1170,6 +1170,10 @@ fi
            	build_png  release "x86_64" linux
             exit 1
             ;;
+		jpeg_turbo)
+           	build_jpeg_turbo  release "x86_64" linux
+            exit 1
+            ;;
     esac
 
 #check_android_environment
