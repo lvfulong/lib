@@ -1104,7 +1104,7 @@ function archive_ios {
 
 function clean {
     echo "Cleaning build directories..."
-    rm -Rf ${build_dir_root}
+    rm -Rf ${root_dir}/build
 }
 
 pushd "$(dirname "$0")" > /dev/null
