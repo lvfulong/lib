@@ -1102,7 +1102,7 @@ function archive_ios {
     lipo -create  "${build_dir0}/lib/libfreetype.a"  "${build_dir1}/lib/libfreetype.a"  -output "${root_dir}/build/ios-fat/libfreetype.a"
 }
 
-function build_clean {
+function clean {
     echo "Cleaning build directories..."
     rm -Rf ${build_dir_root}
 }
