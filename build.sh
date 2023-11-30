@@ -754,7 +754,7 @@ function build_mpg123 {
 		if [[ "$2" == "win64" ]]; then
 			generator="Visual Studio 14 2015 Win64"
 		fi
-
+		cd ${root_dir}/${lib_name}/${lib_source_dir}
 		./windows-builds.sh x86
 	fi
 	
