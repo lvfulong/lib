@@ -1154,6 +1154,10 @@ fi
            	build_curl  release "x86_64" linux
             exit 1
             ;;
+		zlib)
+           	build_zlib  release "x86_64" linux
+            exit 1
+            ;;
     esac
 
 #check_android_environment
