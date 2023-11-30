@@ -1158,6 +1158,10 @@ fi
            	build_zlib  release "x86_64" linux
             exit 1
             ;;
+		mpg123)
+           	build_mpg123  release "x86_64" linux
+            exit 1
+            ;;
     esac
 
 #check_android_environment
