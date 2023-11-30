@@ -1161,7 +1161,8 @@ fi
             exit 1
             ;;
 		mpg123)
-           	build_mpg123  release "x86_64" linux
+			#build_mpg123  release "x86_64" linux
+           	build_mpg123  release "x86_64" windows
             exit 1
             ;;
 		zip)
