@@ -1037,8 +1037,8 @@ function build_curl {
     local arch=$2
     local platform=$3
 	#depends zlib
-	#build_zlib ${build_type} ${arch} ${platform}
-	#build_openssl ${build_type} ${arch} ${platform}
+	build_zlib ${build_type} ${arch} ${platform}
+	build_openssl ${build_type} ${arch} ${platform}
 	local lib_name=curl
 	local build_dir_root="${root_dir}/build/${platform}-${build_type}-${arch}"
     local build_dir="${build_dir_root}/${lib_name}"
@@ -1095,6 +1095,7 @@ function build_curl {
 		#export PKG_CONFIG_PATH="${build_dir_root}/lib64/pkgconfig:${PKG_CONFIG_PATH}"
 		cd ${lib_source_dir}
 		#./configure --prefix=${build_dir_root} --target=x86_64 --with-ssl=${build_dir_root} --with-zlib=${build_dir_root} --disable-shared
+		#https://curl.se/docs/install.html
 		CPPFLAGS="-I${build_dir_root}/include" LDFLAGS="-L${build_dir_root}/lib64" ./configure --prefix=${build_dir_root} --target=x86_64 --with-zlib=${build_dir_root} --disable-shared
 		make
 		make install
