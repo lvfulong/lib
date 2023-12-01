@@ -749,13 +749,16 @@ function build_mpg123 {
 	#-DPLATFORM_NAME="${platform}"
 	#-DCMAKE_BUILD_TYPE=${build_type} 
 	if [[ "$3" == "windows" ]]; then	
-	
-		local generator="Visual Studio 14 2015"
-		if [[ "$2" == "win64" ]]; then
-			generator="Visual Studio 14 2015 Win64"
-		fi
-		cd ${root_dir}/${lib_name}/${lib_source_dir}
-		./windows-builds.sh x86
+		#cd ${root_dir}/${lib_name}/${lib_source_dir}
+		#./windows-builds.sh x86
+		cmake . -G "Visual Studio 17 2022" \
+			-A${arch} \
+			-DCMAKE_BUILD_TYPE=${build_type} \
+			-DCMAKE_INSTALL_PREFIX=${build_dir_root} \
+			-DCMAKE_PREFIX_PATH=${build_dir_root} \
+			../../../${lib_name}/${lib_source_dir}/ports/cmake
+		
+		cmake --build . --config ${build_type} --target install
 	fi
 	
 	#if [[ "$3" == "iphoneos" ]] || [[ "$3" == "iphonesimulator" ]]; then
@@ -815,13 +818,31 @@ function build_openssl {
 
 	#-DPLATFORM_NAME="${platform}"
 	#-DCMAKE_BUILD_TYPE=${build_type} 
-	if [[ "$3" == "windows" ]]; then	
-	
-		local generator="Visual Studio 14 2015"
-		if [[ "$2" == "win64" ]]; then
-			generator="Visual Studio 14 2015 Win64"
-		fi
-		#TODO
+	if [[ "$3" == "windows" ]]; then
+		#install Strawberry Perl
+		#https://www.taurusxin.com/openssl_win_build/
+		#注意perl在windows的git shell执行有问题
+		#在windows powershell 直接执行perl Configure VC-WIN32 --prefix=E:\github\lib\build\windows-Release-win32\openssl no-asm no-shared	
+		#nmake D:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.38.33130\bin\Hostx64\x86加入PATH
+		# VS2022 的开发人员提示工具 否则需要接入下列路径到环境变量
+		#C:\Program Files (x86)\Windows Kits\10\bin\10.0.22621.0\x86 加入PATH
+		#C:\Program Files (x86)\Windows Kits\10\Lib\10.0.22621.0\um\x86 
+		#C:\Program Files (x86)\Windows Kits\10\Lib\10.0.22621.0\ucrt\x86
+		#D:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.38.33130\lib\x86 加如LIB
+		#D:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.38.33130\include
+		#C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\shared
+		#C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt
+		#C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\um
+		cd 'D:/Program Files/Microsoft Visual Studio/2022/Community/VC/Auxiliary/Build'
+		pwd
+		./vcvars32.bat
+		cd ${root_dir}
+		cd ${lib_name}
+		cd ${lib_source_dir}
+		perl Configure VC-WIN32 --prefix=${build_dir_root} no-asm no-shared
+		nmake 
+		#nmake test
+		nmake install
 	fi
 	
 	if [[ "$3" == "iphoneos" ]] || [[ "$3" == "iphonesimulator" ]]; then
@@ -1161,8 +1182,8 @@ fi
             exit 1
             ;;
 		mpg123)
-			#build_mpg123  release "x86_64" linux
-           	build_mpg123  release "x86_64" windows
+			build_mpg123  release "x86_64" linux
+           	#build_mpg123  Release "win32" windows
             exit 1
             ;;
 		zip)
@@ -1175,6 +1196,11 @@ fi
             ;;
 		jpeg_turbo)
            	build_jpeg_turbo  release "x86_64" linux
+            exit 1
+            ;;
+		openssl)
+			build_openssl  release "x86_64" linux
+           	#build_openssl  Release "win32" windows
             exit 1
             ;;
     esac
