@@ -1191,18 +1191,18 @@ function build_vorbis {
 	if [[ "$3" == "linux" ]]; then
 		cd ${lib_source_dir}
 
-		./configure --prefix=${build_dir_root} --target=x86_64 --program-prefix="" --enable-static --disable-shared --disable-dependency-tracking --with-pic
+		./configure --prefix=${build_dir_root} --datarootdir="${build_dir_root}/share" --includedir="${build_dir_root}/include" --libdir="${build_dir_root}/lib" --target=x86_64 --program-prefix="" --enable-static --disable-shared --disable-dependency-tracking --with-pic
 		make
 		make install
 	fi
-	#rm -rf ${root_dir}/${lib_name}/${lib_source_dir}
+	rm -rf ${root_dir}/${lib_name}/${lib_source_dir}
 	cd ${root_dir}
 }
 function build_ogg {
 	local build_type=$1
     local arch=$2
     local platform=$3
-	build_vorbis ${build_type} ${arch} ${platform}
+
 	local lib_name=ogg
 	local build_dir_root="${root_dir}/build/${platform}-${build_type}-${arch}"
     local build_dir="${build_dir_root}/${lib_name}"
@@ -1333,6 +1333,7 @@ fi
             ;;
 		ogg)
 			build_ogg  release "x86_64" linux
+			build_vorbis  release "x86_64" linux
            	#build_ogg  Release "win32" windows
             exit 1
             ;;
