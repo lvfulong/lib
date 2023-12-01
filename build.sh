@@ -39,13 +39,10 @@ function build_zlib {
 	cd ..
 	cd ${build_dir}
 	if [[ "$3" == "windows" ]]; then
-		local generator="Visual Studio 14 2015"
-		if [[ "$2" == "win64" ]]; then
-			generator="Visual Studio 14 2015 Win64"
-		fi
 		#-DPLATFORM_NAME="${platform}"
 		#-DCMAKE_BUILD_TYPE=${build_type} 
-		cmake -G "${generator}" \
+		cmake . -G "Visual Studio 17 2022" \
+			-A${arch} \
 			-DCMAKE_INSTALL_PREFIX=${build_dir_root} \
 			-DCMAKE_PREFIX_PATH=${build_dir_root} \
 			../../../${lib_name}/${lib_source_dir}
@@ -505,11 +502,8 @@ function build_zip {
 	#-DCMAKE_BUILD_TYPE=${build_type} 
 	if [[ "$3" == "windows" ]]; then	
 	
-		local generator="Visual Studio 14 2015"
-		if [[ "$2" == "win64" ]]; then
-			generator="Visual Studio 14 2015 Win64"
-		fi
-		cmake -G "${generator}" \
+		cmake . -G "Visual Studio 17 2022" \
+			-A${arch} \
 			-DCMAKE_INSTALL_PREFIX=${build_dir_root} \
 			-DCMAKE_PREFIX_PATH=${build_dir_root} \
 			-DBUILD_SHARED_LIBS=OFF \
@@ -822,7 +816,7 @@ function build_openssl {
 		#install Strawberry Perl
 		#https://www.taurusxin.com/openssl_win_build/
 		#注意perl在windows的git shell执行有问题
-		#在windows powershell 直接执行perl Configure VC-WIN32 --prefix=E:\github\lib\build\windows-Release-win32\openssl no-asm no-shared	
+		#在windows powershell 直接执行perl Configure VC-WIN32 --prefix=E:\github\lib\build\windows-Release-win32 no-asm no-shared	
 		#nmake D:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.38.33130\bin\Hostx64\x86加入PATH
 		# VS2022 的开发人员提示工具 否则需要接入下列路径到环境变量
 		#C:\Program Files (x86)\Windows Kits\10\bin\10.0.22621.0\x86 加入PATH
@@ -1108,6 +1102,72 @@ function build_curl {
 	rm -rf ${root_dir}/${lib_name}/${lib_source_dir}
 	cd ${root_dir}
 }
+function build_openal {
+	local build_type=$1
+    local arch=$2
+    local platform=$3
+
+	local lib_name=openal
+	local build_dir_root="${root_dir}/build/${platform}-${build_type}-${arch}"
+    local build_dir="${build_dir_root}/${lib_name}"
+	mkdir -p "${build_dir}"
+	cd ${lib_name}
+	local lib_source_dir=openal-soft-1.21.1
+	rm -rf ${lib_source_dir}
+	tar xvzf ${lib_source_dir}.tar.gz
+
+	cd ..
+	cd ${build_dir}
+	
+
+	#-DPLATFORM_NAME="${platform}"
+	#-DCMAKE_BUILD_TYPE=${build_type} 
+	if [[ "$3" == "windows" ]]; then	
+	fi
+	
+	if [[ "$3" == "iphoneos" ]] || [[ "$3" == "iphonesimulator" ]]; then
+	fi
+	
+	if [[ "$3" == "android" ]]; then
+		local android_abi=
+		if [[ "$2" == "aarch64" ]]; then
+			android_abi=arm64-v8a
+		fi
+	
+		if [[ "$2" == "arm7" ]]; then
+			android_abi=armeabi-v7a
+		fi
+	
+		if [[ "$2" == "x86" ]]; then
+			android_abi=x86
+		fi
+	
+		if [[ "$2" == "x86_64" ]]; then
+			android_abi=x86_64
+		fi
+	fi
+	if [[ "$3" == "linux" ]]; then
+		cmake -G "Unix Makefiles" \
+			-DCMAKE_BUILD_TYPE=${build_type} \
+			-DCMAKE_INSTALL_PREFIX=${build_dir_root} \
+			-DCMAKE_PREFIX_PATH=${build_dir_root} \
+            -DCMAKE_FIND_ROOT_PATH=${build_dir_root} \
+			-DLIBTYPE=STATIC \
+			-DALSOFT_BACKEND_OPENSL=1 \
+			-DALSOFT_BACKEND_WAVE=1 \
+			-DCMAKE_BUILD_TYPE=Release \
+			-DALSOFT_AMBDEC_PRESETS=0 \
+			-DALSOFT_EMBED_HRTF_DATA=0 \
+			-DALSOFT_ENABLE_SSE2_CODEGEN=0 \
+			-DALSOFT_EXAMPLES=0 \
+			-DALSOFT_HRTF_DEFS=0
+			../../../${lib_name}/${lib_source_dir}
+
+		cmake --build . --config ${build_type} --target install
+	fi
+	rm -rf ${root_dir}/${lib_name}/${lib_source_dir}
+	cd ${root_dir}
+}
 function archive_ios {
 
 	local build_type=$1
@@ -1175,10 +1235,12 @@ fi
             ;;
 		curl)
            	build_curl  release "x86_64" linux
+			#build_curl Release "win32" windows
             exit 1
             ;;
 		zlib)
            	build_zlib  release "x86_64" linux
+			#build_zlib  Release "win32" windows
             exit 1
             ;;
 		mpg123)
@@ -1188,6 +1250,7 @@ fi
             ;;
 		zip)
            	build_zip  release "x86_64" linux
+			#build_zip Release "win32" windows
             exit 1
             ;;
 		png)
@@ -1201,6 +1264,11 @@ fi
 		openssl)
 			build_openssl  release "x86_64" linux
            	#build_openssl  Release "win32" windows
+            exit 1
+            ;;
+		openal)
+			openal  release "x86_64" linux
+           	#openal  Release "win32" windows
             exit 1
             ;;
     esac
