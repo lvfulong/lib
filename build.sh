@@ -869,12 +869,18 @@ function build_openssl {
 		/Applications/Xcode.app/Contents/Developer/usr/bin/make install_sw
 	fi
 	
+
+	#Option	Description
+	#--prefix=/opt/openssl	The top of the installation directory tree. The OpenSSL libraries will be created in this directory (/opt/openssl)
+	#--openssldir=/usr/local/ssl	Directory for OpenSSL configuration files, and also the default certificate and key store
+	#https://developers.lseg.com/en/article-catalog/article/how-to-build-openssl-and-curl-libraries-on-linux
+
 	if [[ "$3" == "linux" ]]; then
 		#./Configure --prefix=${build_dir_root} --openssldir=${build_dir_root} no-shared no-unit-test \
         #'-Wl,-rpath,$(LIBRPATH)'
 		#make install_sw
 
-		./Configure --prefix=${build_dir_root} --openssldir=${build_dir_root} no-shared no-unit-test
+		./Configure --prefix=${build_dir_root} --openssldir=/usr/local/ssl no-shared no-unit-test
 		make install
 	fi
 
