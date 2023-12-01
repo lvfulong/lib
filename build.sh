@@ -1337,6 +1337,11 @@ fi
            	#build_ogg  Release "win32" windows
             exit 1
             ;;
+		freetype)
+			build_freetype  release "x86_64" linux
+           	#build_freetype  Release "win32" windows
+            exit 1
+            ;;
     esac
 
 #check_android_environment
