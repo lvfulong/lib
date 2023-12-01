@@ -1168,6 +1168,66 @@ function build_openal {
 	rm -rf ${root_dir}/${lib_name}/${lib_source_dir}
 	cd ${root_dir}
 }
+function build_vorbis {
+	local build_type=$1
+    local arch=$2
+    local platform=$3
+
+	local lib_name=vorbis
+	local build_dir_root="${root_dir}/build/${platform}-${build_type}-${arch}"
+    local build_dir="${build_dir_root}/${lib_name}"
+	mkdir -p "${build_dir}"
+	cd ${lib_name}
+	local lib_source_dir=libvorbis-1.3.5
+	rm -rf ${lib_source_dir}
+	tar xvzf ${lib_source_dir}.tar.gz
+
+	#cd ..
+	#cd ${build_dir}
+	
+
+	#-DPLATFORM_NAME="${platform}"
+	#-DCMAKE_BUILD_TYPE=${build_type} 
+	if [[ "$3" == "linux" ]]; then
+		cd ${lib_source_dir}
+
+		./configure --prefix=${build_dir_root} --target=x86_64 --program-prefix="" --enable-static --disable-shared --disable-dependency-tracking --with-pic
+		make
+		make install
+	fi
+	rm -rf ${root_dir}/${lib_name}/${lib_source_dir}
+	cd ${root_dir}
+}
+function build_ogg {
+	local build_type=$1
+    local arch=$2
+    local platform=$3
+	build_vorbis ${build_type} ${arch} ${platform}
+	local lib_name=ogg
+	local build_dir_root="${root_dir}/build/${platform}-${build_type}-${arch}"
+    local build_dir="${build_dir_root}/${lib_name}"
+	mkdir -p "${build_dir}"
+	cd ${lib_name}
+	local lib_source_dir=libogg-1.3.2
+	rm -rf ${lib_source_dir}
+	tar xvzf ${lib_source_dir}.tar.gz
+
+	#cd ..
+	#cd ${build_dir}
+	
+
+	#-DPLATFORM_NAME="${platform}"
+	#-DCMAKE_BUILD_TYPE=${build_type} 
+	if [[ "$3" == "linux" ]]; then
+		cd ${lib_source_dir}
+
+		./configure --prefix=${build_dir_root} --target=x86_64 --program-prefix="" --enable-static --disable-shared --disable-dependency-tracking --with-pic
+		make
+		make install
+	fi
+	rm -rf ${root_dir}/${lib_name}/${lib_source_dir}
+	cd ${root_dir}
+}
 function archive_ios {
 
 	local build_type=$1
@@ -1269,6 +1329,11 @@ fi
 		openal)
 			build_openal  release "x86_64" linux
            	#build_openal  Release "win32" windows
+            exit 1
+            ;;
+		ogg)
+			build_ogg  release "x86_64" linux
+           	#build_ogg  Release "win32" windows
             exit 1
             ;;
     esac
