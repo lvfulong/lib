@@ -1173,7 +1173,7 @@ function build_vorbis {
     local arch=$2
     local platform=$3
 
-	local lib_name=vorbis
+	local lib_name=ogg
 	local build_dir_root="${root_dir}/build/${platform}-${build_type}-${arch}"
     local build_dir="${build_dir_root}/${lib_name}"
 	mkdir -p "${build_dir}"
@@ -1195,7 +1195,7 @@ function build_vorbis {
 		make
 		make install
 	fi
-	rm -rf ${root_dir}/${lib_name}/${lib_source_dir}
+	#rm -rf ${root_dir}/${lib_name}/${lib_source_dir}
 	cd ${root_dir}
 }
 function build_ogg {
