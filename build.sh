@@ -1125,8 +1125,8 @@ function build_openal {
 	#if [[ "$3" == "windows" ]]; then	
 	#fi
 	
-	if [[ "$3" == "iphoneos" ]] || [[ "$3" == "iphonesimulator" ]]; then
-	fi
+	#if [[ "$3" == "iphoneos" ]] || [[ "$3" == "iphonesimulator" ]]; then
+	#fi
 	
 	if [[ "$3" == "android" ]]; then
 		local android_abi=
