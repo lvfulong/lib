@@ -1267,8 +1267,8 @@ fi
             exit 1
             ;;
 		openal)
-			openal  release "x86_64" linux
-           	#openal  Release "win32" windows
+			build_openal  release "x86_64" linux
+           	#build_openal  Release "win32" windows
             exit 1
             ;;
     esac
