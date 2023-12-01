@@ -1122,8 +1122,8 @@ function build_openal {
 
 	#-DPLATFORM_NAME="${platform}"
 	#-DCMAKE_BUILD_TYPE=${build_type} 
-	if [[ "$3" == "windows" ]]; then	
-	fi
+	#if [[ "$3" == "windows" ]]; then	
+	#fi
 	
 	if [[ "$3" == "iphoneos" ]] || [[ "$3" == "iphonesimulator" ]]; then
 	fi
