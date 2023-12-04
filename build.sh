@@ -1107,7 +1107,7 @@ function build_curl {
 		#CPPFLAGS="-I${build_dir_root}/include" LDFLAGS="-L${build_dir_root}/lib64" ./configure --prefix=${build_dir_root} --target=x86_64 --with-zlib=${build_dir_root} --disable-shared
 		export CPPFLAGS="-I${build_dir_root}/include"
 		export LDFLAGS="-L${build_dir_root}/lib64" 
-		./configure --prefix=${build_dir_root} --target=x86_64 --with-zlib=${build_dir_root} --with-ssl=/opt/openssl --disable-shared
+		./configure --prefix=${build_dir_root} --target=x86_64 --with-zlib=${build_dir_root} --with-openssl=/opt/openssl --disable-shared
 		make
 		make install
 	fi
