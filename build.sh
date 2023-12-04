@@ -1070,9 +1070,10 @@ function build_curl {
 			-DCMAKE_INSTALL_PREFIX=${build_dir_root} \
 			-DCMAKE_PREFIX_PATH=${build_dir_root} \
 		  	-DCURL_ZLIB=ON \
-		   	-DCMAKE_USE_OPENSSL=ON \
+		   	-DUSE_OPENSSL=ON \
 		   	-DENABLE_IPV6=ON \
-		   	-DCURL_STATICLIB=ON \
+			-DBUILD_SHARED_LIBS=OFF \
+		   	-DBUILD_STATIC_LIBS=ON \
 		   	-DBUILD_CURL_EXE=OFF \
 		    -DBUILD_TESTING=OFF \
 			-DZLIB_LIBRARIES="${build_dir_root}/lib" \
