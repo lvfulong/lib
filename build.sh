@@ -1052,7 +1052,7 @@ function build_curl {
     local build_dir="${build_dir_root}/${lib_name}"
 	mkdir -p "${build_dir}"
 	cd ${lib_name}
-	local lib_source_dir=curl-7.56.0
+	local lib_source_dir=curl-8.4.0
 	rm -rf ${lib_source_dir}
 	tar xvzf ${lib_source_dir}.tar.gz
 
