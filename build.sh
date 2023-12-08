@@ -42,7 +42,7 @@ function build_zlib {
 		#-DPLATFORM_NAME="${platform}"
 		#-DCMAKE_BUILD_TYPE=${build_type} 
 		cmake . -G "Visual Studio 17 2022" \
-			-A${arch} \
+			-A ${arch} \
 			-DCMAKE_INSTALL_PREFIX=${build_dir_root} \
 			-DCMAKE_PREFIX_PATH=${build_dir_root} \
 			../../../${lib_name}/${lib_source_dir}
@@ -143,11 +143,8 @@ function build_png {
 	#-DCMAKE_BUILD_TYPE=${build_type} 
 	if [[ "$3" == "windows" ]]; then	
 	
-		local generator="Visual Studio 14 2015"
-		if [[ "$2" == "win64" ]]; then
-			generator="Visual Studio 14 2015 Win64"
-		fi
-		cmake -G "${generator}" \
+		cmake . -G "Visual Studio 17 2022" \
+			-A ${arch} \
 			-DCMAKE_INSTALL_PREFIX=${build_dir_root} \
 			-DCMAKE_PREFIX_PATH=${build_dir_root} \
 			-DPNG_STATIC=ON \
@@ -365,11 +362,8 @@ function build_jpeg_turbo {
 	#-DPLATFORM_NAME="${platform}"
 	#-DCMAKE_BUILD_TYPE=${build_type} 
 	if [[ "$3" == "windows" ]]; then
-		local generator="Visual Studio 14 2015"
-		if [[ "$2" == "win64" ]]; then
-			generator="Visual Studio 14 2015 Win64"
-		fi
-		cmake -G "${generator}" \
+		cmake . -G "Visual Studio 17 2022" \
+			-A ${arch} \
 			-DCMAKE_INSTALL_PREFIX=${build_dir_root} \
 			-DCMAKE_PREFIX_PATH=${build_dir_root} \
 			-DENABLE_STATIC=ON \
@@ -503,7 +497,7 @@ function build_zip {
 	if [[ "$3" == "windows" ]]; then	
 	
 		cmake . -G "Visual Studio 17 2022" \
-			-A${arch} \
+			-A ${arch} \
 			-DCMAKE_INSTALL_PREFIX=${build_dir_root} \
 			-DCMAKE_PREFIX_PATH=${build_dir_root} \
 			-DBUILD_SHARED_LIBS=OFF \
@@ -601,8 +595,8 @@ function build_freetype {
     local arch=$2
     local platform=$3
 	#depends zlib png
-	build_zlib ${build_type} ${arch} ${platform}
-	build_png ${build_type} ${arch} ${platform}
+	#build_zlib ${build_type} ${arch} ${platform}
+	#build_png ${build_type} ${arch} ${platform}
 	local lib_name=freetype
 	local build_dir_root="${root_dir}/build/${platform}-${build_type}-${arch}"
     local build_dir="${build_dir_root}/${lib_name}"
@@ -620,11 +614,8 @@ function build_freetype {
 	#-DCMAKE_BUILD_TYPE=${build_type} 
 	if [[ "$3" == "windows" ]]; then	
 	
-		local generator="Visual Studio 14 2015"
-		if [[ "$2" == "win64" ]]; then
-			generator="Visual Studio 14 2015 Win64"
-		fi
-		cmake -G "${generator}" \
+		cmake . -G "Visual Studio 17 2022" \
+			-A ${arch} \
 			-DCMAKE_INSTALL_PREFIX=${build_dir_root} \
 			-DCMAKE_PREFIX_PATH=${build_dir_root} \
 			-DFT_REQUIRE_ZLIB=TRUE \
@@ -746,7 +737,7 @@ function build_mpg123 {
 		#cd ${root_dir}/${lib_name}/${lib_source_dir}
 		#./windows-builds.sh x86
 		cmake . -G "Visual Studio 17 2022" \
-			-A${arch} \
+			-A ${arch} \
 			-DCMAKE_BUILD_TYPE=${build_type} \
 			-DCMAKE_INSTALL_PREFIX=${build_dir_root} \
 			-DCMAKE_PREFIX_PATH=${build_dir_root} \
@@ -802,7 +793,7 @@ function build_openssl {
     local build_dir="${build_dir_root}/${lib_name}"
 	mkdir -p "${build_dir}"
 	cd ${lib_name}
-	local lib_source_dir=openssl-3.1.0
+	local lib_source_dir=openssl-3.1.4
 	rm -rf ${lib_source_dir}
 	tar xvzf ${lib_source_dir}.tar.gz
 
@@ -817,6 +808,7 @@ function build_openssl {
 		#https://www.taurusxin.com/openssl_win_build/
 		#注意perl在windows的git shell执行有问题
 		#在windows powershell 直接执行perl Configure VC-WIN32 --prefix=E:\github\lib\build\windows-Release-win32 no-asm no-shared	
+		#perl Configure VC-WIN64A --prefix=E:\github\lib\build\windows-Release-x64 no-asm no-shared	
 		#nmake D:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.38.33130\bin\Hostx64\x86加入PATH
 		# VS2022 的开发人员提示工具 否则需要接入下列路径到环境变量
 		#C:\Program Files (x86)\Windows Kits\10\bin\10.0.22621.0\x86 加入PATH
@@ -895,8 +887,8 @@ function build_websocket {
     local arch=$2
     local platform=$3
 	#depends zlib
-	build_zlib ${build_type} ${arch} ${platform}
-	build_openssl ${build_type} ${arch} ${platform}
+	#build_zlib ${build_type} ${arch} ${platform}
+	#build_openssl ${build_type} ${arch} ${platform}
 	local lib_name=websocket
 	local build_dir_root="${root_dir}/build/${platform}-${build_type}-${arch}"
     local build_dir="${build_dir_root}/${lib_name}"
@@ -914,11 +906,8 @@ function build_websocket {
 	#-DCMAKE_BUILD_TYPE=${build_type} 
 	if [[ "$3" == "windows" ]]; then	
 	
-		local generator="Visual Studio 14 2015"
-		if [[ "$2" == "win64" ]]; then
-			generator="Visual Studio 14 2015 Win64"
-		fi
-		cmake -G "${generator}" \
+		cmake -G "Visual Studio 17 2022" \
+			-A ${arch} \
 			-DCMAKE_INSTALL_PREFIX=${build_dir_root} \
 			-DCMAKE_PREFIX_PATH=${build_dir_root} \
 			-DLWS_WITH_SSL=1 \
@@ -927,7 +916,7 @@ function build_websocket {
 			-DLWS_WITHOUT_TEST_SERVER=1 \
 			-DLWS_WITHOUT_TEST_SERVER_EXTPOLL=1 \
 			-DLWS_WITHOUT_TEST_PING=1 \
-			-DLWS_WITHOUT_TEST_ECHO=1 \ 
+			-DLWS_WITHOUT_TEST_ECHO=1 \
 			-DLWS_WITHOUT_TEST_CLIENT=1 \
  			-DLWS_WITHOUT_TEST_FRAGGLE=1 \
 			-DLWS_IPV6=1 \
@@ -1045,8 +1034,8 @@ function build_curl {
     local arch=$2
     local platform=$3
 	#depends zlib
-	build_zlib ${build_type} ${arch} ${platform}
-	build_openssl ${build_type} ${arch} ${platform}
+	#build_zlib ${build_type} ${arch} ${platform}
+	#build_openssl ${build_type} ${arch} ${platform}
 	local lib_name=curl
 	local build_dir_root="${root_dir}/build/${platform}-${build_type}-${arch}"
     local build_dir="${build_dir_root}/${lib_name}"
@@ -1066,7 +1055,7 @@ function build_curl {
 		cd ..
 		cd ${build_dir}
 		cmake . -G "Visual Studio 17 2022" \
-			-A${arch} \
+			-A ${arch} \
 			-DCMAKE_INSTALL_PREFIX=${build_dir_root} \
 			-DCMAKE_PREFIX_PATH=${build_dir_root} \
 		  	-DCURL_ZLIB=ON \
@@ -1132,11 +1121,23 @@ function build_openal {
 	cd ..
 	cd ${build_dir}
 	
-
+	#静态库链接不上
 	#-DPLATFORM_NAME="${platform}"
 	#-DCMAKE_BUILD_TYPE=${build_type} 
-	#if [[ "$3" == "windows" ]]; then	
-	#fi
+	if [[ "$3" == "windows" ]]; then
+	cmake . -G "Visual Studio 17 2022" \
+			-A${arch} \
+			-DCMAKE_BUILD_TYPE=${build_type} \
+			-DCMAKE_INSTALL_PREFIX=${build_dir_root} \
+			-DCMAKE_PREFIX_PATH=${build_dir_root} \
+            -DCMAKE_FIND_ROOT_PATH=${build_dir_root} \
+			-DLIBTYPE=SHARED \
+			-DCMAKE_BUILD_TYPE=Release \
+			-DALSOFT_EXAMPLES=0 \
+			../../../${lib_name}/${lib_source_dir}
+
+		cmake --build . --config ${build_type} --target install	
+	fi
 	
 	#if [[ "$3" == "iphoneos" ]] || [[ "$3" == "iphonesimulator" ]]; then
 	#fi
@@ -1303,35 +1304,38 @@ if [[ "${ISSUE_CLEAN}" == "true" ]]; then
 fi
     case ${BUILD_LIB_TYPE} in
         websocket)
-           	build_websocket  release "x86_64" linux
+           	#build_websocket  release "x86_64" linux
+			build_websocket Release "x64" windows
             exit 1
             ;;
 		curl)
-           	build_curl  release "x86_64" linux
-			#build_curl Release "win32" windows
+           	#build_curl  release "x86_64" linux
+			build_curl Release "x64" windows
             exit 1
             ;;
 		zlib)
-           	build_zlib  release "x86_64" linux
-			#build_zlib  Release "win32" windows
+           	#build_zlib  release "x86_64" linux
+			build_zlib  Release "x64" windows
             exit 1
             ;;
 		mpg123)
-			build_mpg123  release "x86_64" linux
-           	#build_mpg123  Release "win32" windows
+			#build_mpg123  release "x86_64" linux
+           	build_mpg123  Release "x64" windows
             exit 1
             ;;
 		zip)
-           	build_zip  release "x86_64" linux
-			#build_zip Release "win32" windows
+           	#build_zip  release "x86_64" linux
+			build_zip Release "x64" windows
             exit 1
             ;;
 		png)
-           	build_png  release "x86_64" linux
+           	#build_png  release "x86_64" linux
+			build_png Release "x64" windows
             exit 1
             ;;
 		jpeg_turbo)
-           	build_jpeg_turbo  release "x86_64" linux
+           	#build_jpeg_turbo  release "x86_64" linux
+			build_jpeg_turbo  Release "x64" windows
             exit 1
             ;;
 		openssl)
@@ -1340,19 +1344,20 @@ fi
             exit 1
             ;;
 		openal)
-			build_openal  release "x86_64" linux
-           	#build_openal  Release "win32" windows
+			#build_openal  release "x86_64" linux
+           	build_openal  Release "x64" windows
             exit 1
             ;;
 		ogg)
-			build_ogg  release "x86_64" linux
-			build_vorbis  release "x86_64" linux
-           	#build_ogg  Release "win32" windows
+			#build_ogg  release "x86_64" linux
+			#build_vorbis  release "x86_64" linux
+           	build_ogg  Release "x64" windows
+			build_vorbis  Release "x64" windows
             exit 1
             ;;
 		freetype)
-			build_freetype  release "x86_64" linux
-           	#build_freetype  Release "win32" windows
+			#build_freetype  release "x86_64" linux
+           	build_freetype  Release "x64" windows
             exit 1
             ;;
     esac
