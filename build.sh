@@ -1242,6 +1242,76 @@ function build_ogg {
 	rm -rf ${root_dir}/${lib_name}/${lib_source_dir}
 	cd ${root_dir}
 }
+function build_sdl {
+	local build_type=$1
+    local arch=$2
+    local platform=$3
+
+	local lib_name=sdl
+	local build_dir_root="${root_dir}/build/${platform}-${build_type}-${arch}"
+    local build_dir="${build_dir_root}/${lib_name}"
+	mkdir -p "${build_dir}"
+	cd ${lib_name}
+	local lib_source_dir=SDL2-2.28.5
+	rm -rf ${lib_source_dir}
+	tar xvzf ${lib_source_dir}.tar.gz
+
+	cd ..
+	cd ${build_dir}
+	
+	#静态库链接不上
+	#-DPLATFORM_NAME="${platform}"
+	#-DCMAKE_BUILD_TYPE=${build_type} 
+	if [[ "$3" == "windows" ]]; then
+	cmake . -G "Visual Studio 17 2022" \
+			-A ${arch} \
+			-DCMAKE_BUILD_TYPE=${build_type} \
+			-DCMAKE_INSTALL_PREFIX=${build_dir_root} \
+			-DCMAKE_PREFIX_PATH=${build_dir_root} \
+            -DCMAKE_FIND_ROOT_PATH=${build_dir_root} \
+			-DSDL_SHARED=OFF \
+			-DSDL_STATIC=ON \
+			../../../${lib_name}/${lib_source_dir}
+
+		cmake --build . --config ${build_type} --target install	
+	fi
+	
+	#if [[ "$3" == "iphoneos" ]] || [[ "$3" == "iphonesimulator" ]]; then
+	#fi
+	
+	if [[ "$3" == "android" ]]; then
+		local android_abi=
+		if [[ "$2" == "aarch64" ]]; then
+			android_abi=arm64-v8a
+		fi
+	
+		if [[ "$2" == "arm7" ]]; then
+			android_abi=armeabi-v7a
+		fi
+	
+		if [[ "$2" == "x86" ]]; then
+			android_abi=x86
+		fi
+	
+		if [[ "$2" == "x86_64" ]]; then
+			android_abi=x86_64
+		fi
+	fi
+	if [[ "$3" == "linux" ]]; then
+		cmake . -G "Unix Makefiles" \
+			-DCMAKE_BUILD_TYPE=${build_type} \
+			-DCMAKE_INSTALL_PREFIX=${build_dir_root} \
+			-DCMAKE_PREFIX_PATH=${build_dir_root} \
+            -DCMAKE_FIND_ROOT_PATH=${build_dir_root} \
+			-DSDL_SHARED=OFF \
+			-DSDL_STATIC=ON \
+			../../../${lib_name}/${lib_source_dir}
+
+		cmake --build . --config ${build_type} --target install
+	fi
+	rm -rf ${root_dir}/${lib_name}/${lib_source_dir}
+	cd ${root_dir}
+}
 function archive_ios {
 
 	local build_type=$1
@@ -1358,6 +1428,11 @@ fi
 		freetype)
 			#build_freetype  release "x86_64" linux
            	build_freetype  Release "x64" windows
+            exit 1
+            ;;
+		sdl)
+			build_sdl  release "x86_64" linux
+           	#build_sdl  Release "x64" windows
             exit 1
             ;;
     esac
