@@ -1305,6 +1305,7 @@ function build_sdl {
             -DCMAKE_FIND_ROOT_PATH=${build_dir_root} \
 			-DSDL_SHARED=OFF \
 			-DSDL_STATIC=ON \
+			-DSDL_X11=ON \
 			../../../${lib_name}/${lib_source_dir}
 
 		cmake --build . --config ${build_type} --target install
