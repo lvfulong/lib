@@ -162,7 +162,6 @@ function build_png {
 			-DCMAKE_BUILD_TYPE="${build_type}" \
 			-DIOS_ARCH="${arch}" \
 			-DPLATFORM_NAME="${platform}" \
-			#-DCMAKE_INSTALL_PREFIX=${build_dir} \
 			-DCMAKE_TOOLCHAIN_FILE=../../../CMake/clang/iOS.cmake \
 			-DCMAKE_SYSTEM_NAME=iOS \
 			-DCMAKE_INSTALL_PREFIX=${build_dir_root} \
@@ -195,7 +194,6 @@ function build_png {
 		fi
 		#-DCMAKE_ARCHIVE_OUTPUT_DIRECTORY=../android-${build_type}/Conch why not work?
 		cmake -G "Unix Makefiles" \
-			#-DCMAKE_INSTALL_PREFIX=${build_dir} \
 			-DCMAKE_BUILD_TYPE=${build_type} \
 			-DCMAKE_TOOLCHAIN_FILE=${CONCH_NDK_PATH}/build/cmake/android.toolchain.cmake \
 			-DANDROID_ABI=${android_abi} \
@@ -400,7 +398,6 @@ function build_jpeg_turbo {
 			-DCMAKE_BUILD_TYPE="${build_type}" \
 			-DIOS_ARCH="${arch}" \
 			-DPLATFORM_NAME="${platform}" \
-			#-DCMAKE_INSTALL_PREFIX=${build_dir} \
 			-DCMAKE_TOOLCHAIN_FILE=../../../CMake/clang/iOS.cmake \
 			-DCMAKE_SYSTEM_NAME=iOS \
 			-DCMAKE_INSTALL_PREFIX=${build_dir_root} \
@@ -433,7 +430,6 @@ function build_jpeg_turbo {
 		fi
 		#-DCMAKE_ARCHIVE_OUTPUT_DIRECTORY=../android-${build_type}/Conch why not work?
 		cmake -G "Unix Makefiles" \
-			#-DCMAKE_INSTALL_PREFIX=${build_dir} \
 			-DCMAKE_BUILD_TYPE=${build_type} \
 			-DCMAKE_TOOLCHAIN_FILE=${CONCH_NDK_PATH}/build/cmake/android.toolchain.cmake \
 			-DANDROID_ABI=${android_abi} \
@@ -512,7 +508,6 @@ function build_zip {
 			-DCMAKE_BUILD_TYPE="${build_type}" \
 			-DIOS_ARCH="${arch}" \
 			-DPLATFORM_NAME="${platform}" \
-			#-DCMAKE_INSTALL_PREFIX=${build_dir} \
 			-DCMAKE_TOOLCHAIN_FILE=../../../CMake/clang/iOS.cmake \
 			-DCMAKE_SYSTEM_NAME=iOS \
 			-DCMAKE_INSTALL_PREFIX=${build_dir_root} \
@@ -547,7 +542,6 @@ function build_zip {
 		fi
 		#-DCMAKE_ARCHIVE_OUTPUT_DIRECTORY=../android-${build_type}/Conch why not work?
 		cmake -G "Unix Makefiles" \
-			#-DCMAKE_INSTALL_PREFIX=${build_dir} \
 			-DCMAKE_BUILD_TYPE=${build_type} \
 			-DCMAKE_TOOLCHAIN_FILE=${CONCH_NDK_PATH}/build/cmake/android.toolchain.cmake \
 			-DANDROID_ABI=${android_abi} \
@@ -634,7 +628,6 @@ function build_freetype {
 			-DCMAKE_BUILD_TYPE="${build_type}" \
 			-DIOS_ARCH="${arch}" \
 			-DPLATFORM_NAME="${platform}" \
-			#-DCMAKE_INSTALL_PREFIX=${build_dir} \
 			-DCMAKE_TOOLCHAIN_FILE=../../../CMake/clang/iOS.cmake \
 			-DCMAKE_SYSTEM_NAME=iOS \
 			-DCMAKE_INSTALL_PREFIX=${build_dir_root} \
@@ -668,7 +661,6 @@ function build_freetype {
 		fi
 		#-DCMAKE_ARCHIVE_OUTPUT_DIRECTORY=../android-${build_type}/Conch why not work?
 		cmake -G "Unix Makefiles" \
-			#-DCMAKE_INSTALL_PREFIX=${build_dir} \
 			-DCMAKE_BUILD_TYPE=${build_type} \
 			-DCMAKE_TOOLCHAIN_FILE=${CONCH_NDK_PATH}/build/cmake/android.toolchain.cmake \
 			-DANDROID_ABI=${android_abi} \
@@ -931,7 +923,6 @@ function build_websocket {
 			-DCMAKE_BUILD_TYPE="${build_type}" \
 			-DIOS_ARCH="${arch}" \
 			-DPLATFORM_NAME="${platform}" \
-			#-DCMAKE_INSTALL_PREFIX=${build_dir} \
 			-DCMAKE_TOOLCHAIN_FILE=../../../CMake/clang/iOS.cmake \
 			-DCMAKE_SYSTEM_NAME=iOS \
 			-DCMAKE_INSTALL_PREFIX=${build_dir_root} \
@@ -970,7 +961,6 @@ function build_websocket {
 		fi
 		#-DCMAKE_ARCHIVE_OUTPUT_DIRECTORY=../android-${build_type}/Conch why not work?
 		cmake -G "Unix Makefiles" \
-			#-DCMAKE_INSTALL_PREFIX=${build_dir} \
 			-DCMAKE_BUILD_TYPE=${build_type} \
 			-DCMAKE_TOOLCHAIN_FILE=${CONCH_NDK_PATH}/build/cmake/android.toolchain.cmake \
 			-DANDROID_ABI=${android_abi} \
@@ -1313,6 +1303,110 @@ function build_sdl {
 	rm -rf ${root_dir}/${lib_name}/${lib_source_dir}
 	cd ${root_dir}
 }
+function build_benchmark {
+	local build_type=$1
+    local arch=$2
+    local platform=$3
+
+	local lib_name=benchmark
+	local build_dir_root="${root_dir}/build/${platform}-${build_type}-${arch}"
+    local build_dir="${build_dir_root}/${lib_name}"
+	mkdir -p "${build_dir}"
+	cd ${lib_name}
+	local lib_source_dir=benchmark-1.8.3
+	rm -rf ${lib_source_dir}
+	tar xvzf ${lib_source_dir}.tar.gz
+
+	cd ..
+	cd ${build_dir}
+	
+	#静态库链接不上
+	#-DPLATFORM_NAME="${platform}"
+	#-DCMAKE_BUILD_TYPE=${build_type} 
+	if [[ "$3" == "windows" ]]; then
+	cmake . -G "Visual Studio 17 2022" \
+			-A ${arch} \
+			-DCMAKE_BUILD_TYPE=${build_type} \
+			-DCMAKE_INSTALL_PREFIX=${build_dir_root} \
+			-DCMAKE_PREFIX_PATH=${build_dir_root} \
+            -DCMAKE_FIND_ROOT_PATH=${build_dir_root} \
+			../../../${lib_name}/${lib_source_dir}
+
+		cmake --build . --config ${build_type} --target install	
+	fi
+	
+	if [[ "$3" == "iphoneos" ]] || [[ "$3" == "iphonesimulator" ]]; then
+		cmake \
+			-G "Unix Makefiles" \
+			-DCMAKE_BUILD_TYPE="${build_type}" \
+			-DIOS_ARCH="${arch}" \
+			-DPLATFORM_NAME="${platform}" \
+			-DCMAKE_TOOLCHAIN_FILE=../../../CMake/clang/iOS.cmake \
+			-DCMAKE_SYSTEM_NAME=iOS \
+			-DCMAKE_INSTALL_PREFIX=${build_dir_root} \
+			-DCMAKE_PREFIX_PATH=${build_dir_root} \
+			-DHAVE_STEADY_CLOCK=0 \
+			-DBENCHMARK_ENABLE_TESTING=OFF \
+			../../../${lib_name}/${lib_source_dir}
+		
+		cmake --build . --config ${build_type} --target install
+	fi
+	
+	if [[ "$3" == "android" ]]; then
+		local android_abi=
+		if [[ "$2" == "aarch64" ]]; then
+			android_abi=arm64-v8a
+		fi
+	
+		if [[ "$2" == "arm7" ]]; then
+			android_abi=armeabi-v7a
+		fi
+	
+		if [[ "$2" == "x86" ]]; then
+			android_abi=x86
+		fi
+	
+		if [[ "$2" == "x86_64" ]]; then
+			android_abi=x86_64
+		fi
+
+		cmake -G "Unix Makefiles" \
+			-DCMAKE_BUILD_TYPE=${build_type} \
+			-DCMAKE_TOOLCHAIN_FILE=${CONCH_NDK_PATH}/build/cmake/android.toolchain.cmake \
+			-DANDROID_ABI=${android_abi} \
+			-DANDROID_NDK=${CONCH_NDK_PATH} \
+			-DCMAKE_ANDROID_ARCH_ABI=${android_abi} \
+			-DCMAKE_ANDROID_NDK=${CONCH_NDK_PATH} \
+			-DCMAKE_EXPORT_COMPILE_COMMANDS=ON \
+			-DCMAKE_SYSTEM_NAME=Android \
+			-DCMAKE_SYSTEM_VERSION=19 \
+			-DANDROID_STL=c++_shared \
+			-DANDROID_PLATFORM=${CONCH_ANDROID_MINI_SDK_VERSION} \
+			-DANDROID_ARM_NEON=TRUE \
+			-DANDROID_TOOLCHAIN=clang \
+			-DCMAKE_INSTALL_PREFIX=${build_dir_root} \
+			-DCMAKE_PREFIX_PATH=${build_dir_root} \
+            -DCMAKE_FIND_ROOT_PATH=${build_dir_root} \
+			-DBENCHMARK_ENABLE_TESTING=OFF \
+			../../../${lib_name}/${lib_source_dir}
+
+		cmake --build . --config ${build_type} --target install
+	fi
+	if [[ "$3" == "linux" ]]; then
+		cmake . -G "Unix Makefiles" \
+			-DCMAKE_BUILD_TYPE=${build_type} \
+			-DCMAKE_INSTALL_PREFIX=${build_dir_root} \
+			-DCMAKE_PREFIX_PATH=${build_dir_root} \
+            -DCMAKE_FIND_ROOT_PATH=${build_dir_root} \
+			-DBENCHMARK_ENABLE_TESTING=OFF \
+			../../../${lib_name}/${lib_source_dir}
+
+		cmake --build . --config ${build_type} --target install
+	fi
+	rm -rf ${root_dir}/${lib_name}/${lib_source_dir}
+	cd ${root_dir}
+}
+
 function archive_ios {
 
 	local build_type=$1
@@ -1328,6 +1422,8 @@ function archive_ios {
 	lipo -create  "${build_dir0}/lib/libjpeg.a"  "${build_dir1}/lib/libjpeg.a"  -output "${root_dir}/build/ios-fat/libjpeg.a"
     lipo -create  "${build_dir0}/lib/libturbojpeg.a"  "${build_dir1}/lib/libturbojpeg.a"  -output "${root_dir}/build/ios-fat/libturbojpeg.a"
     lipo -create  "${build_dir0}/lib/libfreetype.a"  "${build_dir1}/lib/libfreetype.a"  -output "${root_dir}/build/ios-fat/libfreetype.a"
+	lipo -create  "${build_dir0}/lib/libbenchmark_main.a"  "${build_dir1}/lib/libbenchmark_main.a"  -output "${root_dir}/build/ios-fat/libbenchmark_main.a"
+	lipo -create  "${build_dir0}/lib/libbenchmark.a"  "${build_dir1}/lib/libbenchmark.a"  -output "${root_dir}/build/ios-fat/libbenchmark.a"
 }
 
 function clean {
@@ -1434,6 +1530,16 @@ fi
 		sdl)
 			build_sdl  release "x86_64" linux
            	#build_sdl  Release "x64" windows
+            exit 1
+            ;;
+		benchmark)
+			#build_benchmark release "x86_64" linux
+           	#build_benchmark  Release "x64" windows
+			#build_benchmark release x86_64 iphonesimulator
+			#build_benchmark release arm64 iphoneos
+			#archive_ios release iphoneos arm64 iphonesimulator x86_64
+			build_benchmark release "aarch64" android
+			build_benchmark release "arm7" android
             exit 1
             ;;
     esac
