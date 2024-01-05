@@ -1428,33 +1428,7 @@ function build_spdlog {
 	#静态库链接不上
 	#-DPLATFORM_NAME="${platform}"
 	#-DCMAKE_BUILD_TYPE=${build_type} 
-	if [[ "$3" == "windows" ]]; then
 
-	fi
-	
-	if [[ "$3" == "iphoneos" ]] || [[ "$3" == "iphonesimulator" ]]; then
-
-	fi
-	
-	if [[ "$3" == "android" ]]; then
-		local android_abi=
-		if [[ "$2" == "aarch64" ]]; then
-			android_abi=arm64-v8a
-		fi
-	
-		if [[ "$2" == "arm7" ]]; then
-			android_abi=armeabi-v7a
-		fi
-	
-		if [[ "$2" == "x86" ]]; then
-			android_abi=x86
-		fi
-	
-		if [[ "$2" == "x86_64" ]]; then
-			android_abi=x86_64
-		fi
-
-	fi
 	if [[ "$3" == "linux" ]]; then
 		cmake . -G "Unix Makefiles" \
 			-DCMAKE_BUILD_TYPE=${build_type} \
