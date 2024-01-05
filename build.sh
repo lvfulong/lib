@@ -1330,6 +1330,8 @@ function build_benchmark {
 			-DCMAKE_INSTALL_PREFIX=${build_dir_root} \
 			-DCMAKE_PREFIX_PATH=${build_dir_root} \
             -DCMAKE_FIND_ROOT_PATH=${build_dir_root} \
+			-DBENCHMARK_ENABLE_TESTING=OFF \
+			-DBUILD_SHARED_LIBS=OFF \
 			../../../${lib_name}/${lib_source_dir}
 
 		cmake --build . --config ${build_type} --target install	
@@ -1406,7 +1408,65 @@ function build_benchmark {
 	rm -rf ${root_dir}/${lib_name}/${lib_source_dir}
 	cd ${root_dir}
 }
+function build_spdlog {
+	local build_type=$1
+    local arch=$2
+    local platform=$3
 
+	local lib_name=spdlog
+	local build_dir_root="${root_dir}/build/${platform}-${build_type}-${arch}"
+    local build_dir="${build_dir_root}/${lib_name}"
+	mkdir -p "${build_dir}"
+	cd ${lib_name}
+	local lib_source_dir=spdlog-1.12.0
+	rm -rf ${lib_source_dir}
+	tar xvzf ${lib_source_dir}.tar.gz
+
+	cd ..
+	cd ${build_dir}
+	
+	#静态库链接不上
+	#-DPLATFORM_NAME="${platform}"
+	#-DCMAKE_BUILD_TYPE=${build_type} 
+	if [[ "$3" == "windows" ]]; then
+
+	fi
+	
+	if [[ "$3" == "iphoneos" ]] || [[ "$3" == "iphonesimulator" ]]; then
+
+	fi
+	
+	if [[ "$3" == "android" ]]; then
+		local android_abi=
+		if [[ "$2" == "aarch64" ]]; then
+			android_abi=arm64-v8a
+		fi
+	
+		if [[ "$2" == "arm7" ]]; then
+			android_abi=armeabi-v7a
+		fi
+	
+		if [[ "$2" == "x86" ]]; then
+			android_abi=x86
+		fi
+	
+		if [[ "$2" == "x86_64" ]]; then
+			android_abi=x86_64
+		fi
+
+	fi
+	if [[ "$3" == "linux" ]]; then
+		cmake . -G "Unix Makefiles" \
+			-DCMAKE_BUILD_TYPE=${build_type} \
+			-DCMAKE_INSTALL_PREFIX=${build_dir_root} \
+			-DCMAKE_PREFIX_PATH=${build_dir_root} \
+			../../../${lib_name}/${lib_source_dir}
+
+		cmake --build . --config ${build_type} --target install
+	fi
+	rm -rf ${root_dir}/${lib_name}/${lib_source_dir}
+	cd ${root_dir}
+}
 function archive_ios {
 
 	local build_type=$1
@@ -1534,12 +1594,17 @@ fi
             ;;
 		benchmark)
 			#build_benchmark release "x86_64" linux
-           	#build_benchmark  Release "x64" windows
+           	build_benchmark  Release "x64" windows
 			#build_benchmark release x86_64 iphonesimulator
 			#build_benchmark release arm64 iphoneos
 			#archive_ios release iphoneos arm64 iphonesimulator x86_64
-			build_benchmark release "aarch64" android
-			build_benchmark release "arm7" android
+			#build_benchmark release "aarch64" android
+			#build_benchmark release "arm7" android
+            exit 1
+            ;;
+		spdlog)
+			build_spdlog  release "x86_64" linux
+           	#build_spdlog  Release "x64" windows
             exit 1
             ;;
     esac
