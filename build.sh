@@ -1428,7 +1428,17 @@ function build_spdlog {
 	#静态库链接不上
 	#-DPLATFORM_NAME="${platform}"
 	#-DCMAKE_BUILD_TYPE=${build_type} 
+	if [[ "$3" == "windows" ]]; then
+	    cmake . -G "Visual Studio 17 2022" \
+			-A ${arch} \
+			-DCMAKE_BUILD_TYPE=${build_type} \
+			-DCMAKE_INSTALL_PREFIX=${build_dir_root} \
+			-DCMAKE_PREFIX_PATH=${build_dir_root} \
+			../../../${lib_name}/${lib_source_dir}
 
+		cmake --build . --config ${build_type} --target install	
+	fi
+	
 	if [[ "$3" == "linux" ]]; then
 		cmake . -G "Unix Makefiles" \
 			-DCMAKE_BUILD_TYPE=${build_type} \
