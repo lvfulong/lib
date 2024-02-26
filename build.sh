@@ -1451,6 +1451,40 @@ function build_spdlog {
 	rm -rf ${root_dir}/${lib_name}/${lib_source_dir}
 	cd ${root_dir}
 }
+
+function build_boost_regex {
+	local build_type=$1
+    local arch=$2
+    local platform=$3
+
+	local lib_name=boost
+	local build_dir_root="${root_dir}/build/${platform}-${build_type}-${arch}"
+    local build_dir="${build_dir_root}/${lib_name}-regex"
+	mkdir -p "${build_dir}"
+	cd ${lib_name}
+	local lib_source_dir=boost-1.84.0
+	rm -rf ${lib_source_dir}
+	tar xvzf ${lib_source_dir}.tar.gz
+
+	cd ..
+	cd ${root_dir}/${lib_name}/${lib_source_dir}/tools/build
+	
+	#静态库链接不上
+	#-DPLATFORM_NAME="${platform}"
+	#-DCMAKE_BUILD_TYPE=${build_type} 
+	if [[ "$3" == "windows" ]]; then
+		#commad below excute in windows console
+		#cd E:\github\lib\boost\boost-1.84.0\boost-1.84.0\tools\build
+		#.\bootstrap.bat
+		# .\b2 install --prefix=E:/github/lib/build/windows-Release-x64
+		#cd ${root_dir}/${lib_name}/${lib_source_dir}
+		#E:/github/lib/build/windows-Release-x64加入PATH
+		#b2 --build-dir=E:/github/lib/build/windows-Release-x64 toolset=msvc --with-regex --build-type=complete install
+	fi
+
+	rm -rf ${root_dir}/${lib_name}/${lib_source_dir}
+	cd ${root_dir}
+}
 function archive_ios {
 
 	local build_type=$1
@@ -1589,6 +1623,11 @@ fi
 		spdlog)
 			build_spdlog  release "x86_64" linux
            	#build_spdlog  Release "x64" windows
+            exit 1
+            ;;
+		boost_regex)
+			#build_boost_regex  release "x86_64" linux
+           	build_boost_regex  Release "x64" windows
             exit 1
             ;;
     esac
