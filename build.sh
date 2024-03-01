@@ -1472,7 +1472,7 @@ function build_boost_regex {
 	#静态库链接不上
 	#-DPLATFORM_NAME="${platform}"
 	#-DCMAKE_BUILD_TYPE=${build_type} 
-	if [[ "$3" == "windows" ]]; then
+	#if [[ "$3" == "windows" ]]; then
 		#commad below excute in windows console
 		#cd E:\github\lib\boost\boost-1.84.0\boost-1.84.0\tools\build
 		#.\bootstrap.bat
@@ -1480,12 +1480,17 @@ function build_boost_regex {
 		#cd ${root_dir}/${lib_name}/${lib_source_dir}
 		#E:/github/lib/build/windows-Release-x64加入PATH
 		#b2 --build-dir=E:/github/lib/build/windows-Release-x64 toolset=msvc --with-regex --build-type=complete install
-	fi
+	#fi
 	if [[ "$3" == "linux" ]]; then
+	 	PATH="${build_dir_root}:${PATH}"
 		cd ${root_dir}/${lib_name}/${lib_source_dir}/tools/build
-		./bootstrap.sh --with-libraries=regex --with-toolset=gcc
-		cd ${root_dir}/${lib_name}/${lib_source_dir}
-		b2 --build-dir=/${build_dir_root} toolset=gcc --with-regex --build-type=complete install
+		echo "bootstrap..."
+		sudo  ./bootstrap.sh --with-libraries=regex --with-toolset=gcc
+		echo "b2..."
+		sudo ./b2 --build-dir="${build_dir_root}" toolset=gcc --with-regex --build-type=complete install
+		echo "b2 install..."
+		sudo  ./b2 install --prefix="${build_dir_root}"
+		echo "over..."
 	fi
 	rm -rf ${root_dir}/${lib_name}/${lib_source_dir}
 	cd ${root_dir}
