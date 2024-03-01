@@ -1467,7 +1467,7 @@ function build_boost_regex {
 	tar xvzf ${lib_source_dir}.tar.gz
 
 	cd ..
-	cd ${root_dir}/${lib_name}/${lib_source_dir}/tools/build
+	
 	
 	#静态库链接不上
 	#-DPLATFORM_NAME="${platform}"
@@ -1481,7 +1481,12 @@ function build_boost_regex {
 		#E:/github/lib/build/windows-Release-x64加入PATH
 		#b2 --build-dir=E:/github/lib/build/windows-Release-x64 toolset=msvc --with-regex --build-type=complete install
 	fi
-
+	if [[ "$3" == "linux" ]]; then
+		cd ${root_dir}/${lib_name}/${lib_source_dir}/tools/build
+		./bootstrap.sh --with-libraries=regex --with-toolset=gcc
+		cd ${root_dir}/${lib_name}/${lib_source_dir}
+		b2 --build-dir=/${build_dir_root} toolset=gcc --with-regex --build-type=complete install
+	fi
 	rm -rf ${root_dir}/${lib_name}/${lib_source_dir}
 	cd ${root_dir}
 }
