@@ -1296,6 +1296,7 @@ function build_sdl {
 			-DSDL_SHARED=OFF \
 			-DSDL_STATIC=ON \
 			-DSDL_X11=ON \
+			-DSDL_STATIC_PIC=ON \
 			../../../${lib_name}/${lib_source_dir}
 
 		cmake --build . --config ${build_type} --target install
@@ -1616,7 +1617,7 @@ fi
             exit 1
             ;;
 		sdl)
-			build_sdl  release "x86_64" linux
+			build_sdl  release "arm64" linux
            	#build_sdl  Release "x64" windows
             exit 1
             ;;
