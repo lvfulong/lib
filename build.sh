@@ -1287,6 +1287,7 @@ function build_sdl {
 			android_abi=x86_64
 		fi
 	fi
+	#-DSDL_STATIC_PIC=ON \
 	if [[ "$3" == "linux" ]]; then
 		cmake . -G "Unix Makefiles" \
 			-DCMAKE_BUILD_TYPE=${build_type} \
@@ -1296,7 +1297,7 @@ function build_sdl {
 			-DSDL_SHARED=OFF \
 			-DSDL_STATIC=ON \
 			-DSDL_X11=ON \
-			-DSDL_STATIC_PIC=ON \
+			
 			../../../${lib_name}/${lib_source_dir}
 
 		cmake --build . --config ${build_type} --target install
