@@ -886,9 +886,9 @@ function build_websocket {
     local build_dir="${build_dir_root}/${lib_name}"
 	mkdir -p "${build_dir}"
 	cd ${lib_name}
-	local lib_source_dir=libwebsockets-2.3.0
+	local lib_source_dir=libwebsockets-4.2.0
 	rm -rf ${lib_source_dir}
-	unzip ${lib_source_dir}.zip
+	tar xvzf  ${lib_source_dir}.tar.gz
 
 	cd ..
 	cd ${build_dir}
