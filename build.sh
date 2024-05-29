@@ -475,7 +475,11 @@ function build_jpeg_turbo {
 
 	if [[ "$3" == "ohos" ]]; then
 		${OHOS_NDK_CMAKE_PATH}/cmake  -G "Ninja" \
-		-DCMAKE_BUILD_TYPE=Release \
+		-DCMAKE_BUILD_TYPE=${build_type} \
+		-DCMAKE_INSTALL_PREFIX=${build_dir_root} \
+		-DCMAKE_PREFIX_PATH=${build_dir_root} \
+		-DENABLE_STATIC=ON \
+		-DENABLE_SHARED=OFF \
 		-DOHOS_STL=c++_shared \
 		-DCMAKE_TOOLCHAIN_FILE=${OHOS_NDK_CMAKE_TOOLCHAIN_PATH} \
 		../../../${lib_name}/${lib_source_dir}
