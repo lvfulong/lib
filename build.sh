@@ -20,6 +20,15 @@ function check_android_environment {
 	
 	#TODO
 }
+
+
+OHOS_NDK_CMAKE_PATH="/Users/joychina/Desktop/lvfulong/ohos-sdk/packages/ohos-sdk/darwin/native/build-tools/cmake/bin"
+OHOS_NDK_CMAKE_TOOLCHAIN_PATH="/Users/joychina/Desktop/lvfulong/ohos-sdk/packages/ohos-sdk/darwin/native/build/cmake/ohos.toolchain.cmake"
+
+
+
+
+
 BUILD_LIB_TYPE=""
 ISSUE_CLEAN=false
 
@@ -462,6 +471,18 @@ function build_jpeg_turbo {
 			../../../${lib_name}/${lib_source_dir}
 
 		cmake --build . --config ${build_type} --target install
+	fi
+
+	if [[ "$3" == "ohos" ]]; then
+		${OHOS_NDK_CMAKE_PATH}/cmake  -G "Ninja" \
+		-DCMAKE_BUILD_TYPE=Release \
+		-DOHOS_STL=c++_shared \
+		-DCMAKE_TOOLCHAIN_FILE=${OHOS_NDK_CMAKE_TOOLCHAIN_PATH} \
+		../../../${lib_name}/${lib_source_dir}
+
+		#make
+		#make install
+		${OHOS_NDK_CMAKE_PATH}/cmake --build . --config ${build_type} --target install
 	fi
 
 	#rm -rf ${root_dir}/${lib_name}/${lib_source_dir}
@@ -1592,7 +1613,8 @@ fi
             ;;
 		jpeg_turbo)
            	#build_jpeg_turbo  release "x86_64" linux
-			build_jpeg_turbo  Release "x64" windows
+			#build_jpeg_turbo  Release "x64" windows
+			build_jpeg_turbo  Release "x64" ohos
             exit 1
             ;;
 		openssl)
