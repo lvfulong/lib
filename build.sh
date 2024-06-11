@@ -1522,6 +1522,42 @@ function build_boost_regex {
 	rm -rf ${root_dir}/${lib_name}/${lib_source_dir}
 	cd ${root_dir}
 }
+
+function build_aki {
+	local build_type=$1
+    local arch=$2
+    local platform=$3
+
+	local lib_name=libjpeg-turbo
+	local build_dir_root="${root_dir}/build/${platform}-${build_type}-${arch}"
+    local build_dir="${build_dir_root}/${lib_name}"
+	mkdir -p "${build_dir}"
+	cd ohos-specific/aki
+
+	cd ..
+	cd ${build_dir}
+	
+
+
+	if [[ "$3" == "ohos" ]]; then
+		${OHOS_NDK_CMAKE_PATH}/cmake  -G "Ninja" \
+		-DCMAKE_BUILD_TYPE=${build_type} \
+		-DCMAKE_INSTALL_PREFIX=${build_dir_root} \
+		-DCMAKE_PREFIX_PATH=${build_dir_root} \
+		-DENABLE_STATIC=ON \
+		-DENABLE_SHARED=OFF \
+		-DOHOS_STL=c++_shared \
+		-DCMAKE_TOOLCHAIN_FILE=${OHOS_NDK_CMAKE_TOOLCHAIN_PATH} \
+		../../../ohos-specific/aki
+
+		#make
+		#make install
+		${OHOS_NDK_CMAKE_PATH}/cmake --build . --config ${build_type} --target install
+	fi
+
+	#rm -rf ${root_dir}/${lib_name}/${lib_source_dir}
+	cd ${root_dir}
+}
 function archive_ios {
 
 	local build_type=$1
