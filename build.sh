@@ -22,8 +22,10 @@ function check_android_environment {
 }
 
 
-OHOS_NDK_CMAKE_PATH="/Users/joychina/Desktop/lvfulong/ohos-sdk/packages/ohos-sdk/darwin/native/build-tools/cmake/bin"
-OHOS_NDK_CMAKE_TOOLCHAIN_PATH="/Users/joychina/Desktop/lvfulong/ohos-sdk/packages/ohos-sdk/darwin/native/build/cmake/ohos.toolchain.cmake"
+OHOS_NDK_CMAKE_PATH="E:/huawei/devecostudio-windows-5.0.3.200/sdk/WinSDK/HarmonyOS-NEXT-DP2/base/native/build-tools/cmake/bin"
+OHOS_NDK_CMAKE_TOOLCHAIN_PATH="E:/huawei/devecostudio-windows-5.0.3.200/sdk/WinSDK/HarmonyOS-NEXT-DP2/base/native/build/cmake/ohos.toolchain.cmake"
+#OHOS_NDK_CMAKE_PATH="/Users/joychina/Desktop/lvfulong/ohos-sdk/packages/ohos-sdk/darwin/native/build-tools/cmake/bin"
+#OHOS_NDK_CMAKE_TOOLCHAIN_PATH="/Users/joychina/Desktop/lvfulong/ohos-sdk/packages/ohos-sdk/darwin/native/build/cmake/ohos.toolchain.cmake"
 
 
 
@@ -1528,13 +1530,13 @@ function build_aki {
     local arch=$2
     local platform=$3
 
-	local lib_name=libjpeg-turbo
+	local lib_name=aki
 	local build_dir_root="${root_dir}/build/${platform}-${build_type}-${arch}"
     local build_dir="${build_dir_root}/${lib_name}"
 	mkdir -p "${build_dir}"
-	cd ohos-specific/aki
+	#cd ohos-specific/aki
 
-	cd ..
+	#cd ..
 	cd ${build_dir}
 	
 
@@ -1544,15 +1546,13 @@ function build_aki {
 		-DCMAKE_BUILD_TYPE=${build_type} \
 		-DCMAKE_INSTALL_PREFIX=${build_dir_root} \
 		-DCMAKE_PREFIX_PATH=${build_dir_root} \
-		-DENABLE_STATIC=ON \
-		-DENABLE_SHARED=OFF \
 		-DOHOS_STL=c++_shared \
 		-DCMAKE_TOOLCHAIN_FILE=${OHOS_NDK_CMAKE_TOOLCHAIN_PATH} \
 		../../../ohos-specific/aki
 
 		#make
 		#make install
-		${OHOS_NDK_CMAKE_PATH}/cmake --build . --config ${build_type} --target install
+		${OHOS_NDK_CMAKE_PATH}/cmake --build . --config ${build_type} 
 	fi
 
 	#rm -rf ${root_dir}/${lib_name}/${lib_source_dir}
@@ -1702,6 +1702,10 @@ fi
 		boost_regex)
 			#build_boost_regex  release "x86_64" linux
            	build_boost_regex  Release "x64" windows
+            exit 1
+            ;;
+		ohos)
+			build_aki  release "arm64" ohos
             exit 1
             ;;
     esac
