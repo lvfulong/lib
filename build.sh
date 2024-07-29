@@ -799,13 +799,16 @@ function build_mpg123 {
 	fi
 
 	if [[ "$3" == "ohos" ]]; then
-		cmake  -G "Unix Makefiles" \
+		${OHOS_NDK_CMAKE_PATH}/cmake  -G "Ninja" \
 			-DCMAKE_BUILD_TYPE=${build_type} \
 			-DCMAKE_INSTALL_PREFIX=${build_dir_root} \
 			-DCMAKE_PREFIX_PATH=${build_dir_root} \
+			-DOHOS_STL=c++_shared \
+			-DCMAKE_TOOLCHAIN_FILE=${OHOS_NDK_CMAKE_TOOLCHAIN_PATH} \
+			-DCMAKE_BUILD_WITH_INSTALL_RPATH=ON \
 			../../../${lib_name}/${lib_source_dir}/ports/cmake
 		
-		cmake --build . --config ${build_type} --target install
+		${OHOS_NDK_CMAKE_PATH}/cmake --build . --config ${build_type} --target install
 	fi
 	rm -rf ${root_dir}/${lib_name}/${lib_source_dir}
 	cd ${root_dir}
