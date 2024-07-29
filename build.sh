@@ -798,6 +798,15 @@ function build_mpg123 {
 		cmake --build . --config ${build_type} --target install
 	fi
 
+	if [[ "$3" == "ohos" ]]; then
+		cmake  -G "Unix Makefiles" \
+			-DCMAKE_BUILD_TYPE=${build_type} \
+			-DCMAKE_INSTALL_PREFIX=${build_dir_root} \
+			-DCMAKE_PREFIX_PATH=${build_dir_root} \
+			../../../${lib_name}/${lib_source_dir}/ports/cmake
+		
+		cmake --build . --config ${build_type} --target install
+	fi
 	rm -rf ${root_dir}/${lib_name}/${lib_source_dir}
 	cd ${root_dir}
 }
@@ -1582,133 +1591,6 @@ function clean {
     rm -Rf ${root_dir}/build
 }
 
-pushd "$(dirname "$0")" > /dev/null
-
-while getopts ":hct:" opt; do
-    case ${opt} in
-        h)
-            print_help
-            exit 1
-            ;;
-        \?)
-            echo "Invalid option: -${OPTARG}" >&2
-            echo ""
-            print_help
-            exit 1
-            ;;
-        :)
-            echo "Option -${OPTARG} requires an argument." >&2
-            echo ""
-            print_help
-            exit 1
-            ;;
-		c)	
-			ISSUE_CLEAN=true
-            ;;
-		t)	
-			BUILD_LIB_TYPE=${OPTARG}
-		 	echo "option t: -${OPTARG}" >&2
-            ;;
-    esac
-done
-# 命令行未提供参数
-if [[ "$#" == "0" ]]; then
-    print_help
-    exit 1
-fi
-
-if [[ "${ISSUE_CLEAN}" == "true" ]]; then
-    clean
-fi
-    case ${BUILD_LIB_TYPE} in
-        websocket)
-           	#build_websocket  release "x86_64" linux
-			build_websocket Release "x64" windows
-            exit 1
-            ;;
-		curl)
-           	#build_curl  release "x86_64" linux
-			build_curl Release "x64" windows
-            exit 1
-            ;;
-		zlib)
-           	#build_zlib  release "x86_64" linux
-			build_zlib  Release "x64" windows
-            exit 1
-            ;;
-		mpg123)
-			#build_mpg123  release "x86_64" linux
-           	build_mpg123  Release "x64" windows
-            exit 1
-            ;;
-		zip)
-           	#build_zip  release "x86_64" linux
-			build_zip Release "x64" windows
-            exit 1
-            ;;
-		png)
-           	#build_png  release "x86_64" linux
-			build_png Release "x64" windows
-            exit 1
-            ;;
-		jpeg_turbo)
-           	#build_jpeg_turbo  release "x86_64" linux
-			#build_jpeg_turbo  Release "x64" windows
-			build_jpeg_turbo  Release "x64" ohos
-            exit 1
-            ;;
-		openssl)
-			build_openssl  release "x86_64" linux
-           	#build_openssl  Release "win32" windows
-            exit 1
-            ;;
-		openal)
-			#build_openal  release "x86_64" linux
-           	build_openal  Release "x64" windows
-            exit 1
-            ;;
-		ogg)
-			#build_ogg  release "x86_64" linux
-			#build_vorbis  release "x86_64" linux
-           	build_ogg  Release "x64" windows
-			build_vorbis  Release "x64" windows
-            exit 1
-            ;;
-		freetype)
-			#build_freetype  release "x86_64" linux
-           	build_freetype  Release "x64" windows
-            exit 1
-            ;;
-		sdl)
-			build_sdl  release "arm64" linux
-           	#build_sdl  Release "x64" windows
-            exit 1
-            ;;
-		benchmark)
-			#build_benchmark release "x86_64" linux
-           	build_benchmark  Release "x64" windows
-			#build_benchmark release x86_64 iphonesimulator
-			#build_benchmark release arm64 iphoneos
-			#archive_ios release iphoneos arm64 iphonesimulator x86_64
-			#build_benchmark release "aarch64" android
-			#build_benchmark release "arm7" android
-            exit 1
-            ;;
-		spdlog)
-			build_spdlog  release "x86_64" linux
-           	#build_spdlog  Release "x64" windows
-            exit 1
-            ;;
-		boost_regex)
-			#build_boost_regex  release "x86_64" linux
-           	build_boost_regex  Release "x64" windows
-            exit 1
-            ;;
-		ohos)
-			build_aki  release "arm64" ohos
-            exit 1
-            ;;
-    esac
 
 #check_android_environment
 
@@ -1761,6 +1643,8 @@ fi
 
 
 #build_mpg123 release "x86_64" linux
+build_mpg123 release "arm64" ohos
+
 
 #build_jpeg release "x86_64" linux
 #build_jpeg release arm64 iphoneos
