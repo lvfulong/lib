@@ -1102,6 +1102,55 @@ function build_curl {
 
 		cmake --build . --config ${build_type} --target install
 	fi
+	if [[ "$3" == "android" ]]; then
+		local android_abi=
+		if [[ "$2" == "aarch64" ]]; then
+			android_abi=arm64-v8a
+		fi
+	
+		if [[ "$2" == "arm7" ]]; then
+			android_abi=armeabi-v7a
+		fi
+	
+		if [[ "$2" == "x86" ]]; then
+			android_abi=x86
+		fi
+	
+		if [[ "$2" == "x86_64" ]]; then
+			android_abi=x86_64
+		fi
+		cmake -G "Unix Makefiles" \
+			-DCMAKE_BUILD_TYPE=${build_type} \
+			-DCMAKE_TOOLCHAIN_FILE=${CONCH_NDK_PATH}/build/cmake/android.toolchain.cmake \
+			-DANDROID_ABI=${android_abi} \
+			-DANDROID_NDK=${CONCH_NDK_PATH} \
+			-DCMAKE_ANDROID_ARCH_ABI=${android_abi} \
+			-DCMAKE_ANDROID_NDK=${CONCH_NDK_PATH} \
+			-DCMAKE_EXPORT_COMPILE_COMMANDS=ON \
+			-DCMAKE_SYSTEM_NAME=Android \
+			-DCMAKE_SYSTEM_VERSION=19 \
+			-DANDROID_STL=c++_shared \
+			-DANDROID_PLATFORM=${CONCH_ANDROID_MINI_SDK_VERSION} \
+			-DANDROID_ARM_NEON=TRUE \
+			-DANDROID_TOOLCHAIN=clang \
+			-DCMAKE_INSTALL_PREFIX=${build_dir_root} \
+			-DCMAKE_PREFIX_PATH=${build_dir_root} \
+            -DCMAKE_FIND_ROOT_PATH=${build_dir_root} \
+		  	-DCURL_ZLIB=ON \
+		   	-DUSE_OPENSSL=ON \
+		   	-DENABLE_IPV6=ON \
+			-DBUILD_SHARED_LIBS=OFF \
+		   	-DBUILD_STATIC_LIBS=ON \
+		   	-DBUILD_CURL_EXE=OFF \
+		    -DBUILD_TESTING=OFF \
+			-DZLIB_LIBRARIES="${build_dir_root}/lib" \
+			-DZLIB_INCLUDE_DIRS="${build_dir_root}/include" \
+	        -DOPENSSL_LIBRARIES="${build_dir_root}/lib64" \
+			-DOPENSSL_INCLUDE_DIR="${build_dir_root}/include" \
+			../../../${lib_name}/${lib_source_dir}
+
+		cmake --build . --config ${build_type} --target install
+	fi
 	if [[ "$3" == "linux" ]]; then
 		#cmake -G "Unix Makefiles" \
 		#	-DCMAKE_INSTALL_PREFIX=${build_dir_root} \
