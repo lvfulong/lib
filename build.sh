@@ -886,7 +886,7 @@ function build_openssl {
             export ANDROID_NDK_ROOT=${CONCH_NDK_PATH}
 			export ANDROID_NDK_SYSROOT=${ANDROID_SYSROOT}
             PATH="${CONCH_NDK_PATH}/toolchains/llvm/prebuilt/darwin-x86_64/bin:${CONCH_NDK_PATH}/toolchains/x86_64-4.9/prebuilt/darwin-x86_64/bin:${PATH}"
-			./Configure android-arm -D__ANDROID_API__=21 --prefix=${build_dir_root}   no-shared no-unit-test  -fPIC
+			./Configure android-arm -D__ANDROID_API__=21 --prefix=${build_dir_root}   no-asm no-shared no-unit-test
 			/Applications/Xcode.app/Contents/Developer/usr/bin/make install_sw
 		fi
 	
@@ -1756,11 +1756,11 @@ function clean {
 
 
 #build_zlib release "x86" android
-build_openssl release "x86" android
+#build_openssl release "x86" android
 #build_curl release "x86" android
 
 #build_zlib release "arm7" android
-#build_openssl release "arm7" android
+build_openssl release "arm7" android
 #build_curl release "arm7" android
 
 
