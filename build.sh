@@ -870,14 +870,36 @@ function build_openssl {
 		local android_abi=
 		if [[ "$2" == "aarch64" ]]; then
 			android_abi=arm64-v8a
+			export ANDROID_SYSROOT=${CONCH_NDK_PATH}/toolchains/llvm/prebuilt/darwin-x86_64/sysroot
+			export NDK_SYSROOT=${ANDROID_SYSROOT}
+            export ANDROID_NDK_ROOT=${CONCH_NDK_PATH}
+			export ANDROID_NDK_SYSROOT=${ANDROID_SYSROOT}
+            PATH="${CONCH_NDK_PATH}/toolchains/llvm/prebuilt/darwin-x86_64/bin:${CONCH_NDK_PATH}/toolchains/x86_64-4.9/prebuilt/darwin-x86_64/bin:${PATH}"
+			./Configure android-arm64 -D__ANDROID_API__=21 --prefix=${build_dir_root}  no-shared no-unit-test
+				/Applications/Xcode.app/Contents/Developer/usr/bin/make install_sw
 		fi
 	
 		if [[ "$2" == "arm7" ]]; then
 			android_abi=armeabi-v7a
+			export ANDROID_SYSROOT=${CONCH_NDK_PATH}/toolchains/llvm/prebuilt/darwin-x86_64/sysroot
+			export NDK_SYSROOT=${ANDROID_SYSROOT}
+            export ANDROID_NDK_ROOT=${CONCH_NDK_PATH}
+			export ANDROID_NDK_SYSROOT=${ANDROID_SYSROOT}
+            PATH="${CONCH_NDK_PATH}/toolchains/llvm/prebuilt/darwin-x86_64/bin:${CONCH_NDK_PATH}/toolchains/x86_64-4.9/prebuilt/darwin-x86_64/bin:${PATH}"
+			./Configure android-arm -D__ANDROID_API__=21 --prefix=${build_dir_root}   no-shared no-unit-test  -fPIC
+			/Applications/Xcode.app/Contents/Developer/usr/bin/make install_sw
 		fi
 	
 		if [[ "$2" == "x86" ]]; then
 			android_abi=x86
+			export ANDROID_SYSROOT=${CONCH_NDK_PATH}/toolchains/llvm/prebuilt/darwin-x86_64/sysroot
+			export NDK_SYSROOT=${ANDROID_SYSROOT}
+            export ANDROID_NDK_ROOT=${CONCH_NDK_PATH}
+			export ANDROID_NDK_SYSROOT=${ANDROID_SYSROOT}
+            PATH="${CONCH_NDK_PATH}/toolchains/llvm/prebuilt/darwin-x86_64/bin:${CONCH_NDK_PATH}/toolchains/x86-4.9/prebuilt/darwin-x86_64/bin:${PATH}"
+			#./Configure android-x86 -D__ANDROID_API__=21 --prefix=${build_dir_root}  no-shared no-unit-test -latomic
+			./Configure android-x86 -D__ANDROID_API__=21 --prefix=${build_dir_root}  no-shared no-unit-test 
+			/Applications/Xcode.app/Contents/Developer/usr/bin/make install_sw
 		fi
 	
 		if [[ "$2" == "x86_64" ]]; then
@@ -888,8 +910,9 @@ function build_openssl {
 			export ANDROID_NDK_SYSROOT=${ANDROID_SYSROOT}
             PATH="${CONCH_NDK_PATH}/toolchains/llvm/prebuilt/darwin-x86_64/bin:${CONCH_NDK_PATH}/toolchains/x86_64-4.9/prebuilt/darwin-x86_64/bin:${PATH}"
 			./Configure android-x86_64 -m64 -D__ANDROID_API__=21 --prefix=${build_dir_root}  no-shared no-unit-test
+			/Applications/Xcode.app/Contents/Developer/usr/bin/make install_sw
 		fi
-		/Applications/Xcode.app/Contents/Developer/usr/bin/make install_sw
+		
 	fi
 	
 
@@ -1119,6 +1142,10 @@ function build_curl {
 		if [[ "$2" == "x86_64" ]]; then
 			android_abi=x86_64
 		fi
+
+		cd ..
+		cd ${build_dir}
+	
 		cmake -G "Unix Makefiles" \
 			-DCMAKE_BUILD_TYPE=${build_type} \
 			-DCMAKE_TOOLCHAIN_FILE=${CONCH_NDK_PATH}/build/cmake/android.toolchain.cmake \
@@ -1145,7 +1172,7 @@ function build_curl {
 		    -DBUILD_TESTING=OFF \
 			-DZLIB_LIBRARIES="${build_dir_root}/lib" \
 			-DZLIB_INCLUDE_DIRS="${build_dir_root}/include" \
-	        -DOPENSSL_LIBRARIES="${build_dir_root}/lib64" \
+	        -DOPENSSL_LIBRARIES="${build_dir_root}/lib" \
 			-DOPENSSL_INCLUDE_DIR="${build_dir_root}/include" \
 			../../../${lib_name}/${lib_source_dir}
 
@@ -1695,7 +1722,7 @@ function clean {
 
 
 #build_mpg123 release "x86_64" linux
-build_mpg123 release "arm64" ohos
+#build_mpg123 release "arm64" ohos
 
 
 #build_jpeg release "x86_64" linux
@@ -1723,7 +1750,20 @@ build_mpg123 release "arm64" ohos
 
 #build_curl Release "win32" windows
 
-#build_openssl release "x86_64" linux
+#build_zlib release "x86_64" android
+#build_openssl release "x86_64" android
+#build_curl release "x86_64" android
 
 
+#build_zlib release "x86" android
+build_openssl release "x86" android
+#build_curl release "x86" android
 
+#build_zlib release "arm7" android
+#build_openssl release "arm7" android
+#build_curl release "arm7" android
+
+
+#build_zlib release "aarch64" android
+#build_openssl release "aarch64" android
+#build_curl release "aarch64" android
