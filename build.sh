@@ -1518,9 +1518,10 @@ function build_sdl {
 			android_abi=x86_64
 		fi
 	fi
-	#-DSDL_STATIC_PIC=ON \
+	
 	if [[ "$3" == "linux" ]]; then
 		cmake . -G "Unix Makefiles" \
+			-DSDL_STATIC_PIC=ON \
 			-DCMAKE_BUILD_TYPE=${build_type} \
 			-DCMAKE_INSTALL_PREFIX=${build_dir_root} \
 			-DCMAKE_PREFIX_PATH=${build_dir_root} \
