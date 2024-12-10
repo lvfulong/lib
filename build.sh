@@ -1044,7 +1044,7 @@ function build_openssl {
         #'-Wl,-rpath,$(LIBRPATH)'
 		#make install_sw
 
-		./Configure --prefix=${build_dir_root} --openssldir=${build_dir_root}  no-shared no-unit-test
+		./Configure --prefix=${build_dir_root} --openssldir=${build_dir_root}  no-shared pic no-unit-test
 
 		#./Configure --prefix=/opt/openssl --openssldir=/usr/local/ssl  no-shared no-unit-test
 		make install
@@ -1192,6 +1192,8 @@ function build_websocket {
 			-DLWS_ZLIB_INCLUDE_DIRS="${build_dir_root}/include" \
 			-DLWS_OPENSSL_LIBRARIES="${build_dir_root}/lib64" \
 			-DLWS_OPENSSL_INCLUDE_DIRS="${build_dir_root}/include" \
+			-DCMAKE_C_FLAGS=-fPIC \
+			-DCMAKE_CXX_FLAGS=-fPIC \
 			../../../${lib_name}/${lib_source_dir}
 
 		cmake --build . --config ${build_type} --target install
