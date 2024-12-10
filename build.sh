@@ -1878,10 +1878,13 @@ function clean {
 #build_curl release "x86" android
 
 #build_zlib release "arm7" android
-build_openssl release "arm7" android
+#build_openssl release "arm7" android
 #build_curl release "arm7" android
 
 
 #build_zlib release "aarch64" android
 #build_openssl release "aarch64" android
 #build_curl release "aarch64" android
+
+
+build_openal release "x86_64" linux
