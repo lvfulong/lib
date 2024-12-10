@@ -1390,6 +1390,8 @@ function build_openal {
 			-DALSOFT_ENABLE_SSE2_CODEGEN=0 \
 			-DALSOFT_EXAMPLES=0 \
 			-DALSOFT_HRTF_DEFS=0 \
+			-DCMAKE_CXX_FLAGS="-fPIC" \
+			-DCMAKE_C_FLAGS="-fPIC" \
 			../../../${lib_name}/${lib_source_dir}
 
 		cmake --build . --config ${build_type} --target install
