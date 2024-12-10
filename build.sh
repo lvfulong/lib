@@ -828,6 +828,8 @@ function build_freetype {
 
 	if [[ "$3" == "linux" ]]; then
 		cmake  -G "Unix Makefiles" \
+		    -DCMAKE_C_FLAGS=-fPIC \
+			-DCMAKE_CXX_FLAGS=-fPIC \
 			-DCMAKE_BUILD_TYPE=${build_type} \
 			-DCMAKE_INSTALL_PREFIX=${build_dir_root} \
 			-DCMAKE_PREFIX_PATH=${build_dir_root} \
