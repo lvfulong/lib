@@ -239,6 +239,8 @@ function build_png {
 			-DPNG_SHARED=OFF \
 			-DPNG_EXECUTABLES=OFF \
 			-DPNG_TESTS=OFF \
+			-DCMAKE_C_FLAGS=-fPIC \
+			-DCMAKE_CXX_FLAGS=-fPIC \
 			../../../${lib_name}/${lib_source_dir}
 		
 		cmake --build . --config ${build_type} --target install
@@ -1390,8 +1392,8 @@ function build_openal {
 			-DALSOFT_ENABLE_SSE2_CODEGEN=0 \
 			-DALSOFT_EXAMPLES=0 \
 			-DALSOFT_HRTF_DEFS=0 \
-			-DCMAKE_CXX_FLAGS="-fPIC" \
-			-DCMAKE_C_FLAGS="-fPIC" \
+			-DCMAKE_C_FLAGS=-fPIC \
+			-DCMAKE_CXX_FLAGS=-fPIC \
 			../../../${lib_name}/${lib_source_dir}
 
 		cmake --build . --config ${build_type} --target install
