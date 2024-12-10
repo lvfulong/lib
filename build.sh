@@ -1044,7 +1044,7 @@ function build_openssl {
         #'-Wl,-rpath,$(LIBRPATH)'
 		#make install_sw
 
-		./Configure --prefix=${build_dir_root} --openssldir=${build_dir_root}  no-shared pic no-unit-test
+		./Configure --prefix=${build_dir_root} --openssldir=${build_dir_root}  no-shared no-unit-test
 
 		#./Configure --prefix=/opt/openssl --openssldir=/usr/local/ssl  no-shared no-unit-test
 		make install
