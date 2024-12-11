@@ -1181,6 +1181,8 @@ function build_websocket {
 			-DLWS_WITH_SSL=1 \
 			-DLWS_WITHOUT_SERVER=0 \
 			-DLWS_WITH_SHARED=0 \
+			-DLWS_WITH_STATIC=1 \
+			-DLWS_STATIC_PIC=1 \
 			-DLWS_WITHOUT_TEST_SERVER=1 \
 			-DLWS_WITHOUT_TEST_SERVER_EXTPOLL=1 \
 			-DLWS_WITHOUT_TEST_PING=1 \
@@ -1192,8 +1194,6 @@ function build_websocket {
 			-DLWS_ZLIB_INCLUDE_DIRS="${build_dir_root}/include" \
 			-DLWS_OPENSSL_LIBRARIES="${build_dir_root}/lib64" \
 			-DLWS_OPENSSL_INCLUDE_DIRS="${build_dir_root}/include" \
-			-DCMAKE_C_FLAGS=-fPIC \
-			-DCMAKE_CXX_FLAGS=-fPIC \
 			../../../${lib_name}/${lib_source_dir}
 
 		cmake --build . --config ${build_type} --target install
