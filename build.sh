@@ -474,6 +474,8 @@ function build_jpeg_turbo {
 			-DCMAKE_PREFIX_PATH=${build_dir_root} \
 			-DENABLE_STATIC=ON \
 			-DENABLE_SHARED=OFF \
+			-DCMAKE_C_FLAGS=-fPIC \
+			-DCMAKE_CXX_FLAGS=-fPIC \
 			../../../${lib_name}/${lib_source_dir}
 
 		cmake --build . --config ${build_type} --target install
@@ -1816,7 +1818,7 @@ function clean {
 #build_jpeg_turbo release "arm7" android
 #build_jpeg_turbo release "x86_64" android
 #build_jpeg_turbo release "x86" android
-#build_jpeg_turbo release "x86_64" linux
+build_jpeg_turbo release "x86_64" linux
 
 #build_zip Release "win32" windows
 #build_zip Release "win64" windows
@@ -1899,4 +1901,4 @@ function clean {
 #build_curl release "aarch64" android
 
 #build_openssl release "x86_64" linux
-build_websocket release "x86_64" linux
+#build_websocket release "x86_64" linux
