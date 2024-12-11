@@ -1173,6 +1173,8 @@ function build_websocket {
 	fi
 	if [[ "$3" == "linux" ]]; then
 		cmake -G "Unix Makefiles" \
+			-DLWS_HAVE_EVP_MD_CTX_free=1 \
+			-DLWS_HAVE_HMAC_CTX_new=1 \
 			-DCMAKE_BUILD_TYPE=${build_type} \
 			-DCMAKE_INSTALL_PREFIX=${build_dir_root} \
 			-DCMAKE_PREFIX_PATH=${build_dir_root} \
@@ -1190,9 +1192,9 @@ function build_websocket {
 			-DLWS_WITHOUT_TEST_CLIENT=1 \
  			-DLWS_WITHOUT_TEST_FRAGGLE=1 \
 			-DLWS_IPV6=1 \
-			-DLWS_ZLIB_LIBRARIES="${build_dir_root}/lib" \
+			-DLWS_ZLIB_LIBRARIES="${build_dir_root}/lib/libz.a" \
 			-DLWS_ZLIB_INCLUDE_DIRS="${build_dir_root}/include" \
-			-DLWS_OPENSSL_LIBRARIES="${build_dir_root}/lib64" \
+			-DLWS_OPENSSL_LIBRARIES="${build_dir_root}/lib64/libssl.a;${build_dir_root}/lib64/libcrypto.a" \
 			-DLWS_OPENSSL_INCLUDE_DIRS="${build_dir_root}/include" \
 			../../../${lib_name}/${lib_source_dir}
 
@@ -1896,5 +1898,5 @@ function clean {
 #build_openssl release "aarch64" android
 #build_curl release "aarch64" android
 
-
-build_openal release "x86_64" linux
+#build_openssl release "x86_64" linux
+build_websocket release "x86_64" linux
