@@ -535,6 +535,7 @@ function build_jxl {
       -DCMAKE_SYSTEM_PROCESSOR=${arch} \
       -DCMAKE_C_COMPILER=/usr/bin/clang \
       -DCMAKE_CXX_COMPILER=/usr/bin/clang++ \
+	  -DJPEGXL_STATIC=ON \
       -DBUILD_TESTING=OFF \
       -DJPEGXL_ENABLE_SJPEG=OFF \
       -DIOS_ARCH="${arch}" \
@@ -579,7 +580,7 @@ function build_jxl {
 			-DANDROID_PLATFORM=${CONCH_ANDROID_MINI_SDK_VERSION} \
 			-DANDROID_ARM_NEON=TRUE \
 			-DANDROID_TOOLCHAIN=clang \
-			-DBUILD_SHARED_LIBS=OFF \
+			-DJPEGXL_STATIC=ON \
 			-DBUILD_TESTING=OFF \
 			-DJPEGXL_ENABLE_SJPEG=OFF \
 			../../../${lib_name}/${lib_source_dir}
@@ -594,8 +595,7 @@ function build_jxl {
 			-DCMAKE_BUILD_TYPE=${build_type} \
 			-DCMAKE_INSTALL_PREFIX=${build_dir_root} \
 			-DCMAKE_PREFIX_PATH=${build_dir_root} \
-			-DENABLE_STATIC=ON \
-			-DENABLE_SHARED=OFF \
+			-DJPEGXL_STATIC=ON \
 			-DBUILD_TESTING=OFF \
     		-DJPEGXL_ENABLE_SJPEG=OFF \
     		-DJPEGXL_ENABLE_TESTS=OFF \
@@ -614,8 +614,7 @@ function build_jxl {
     -DCMAKE_PREFIX_PATH=${build_dir_root} \
     -DCMAKE_TOOLCHAIN_FILE=${OHOS_NDK_CMAKE_TOOLCHAIN_PATH} \
     -DCMAKE_MAKE_PROGRAM=${OHOS_NDK_CMAKE_PATH}/ninja \
-    -DENABLE_STATIC=ON \
-    -DENABLE_SHARED=OFF \
+    -DJPEGXL_STATIC=ON \
     -DOHOS_STL=c++_shared \
     -DBUILD_TESTING=OFF \
     -DJPEGXL_ENABLE_SJPEG=OFF \
