@@ -588,6 +588,22 @@ function build_jxl {
 		cmake --build . --config ${build_type} --target install
 	fi
 
+
+	if [[ "$3" == "linux" ]]; then
+		cmake -G "Unix Makefiles" \
+			-DCMAKE_BUILD_TYPE=${build_type} \
+			-DCMAKE_INSTALL_PREFIX=${build_dir_root} \
+			-DCMAKE_PREFIX_PATH=${build_dir_root} \
+			-DENABLE_STATIC=ON \
+			-DENABLE_SHARED=OFF \
+			-DCMAKE_C_FLAGS=-fPIC \
+			-DCMAKE_CXX_FLAGS=-fPIC \
+			../../../${lib_name}/${lib_source_dir}
+
+		cmake --build . --config ${build_type} --target install
+	fi
+
+	
 	if [[ "$3" == "ohos" ]]; then
     ${OHOS_NDK_CMAKE_PATH}/cmake  -G "Ninja" \
     -DCMAKE_BUILD_TYPE=${build_type} \
@@ -1841,7 +1857,7 @@ function clean {
 #build_freetype release x86_64 iphonesimulator
 #archive_ios release iphoneos arm64 iphonesimulator x86_64
 
-build_swappy release "aarch64" android
+#build_swappy release "aarch64" android
 #build_freetype release "arm7" android
 #build_freetype release "x86_64" android
 #build_freetype release "x86" android
@@ -1871,6 +1887,10 @@ build_swappy release "aarch64" android
 #build_zlib release "x86_64" android
 #build_zlib release "x86" android
 #build_zlib release "x86_64" linux
+
+
+build_jxl release "x86_64" linux
+
 
 #build_jxl release "x86_64" android
 #build_jxl release arm64 iphoneos
