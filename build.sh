@@ -596,6 +596,9 @@ function build_jxl {
 			-DCMAKE_PREFIX_PATH=${build_dir_root} \
 			-DENABLE_STATIC=ON \
 			-DENABLE_SHARED=OFF \
+			-DBUILD_TESTING=OFF \
+    		-DJPEGXL_ENABLE_SJPEG=OFF \
+    		-DJPEGXL_ENABLE_TESTS=OFF \
 			-DCMAKE_C_FLAGS=-fPIC \
 			-DCMAKE_CXX_FLAGS=-fPIC \
 			../../../${lib_name}/${lib_source_dir}
@@ -603,7 +606,7 @@ function build_jxl {
 		cmake --build . --config ${build_type} --target install
 	fi
 
-	
+
 	if [[ "$3" == "ohos" ]]; then
     ${OHOS_NDK_CMAKE_PATH}/cmake  -G "Ninja" \
     -DCMAKE_BUILD_TYPE=${build_type} \
