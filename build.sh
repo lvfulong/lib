@@ -22,8 +22,8 @@ function check_android_environment {
 }
 
 
-OHOS_NDK_CMAKE_PATH="E:/huawei/devecostudio-windows-5.0.3.200/sdk/WinSDK/HarmonyOS-NEXT-DP2/base/native/build-tools/cmake/bin"
-OHOS_NDK_CMAKE_TOOLCHAIN_PATH="E:/huawei/devecostudio-windows-5.0.3.200/sdk/WinSDK/HarmonyOS-NEXT-DP2/base/native/build/cmake/ohos.toolchain.cmake"
+OHOS_NDK_CMAKE_PATH="E:/huawei/IDE/DevEcoStudio/sdk/default/openharmony/native/build-tools/cmake/bin"
+OHOS_NDK_CMAKE_TOOLCHAIN_PATH="E:/huawei/IDE/DevEcoStudio/sdk/default/openharmony/native/build/cmake/ohos.toolchain.cmake"
 #OHOS_NDK_CMAKE_PATH="/Users/joychina/Desktop/lvfulong/ohos-sdk/packages/ohos-sdk/darwin/native/build-tools/cmake/bin"
 #OHOS_NDK_CMAKE_TOOLCHAIN_PATH="/Users/joychina/Desktop/lvfulong/ohos-sdk/packages/ohos-sdk/darwin/native/build/cmake/ohos.toolchain.cmake"
 
@@ -537,6 +537,7 @@ function build_jxl {
       -DCMAKE_CXX_COMPILER=/usr/bin/clang++ \
 	  -DJPEGXL_STATIC=ON \
       -DBUILD_TESTING=OFF \
+	  -DBUILD_SHARED_LIBS=OFF \
       -DJPEGXL_ENABLE_SJPEG=OFF \
       -DIOS_ARCH="${arch}" \
       -DPLATFORM_NAME="${platform}" \
@@ -1890,8 +1891,7 @@ function clean {
 #build_zlib release "x86" android
 #build_zlib release "x86_64" linux
 
-
-build_jxl release "x86_64" linux
+build_jxl release "arm64" ohos
 
 
 #build_jxl release "x86_64" android
