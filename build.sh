@@ -28,7 +28,7 @@ OHOS_NDK_CMAKE_TOOLCHAIN_PATH="E:/huawei/IDE/DevEcoStudio/sdk/default/openharmon
 #OHOS_NDK_CMAKE_TOOLCHAIN_PATH="/Users/joychina/Desktop/lvfulong/ohos-sdk/packages/ohos-sdk/darwin/native/build/cmake/ohos.toolchain.cmake"
 
 
-
+OHOS_SDK_LINUX_PATH="/home/ubuntu/lfl/command-line-tools/sdk/default/openharmony"
 
 
 BUILD_LIB_TYPE=""
@@ -1818,6 +1818,28 @@ function build_sqlite {
 		make
 		make install
 	fi
+
+	if [[ "$3" == "ohos" ]]; then
+		export OHOS_SDK=${OHOS_SDK_LINUX_PATH}
+		export AS=${OHOS_SDK}/native/llvm/bin/llvm-as
+		export CC="${OHOS_SDK}/native/llvm/bin/clang --target=arm-linux-ohos"
+		export CXX="${OHOS_SDK}/native/llvm/bin/clang++ --target=arm-linux-ohos"
+		export LD=${OHOS_SDK}/native/llvm/bin/ld.lld
+		export STRIP=${OHOS_SDK}/native/llvm/bin/llvm-strip
+		export RANLIB=${OHOS_SDK}/native/llvm/bin/llvm-ranlib
+		export OBJDUMP=${OHOS_SDK}/native/llvm/bin/llvm-objdump
+		export OBJCOPY=${OHOS_SDK}/native/llvm/bin/llvm-objcopy
+		export NM=${OHOS_SDK}/native/llvm/bin/llvm-nm
+		export AR=${OHOS_SDK}/native/llvm/bin/llvm-ar
+		export CFLAGS="-fPIC -D__MUSL__=1"
+		export CXXFLAGS="-fPIC -D__MUSL__=1"
+
+		./configure --prefix=${build_dir_root}
+
+
+		make
+		make install
+	fi
 	
 	#rm -rf ${root_dir}/${lib_name}
 	cd ${root_dir}
@@ -1923,7 +1945,8 @@ function clean {
 #build_zlib release "x86_64" linux
 
 #build_jxl release "arm64" ohos
-build_sqlite release "x86_64" linux
+#build_sqlite release "x86_64" linux
+build_sqlite release "arm64" ohos
 
 #build_jxl release "x86_64" android
 #build_jxl release arm64 iphoneos
