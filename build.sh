@@ -1841,6 +1841,49 @@ function build_sqlite {
 		make install
 	fi
 	
+
+	if [[ "$3" == "android" ]]; then
+		local android_abi=
+		if [[ "$2" == "aarch64" ]]; then
+			android_abi=arm64-v8a
+
+			export PATH="$PATH:$ANDROID_NDK_HOME/toolchains/aarch64-linux-android-4.9/prebuilt/darwin-x86_64/bin"
+			export CC="aarch64-linux-androideabi-gcc"
+			export CXX="aarch64-linux-androideabi-g++"
+			export RANLIB="aarch64-linux-androideabi-ranlib"
+			export LD="aarch64-linux-androideabi-ld"
+			export AR="aarch64-linux-androideabi-ar"
+			export CROSS_COMPILE="aarch64-linux-androideabi"
+			export ANDROID_API=21
+			export CFLAGS="-fPIC -D__MUSL__=1 -D__ANDROID_API__=$ANDROID_API"
+			export CXXFLAGS="-fPIC -D__MUSL__=1 -D__ANDROID_API__=$ANDROID_API"
+
+		fi
+	
+		if [[ "$2" == "arm7" ]]; then
+			android_abi=armeabi-v7a
+		fi
+	
+		if [[ "$2" == "x86" ]]; then
+			android_abi=x86
+		fi
+	
+		if [[ "$2" == "x86_64" ]]; then
+			android_abi=x86_64
+		fi
+
+
+		
+
+
+
+		./configure --prefix=${build_dir_root}
+
+
+		make
+		make install
+	fi
+
 	#rm -rf ${root_dir}/${lib_name}
 	cd ${root_dir}
 
@@ -1946,7 +1989,10 @@ function clean {
 
 #build_jxl release "arm64" ohos
 #build_sqlite release "x86_64" linux
-build_sqlite release "arm64" ohos
+#build_sqlite release "arm64" ohos
+build_sqlite release "aarch64" android
+
+
 
 #build_jxl release "x86_64" android
 #build_jxl release arm64 iphoneos
