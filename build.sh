@@ -1878,14 +1878,97 @@ function build_sqlite {
 	
 		if [[ "$2" == "arm7" ]]; then
 			android_abi=armeabi-v7a
+
+
+			# 设置 Android NDK 工具链路径
+            export ANDROID_NDK_HOME=${CONCH_NDK_PATH}
+            export PATH=${ANDROID_NDK_HOME}/toolchains/llvm/prebuilt/darwin-x86_64/bin:$PATH
+
+            # 设置编译器
+            export CC=arm-linux-android21-clang
+            export CXX=arm-linux-android21-clang++
+            export AR=llvm-ar
+            export RANLIB=llvm-ranlib
+            export STRIP=llvm-strip
+            export LD=ld.lld
+
+            # 设置编译标志
+            export CFLAGS="-fPIC -D__ANDROID_API__=21"
+            export CXXFLAGS="-fPIC -D__ANDROID_API__=21"
+            export LDFLAGS="-fPIC"
+        
+
+        	# 配置编译选项
+        	./configure --prefix=${build_dir_root} \
+           		--host=arm-linux-android
+
+        	make clean
+        	make
+			make install
+
 		fi
 	
 		if [[ "$2" == "x86" ]]; then
 			android_abi=x86
+
+
+			# 设置 Android NDK 工具链路径
+            export ANDROID_NDK_HOME=${CONCH_NDK_PATH}
+            export PATH=${ANDROID_NDK_HOME}/toolchains/llvm/prebuilt/darwin-x86_64/bin:$PATH
+
+            # 设置编译器
+            export CC=i686-linux-android21-clang
+            export CXX=i686-linux-android21-clang++	
+            export AR=llvm-ar
+            export RANLIB=llvm-ranlib
+            export STRIP=llvm-strip
+            export LD=ld.lld
+
+            # 设置编译标志
+            export CFLAGS="-fPIC -D__ANDROID_API__=21"
+            export CXXFLAGS="-fPIC -D__ANDROID_API__=21"
+            export LDFLAGS="-fPIC"
+        
+
+        	# 配置编译选项
+        	./configure --prefix=${build_dir_root} \
+           		--host=i686-linux-android
+
+        	make clean
+        	make
+			make install
+
 		fi
 	
 		if [[ "$2" == "x86_64" ]]; then
 			android_abi=x86_64
+
+
+			# 设置 Android NDK 工具链路径
+            export ANDROID_NDK_HOME=${CONCH_NDK_PATH}
+            export PATH=${ANDROID_NDK_HOME}/toolchains/llvm/prebuilt/darwin-x86_64/bin:$PATH
+
+            # 设置编译器
+            export CC=x86_64-linux-android21-clang
+            export CXX=x86_64-linux-android21-clang++
+            export AR=llvm-ar
+            export RANLIB=llvm-ranlib
+            export STRIP=llvm-strip
+            export LD=ld.lld
+
+            # 设置编译标志
+            export CFLAGS="-fPIC -D__ANDROID_API__=21"
+            export CXXFLAGS="-fPIC -D__ANDROID_API__=21"
+            export LDFLAGS="-fPIC"
+        
+
+        	# 配置编译选项
+        	./configure --prefix=${build_dir_root} \
+           		--host=x86_64-linux-android
+
+        	make clean
+        	make
+			make install
 		fi
 
 
