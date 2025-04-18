@@ -1812,31 +1812,14 @@ function build_sqlite {
 
 
 	if [[ "$3" == "linux" ]]; then
-		./configure --prefix=${build_dir_root} \
-		--enable-shared=no \
-		--enable-static=yes \
-		--enable-readline \
-		--enable-fts5 \
-		--enable-json1 \
-		--enable-rtree \
-		--enable-session \
-    	--enable-math \
-    	--enable-fts4 \
-    	--enable-fts3 \
-    	--enable-fts5 \
-    	--enable-json1 \
-    	--enable-rtree \
-    	--enable-session \
-    	--enable-math \
-    	--enable-load-extension \
-    	--enable-dynamic-extensions
+		./configure --prefix=${build_dir_root}
 
 
 		make
 		make install
 	fi
 	
-	rm -rf ${root_dir}/${lib_name}
+	#rm -rf ${root_dir}/${lib_name}
 	cd ${root_dir}
 
 }
