@@ -1804,7 +1804,7 @@ function build_sqlite {
 	cd ${lib_name}
 	local lib_source_dir=sqlite-src-3490100
 	rm -rf ${lib_source_dir}
-	tar xvzf sqlite-src-3490100.zip
+	unzip sqlite-src-3490100.zip
 
 	#cd ..
 	#cd ${build_dir}
