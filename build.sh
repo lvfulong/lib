@@ -1822,8 +1822,8 @@ function build_sqlite {
 	if [[ "$3" == "ohos" ]]; then
 		export OHOS_SDK=${OHOS_SDK_LINUX_PATH}
 		export AS=${OHOS_SDK}/native/llvm/bin/llvm-as
-		export CC="${OHOS_SDK}/native/llvm/bin/clang --target=arm-linux-ohos"
-		export CXX="${OHOS_SDK}/native/llvm/bin/clang++ --target=arm-linux-ohos"
+		export CC="${OHOS_SDK}/native/llvm/bin/clang --target=aarch64-linux-ohos"
+		export CXX="${OHOS_SDK}/native/llvm/bin/clang++ --target=aarch64-linux-ohos"
 		export LD=${OHOS_SDK}/native/llvm/bin/ld.lld
 		export STRIP=${OHOS_SDK}/native/llvm/bin/llvm-strip
 		export RANLIB=${OHOS_SDK}/native/llvm/bin/llvm-ranlib
