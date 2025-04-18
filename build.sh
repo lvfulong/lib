@@ -1847,20 +1847,32 @@ function build_sqlite {
 		if [[ "$2" == "aarch64" ]]; then
 			android_abi=arm64-v8a
 
-			#Install the toolchain.
-		    ${CONCH_NDK_PATH}/build/tools/make-standalone-toolchain.sh --platform=android-21 --install-dir=${build_dir}/android-toolchain
 
+			# 设置 Android NDK 工具链路径
+            export ANDROID_NDK_HOME=${CONCH_NDK_PATH}
+            export PATH=${ANDROID_NDK_HOME}/toolchains/llvm/prebuilt/darwin-x86_64/bin:$PATH
 
-			export PATH="$PATH:$CONCH_NDK_PATH/toolchains/aarch64-linux-android-4.9/prebuilt/darwin-x86_64/bin"
-			export CC="aarch64-linux-androideabi-gcc"
-			export CXX="aarch64-linux-androideabi-g++"
-			export RANLIB="aarch64-linux-androideabi-ranlib"
-			export LD="aarch64-linux-androideabi-ld"
-			export AR="aarch64-linux-androideabi-ar"
-			export CROSS_COMPILE="aarch64-linux-androideabi"
-			export ANDROID_API=21
-			export CFLAGS="-fPIC -D__MUSL__=1 -D__ANDROID_API__=$ANDROID_API"
-			export CXXFLAGS="-fPIC -D__MUSL__=1 -D__ANDROID_API__=$ANDROID_API"
+            # 设置编译器
+            export CC=aarch64-linux-android21-clang
+            export CXX=aarch64-linux-android21-clang++
+            export AR=llvm-ar
+            export RANLIB=llvm-ranlib
+            export STRIP=llvm-strip
+            export LD=ld.lld
+
+            # 设置编译标志
+            export CFLAGS="-fPIC -D__ANDROID_API__=21"
+            export CXXFLAGS="-fPIC -D__ANDROID_API__=21"
+            export LDFLAGS="-fPIC"
+        
+
+        	# 配置编译选项
+        	./configure --prefix=${build_dir_root} \
+           		--host=aarch64-linux-android
+
+        	make clean
+        	make
+			make install
 
 		fi
 	
@@ -1877,15 +1889,6 @@ function build_sqlite {
 		fi
 
 
-		
-
-
-
-		./configure --prefix=${build_dir_root}
-
-
-		make
-		make install
 	fi
 
 	#rm -rf ${root_dir}/${lib_name}
