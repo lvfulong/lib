@@ -1847,6 +1847,10 @@ function build_sqlite {
 		if [[ "$2" == "aarch64" ]]; then
 			android_abi=arm64-v8a
 
+			#Install the toolchain.
+		    ${ANDROID_NDK_HOME}/build/tools/make-standalone-toolchain.sh --platform=android-21 --install-dir=${build_dir}/android-toolchain
+
+
 			export PATH="$PATH:$ANDROID_NDK_HOME/toolchains/aarch64-linux-android-4.9/prebuilt/darwin-x86_64/bin"
 			export CC="aarch64-linux-androideabi-gcc"
 			export CXX="aarch64-linux-androideabi-g++"
