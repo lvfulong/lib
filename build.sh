@@ -1885,8 +1885,8 @@ function build_sqlite {
             export PATH=${ANDROID_NDK_HOME}/toolchains/llvm/prebuilt/darwin-x86_64/bin:$PATH
 
             # 设置编译器
-            export CC=arm-linux-android21-clang
-            export CXX=arm-linux-android21-clang++
+            export CC=armv7a-linux-androideabi21-clang
+            export CXX=armv7a-linux-androideabi21-clang++
             export AR=llvm-ar
             export RANLIB=llvm-ranlib
             export STRIP=llvm-strip
@@ -1900,7 +1900,7 @@ function build_sqlite {
 
         	# 配置编译选项
         	./configure --prefix=${build_dir_root} \
-           		--host=arm-linux-android
+           		--host=armv7a-linux-android
 
         	make clean
         	make
@@ -2080,7 +2080,10 @@ function clean {
 #build_jxl release "arm64" ohos
 #build_sqlite release "x86_64" linux
 #build_sqlite release "arm64" ohos
-build_sqlite release "aarch64" android
+#build_sqlite release "aarch64" android
+build_sqlite release "arm7" android
+#build_sqlite release "x86_64" android
+#build_sqlite release "x86" android
 
 
 
