@@ -1797,12 +1797,12 @@ function build_sqlite {
     local arch=$2
     local platform=$3
 
-	local lib_name=jpeg
+	local lib_name=sqlite
 	local build_dir_root="${root_dir}/build/${platform}-${build_type}-${arch}"
     local build_dir="${build_dir_root}/${lib_name}"
 	mkdir -p "${build_dir}"
 	cd ${lib_name}
-	local lib_source_dir=sqlite
+	local lib_source_dir=sqlite-src-3490100
 	rm -rf ${lib_source_dir}
 	tar xvzf sqlite-src-3490100.zip
 
