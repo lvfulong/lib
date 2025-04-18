@@ -1791,7 +1791,55 @@ function build_aki {
 	#rm -rf ${root_dir}/${lib_name}/${lib_source_dir}
 	cd ${root_dir}
 }
+function build_sqlite {
 
+	local build_type=$1
+    local arch=$2
+    local platform=$3
+
+	local lib_name=jpeg
+	local build_dir_root="${root_dir}/build/${platform}-${build_type}-${arch}"
+    local build_dir="${build_dir_root}/${lib_name}"
+	mkdir -p "${build_dir}"
+	cd ${lib_name}
+	local lib_source_dir=sqlite
+	rm -rf ${lib_source_dir}
+	tar xvzf sqlite-src-3490100.zip
+
+	#cd ..
+	#cd ${build_dir}
+	cd ${lib_source_dir}
+
+
+	if [[ "$3" == "linux" ]]; then
+		./configure --prefix=${build_dir_root} \
+		--enable-shared=no \
+		--enable-static=yes \
+		--enable-readline \
+		--enable-fts5 \
+		--enable-json1 \
+		--enable-rtree \
+		--enable-session \
+    	--enable-math \
+    	--enable-fts4 \
+    	--enable-fts3 \
+    	--enable-fts5 \
+    	--enable-json1 \
+    	--enable-rtree \
+    	--enable-session \
+    	--enable-math \
+    	--enable-load-extension \
+    	--enable-dynamic-extensions
+
+
+		make
+		make install
+	fi
+	
+	rm -rf ${root_dir}/${lib_name}
+	cd ${root_dir}
+
+}
 function archive_ios {
 
 	local build_type=$1
@@ -1891,8 +1939,8 @@ function clean {
 #build_zlib release "x86" android
 #build_zlib release "x86_64" linux
 
-build_jxl release "arm64" ohos
-
+#build_jxl release "arm64" ohos
+build_sqlite release "x86_64" linux
 
 #build_jxl release "x86_64" android
 #build_jxl release arm64 iphoneos
