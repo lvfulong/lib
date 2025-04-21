@@ -1816,14 +1816,28 @@ function build_tracy {
 			-DCMAKE_INSTALL_PREFIX=${build_dir_root} \
 			-DCMAKE_PREFIX_PATH=${build_dir_root} \
             -DCMAKE_FIND_ROOT_PATH=${build_dir_root} \
-			  -DBUILD_SHARED_LIBS=OFF \
+			-DBUILD_SHARED_LIBS=OFF \
 			../../../${lib_name}/${lib_source_dir}
 
 		cmake --build . --config ${build_type} --target install	
 	fi
 	
-	#if [[ "$3" == "iphoneos" ]] || [[ "$3" == "iphonesimulator" ]]; then
-	#fi
+	if [[ "$3" == "iphoneos" ]] || [[ "$3" == "iphonesimulator" ]]; then
+
+	cmake \
+			-G "Unix Makefiles" \
+			-DCMAKE_BUILD_TYPE="${build_type}" \
+			-DIOS_ARCH="${arch}" \
+			-DPLATFORM_NAME="${platform}" \
+			-DCMAKE_TOOLCHAIN_FILE=../../../CMake/clang/iOS.cmake \
+			-DCMAKE_SYSTEM_NAME=iOS \
+			-DCMAKE_INSTALL_PREFIX=${build_dir_root} \
+			-DCMAKE_PREFIX_PATH=${build_dir_root} \
+			-DBUILD_SHARED_LIBS=OFF \
+			../../../${lib_name}/${lib_source_dir}
+		
+		cmake --build . --config ${build_type} --target install
+	fi
 	
 	if [[ "$3" == "android" ]]; then
 		local android_abi=
@@ -2070,7 +2084,7 @@ function archive_ios {
     lipo -create  "${build_dir0}/lib/libfreetype.a"  "${build_dir1}/lib/libfreetype.a"  -output "${root_dir}/build/ios-fat/libfreetype.a"
 	lipo -create  "${build_dir0}/lib/libbenchmark_main.a"  "${build_dir1}/lib/libbenchmark_main.a"  -output "${root_dir}/build/ios-fat/libbenchmark_main.a"
 	lipo -create  "${build_dir0}/lib/libbenchmark.a"  "${build_dir1}/lib/libbenchmark.a"  -output "${root_dir}/build/ios-fat/libbenchmark.a"
-}
+	lipo -create  "${build_dir0}/lib/libtracy.a"  "${build_dir1}/lib/libtracy.a"  -output "${root_dir}/build/ios-fat/libtracy.a"
 
 function clean {
     echo "Cleaning build directories..."
@@ -2118,7 +2132,13 @@ function clean {
 #build_freetype Release "win64" windows
 
 #build_tracy Release "x64" windows
-build_tracy Debug "x64" windows
+#build_tracy Debug "x64" windows
+
+build_tracy release arm64 iphoneos
+build_tracy release x86_64 iphonesimulator
+archive_ios release iphoneos arm64 iphonesimulator x86_64
+
+
 
 #build_freetype release arm64 iphoneos
 #build_freetype release x86_64 iphonesimulator
