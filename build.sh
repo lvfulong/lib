@@ -1380,7 +1380,6 @@ function build_openal {
 			-DCMAKE_PREFIX_PATH=${build_dir_root} \
             -DCMAKE_FIND_ROOT_PATH=${build_dir_root} \
 			-DLIBTYPE=SHARED \
-			-DCMAKE_BUILD_TYPE=Release \
 			-DALSOFT_EXAMPLES=0 \
 			../../../${lib_name}/${lib_source_dir}
 
@@ -1417,7 +1416,6 @@ function build_openal {
 			-DLIBTYPE=STATIC \
 			-DALSOFT_BACKEND_OPENSL=1 \
 			-DALSOFT_BACKEND_WAVE=1 \
-			-DCMAKE_BUILD_TYPE=Release \
 			-DALSOFT_AMBDEC_PRESETS=0 \
 			-DALSOFT_EMBED_HRTF_DATA=0 \
 			-DALSOFT_ENABLE_SSE2_CODEGEN=0 \
@@ -1818,7 +1816,6 @@ function build_tracy {
 			-DCMAKE_INSTALL_PREFIX=${build_dir_root} \
 			-DCMAKE_PREFIX_PATH=${build_dir_root} \
             -DCMAKE_FIND_ROOT_PATH=${build_dir_root} \
-			-DCMAKE_BUILD_TYPE=Release \
 			  -DBUILD_SHARED_LIBS=OFF \
 			../../../${lib_name}/${lib_source_dir}
 
@@ -1855,7 +1852,6 @@ function build_tracy {
 			-DLIBTYPE=STATIC \
 			-DALSOFT_BACKEND_OPENSL=1 \
 			-DALSOFT_BACKEND_WAVE=1 \
-			-DCMAKE_BUILD_TYPE=Release \
 			-DALSOFT_AMBDEC_PRESETS=0 \
 			-DALSOFT_EMBED_HRTF_DATA=0 \
 			-DALSOFT_ENABLE_SSE2_CODEGEN=0 \
@@ -2121,7 +2117,8 @@ function clean {
 #build_freetype Release "win32" windows
 #build_freetype Release "win64" windows
 
-build_tracy Release "x64" windows
+#build_tracy Release "x64" windows
+build_tracy Debug "x64" windows
 
 #build_freetype release arm64 iphoneos
 #build_freetype release x86_64 iphonesimulator
