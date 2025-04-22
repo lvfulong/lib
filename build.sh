@@ -1856,21 +1856,52 @@ function build_tracy {
 		if [[ "$2" == "x86_64" ]]; then
 			android_abi=x86_64
 		fi
+
+		cmake -G "Unix Makefiles" \
+			-DCMAKE_BUILD_TYPE=${build_type} \
+			-DCMAKE_TOOLCHAIN_FILE=${CONCH_NDK_PATH}/build/cmake/android.toolchain.cmake \
+			-DANDROID_ABI=${android_abi} \
+			-DANDROID_NDK=${CONCH_NDK_PATH} \
+			-DCMAKE_ANDROID_ARCH_ABI=${android_abi} \
+			-DCMAKE_ANDROID_NDK=${CONCH_NDK_PATH} \
+			-DCMAKE_EXPORT_COMPILE_COMMANDS=ON \
+			-DCMAKE_SYSTEM_NAME=Android \
+			-DCMAKE_SYSTEM_VERSION=19 \
+			-DANDROID_STL=c++_shared \
+			-DANDROID_PLATFORM=${CONCH_ANDROID_MINI_SDK_VERSION} \
+			-DANDROID_ARM_NEON=TRUE \
+			-DANDROID_TOOLCHAIN=clang \
+			-DCMAKE_INSTALL_PREFIX=${build_dir_root} \
+			-DCMAKE_PREFIX_PATH=${build_dir_root} \
+            -DCMAKE_FIND_ROOT_PATH=${build_dir_root} \
+			-DBUILD_SHARED_LIBS=OFF \
+			../../../${lib_name}/${lib_source_dir}
+
+		cmake --build . --config ${build_type} --target install
 	fi
+
+	if [[ "$3" == "ohos" ]]; then
+		${OHOS_NDK_CMAKE_PATH}/cmake  -G "Ninja" \
+		-DCMAKE_BUILD_TYPE=${build_type} \
+		-DCMAKE_INSTALL_PREFIX=${build_dir_root} \
+		-DCMAKE_PREFIX_PATH=${build_dir_root} \
+		-DOHOS_STL=c++_shared \
+		-DCMAKE_TOOLCHAIN_FILE=${OHOS_NDK_CMAKE_TOOLCHAIN_PATH} \
+		-DBUILD_SHARED_LIBS=OFF \
+		../../../${lib_name}/${lib_source_dir}
+
+		#make
+		#make install
+		${OHOS_NDK_CMAKE_PATH}/cmake --build . --config ${build_type} 
+	fi
+
 	if [[ "$3" == "linux" ]]; then
 		cmake . -G "Unix Makefiles" \
 			-DCMAKE_BUILD_TYPE=${build_type} \
 			-DCMAKE_INSTALL_PREFIX=${build_dir_root} \
 			-DCMAKE_PREFIX_PATH=${build_dir_root} \
             -DCMAKE_FIND_ROOT_PATH=${build_dir_root} \
-			-DLIBTYPE=STATIC \
-			-DALSOFT_BACKEND_OPENSL=1 \
-			-DALSOFT_BACKEND_WAVE=1 \
-			-DALSOFT_AMBDEC_PRESETS=0 \
-			-DALSOFT_EMBED_HRTF_DATA=0 \
-			-DALSOFT_ENABLE_SSE2_CODEGEN=0 \
-			-DALSOFT_EXAMPLES=0 \
-			-DALSOFT_HRTF_DEFS=0 \
+			-DBUILD_SHARED_LIBS=OFF \
 			-DCMAKE_C_FLAGS=-fPIC \
 			-DCMAKE_CXX_FLAGS=-fPIC \
 			../../../${lib_name}/${lib_source_dir}
@@ -2134,10 +2165,17 @@ function clean {
 #build_tracy Release "x64" windows
 #build_tracy Debug "x64" windows
 
-build_tracy release arm64 iphoneos
-build_tracy release x86_64 iphonesimulator
-archive_ios release iphoneos arm64 iphonesimulator x86_64
+#build_tracy release arm64 iphoneos
+#build_tracy release x86_64 iphonesimulator
+#archive_ios release iphoneos arm64 iphonesimulator x86_64
 
+
+build_tracy release "aarch64" android
+build_tracy release "arm7" android
+build_tracy release "x86_64" android
+build_tracy release "x86" android
+
+#build_tracy release "arm64" ohos
 
 
 #build_freetype release arm64 iphoneos
