@@ -2170,10 +2170,12 @@ function clean {
 #archive_ios release iphoneos arm64 iphonesimulator x86_64
 
 
-build_tracy release "aarch64" android
-build_tracy release "arm7" android
-build_tracy release "x86_64" android
-build_tracy release "x86" android
+#build_tracy release "aarch64" android
+#build_tracy release "arm7" android
+#build_tracy release "x86_64" android
+#build_tracy release "x86" android
+
+build_tracy release "x86_64" linux
 
 #build_tracy release "arm64" ohos
 
