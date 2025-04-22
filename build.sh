@@ -2084,8 +2084,8 @@ function archive_ios {
     lipo -create  "${build_dir0}/lib/libfreetype.a"  "${build_dir1}/lib/libfreetype.a"  -output "${root_dir}/build/ios-fat/libfreetype.a"
 	lipo -create  "${build_dir0}/lib/libbenchmark_main.a"  "${build_dir1}/lib/libbenchmark_main.a"  -output "${root_dir}/build/ios-fat/libbenchmark_main.a"
 	lipo -create  "${build_dir0}/lib/libbenchmark.a"  "${build_dir1}/lib/libbenchmark.a"  -output "${root_dir}/build/ios-fat/libbenchmark.a"
-	lipo -create  "${build_dir0}/lib/libtracy.a"  "${build_dir1}/lib/libtracy.a"  -output "${root_dir}/build/ios-fat/libtracy.a"
-
+	lipo -create  "${build_dir0}/lib/libTracyClient.a"  "${build_dir1}/lib/libTracyClient.a"  -output "${root_dir}/build/ios-fat/libTracyClient.a"
+}
 function clean {
     echo "Cleaning build directories..."
     rm -Rf ${root_dir}/build
