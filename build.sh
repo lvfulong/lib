@@ -1817,6 +1817,8 @@ function build_tracy {
 			-DCMAKE_PREFIX_PATH=${build_dir_root} \
             -DCMAKE_FIND_ROOT_PATH=${build_dir_root} \
 			-DBUILD_SHARED_LIBS=OFF \
+			-DTRACY_PORT=5958 \
+			-DTRACY_ENABLE=ON \
 			../../../${lib_name}/${lib_source_dir}
 
 		cmake --build . --config ${build_type} --target install	
@@ -1834,6 +1836,8 @@ function build_tracy {
 			-DCMAKE_INSTALL_PREFIX=${build_dir_root} \
 			-DCMAKE_PREFIX_PATH=${build_dir_root} \
 			-DBUILD_SHARED_LIBS=OFF \
+			-DTRACY_PORT=5958 \
+			-DTRACY_ENABLE=ON \
 			../../../${lib_name}/${lib_source_dir}
 		
 		cmake --build . --config ${build_type} --target install
@@ -1875,6 +1879,8 @@ function build_tracy {
 			-DCMAKE_PREFIX_PATH=${build_dir_root} \
             -DCMAKE_FIND_ROOT_PATH=${build_dir_root} \
 			-DBUILD_SHARED_LIBS=OFF \
+			-DTRACY_PORT=5958 \
+			-DTRACY_ENABLE=ON \
 			../../../${lib_name}/${lib_source_dir}
 
 		cmake --build . --config ${build_type} --target install
@@ -1888,6 +1894,8 @@ function build_tracy {
 		-DOHOS_STL=c++_shared \
 		-DCMAKE_TOOLCHAIN_FILE=${OHOS_NDK_CMAKE_TOOLCHAIN_PATH} \
 		-DBUILD_SHARED_LIBS=OFF \
+		-DTRACY_PORT=5958 \
+			-DTRACY_ENABLE=ON \
 		../../../${lib_name}/${lib_source_dir}
 
 		#make
@@ -1904,6 +1912,8 @@ function build_tracy {
 			-DBUILD_SHARED_LIBS=OFF \
 			-DCMAKE_C_FLAGS=-fPIC \
 			-DCMAKE_CXX_FLAGS=-fPIC \
+			-DTRACY_PORT=5958 \
+			-DTRACY_ENABLE=ON \
 			../../../${lib_name}/${lib_source_dir}
 
 		cmake --build . --config ${build_type} --target install
@@ -2175,7 +2185,7 @@ function clean {
 #build_tracy release "x86_64" android
 #build_tracy release "x86" android
 
-build_tracy release "x86_64" linux
+#build_tracy release "x86_64" linux
 
 #build_tracy release "arm64" ohos
 
