@@ -34,6 +34,21 @@ OHOS_SDK_LINUX_PATH="/home/ubuntu/lfl/command-line-tools/sdk/default/openharmony
 BUILD_LIB_TYPE=""
 ISSUE_CLEAN=false
 
+
+#archive_ios_lib release crypto
+#archive_ios_lib release ssl
+function archive_ios_lib {
+
+	local build_type=$1
+	local lib_name=$2
+	
+	local build_dir0="${root_dir}/build/iphoneos-${build_type}-arm64"
+	local build_dir1="${root_dir}/build/iphonesimulator-${build_type}-x86_64"
+
+	lipo -create  "${build_dir0}/lib/lib${lib_name}.a"  "${build_dir1}/lib/lib${lib_name}.a"  -output "${root_dir}/build/ios-fat/lib${lib_name}.a"
+}
+
+
 function build_zlib {
 	local build_type=$1
     local arch=$2
@@ -1002,7 +1017,42 @@ function build_openssl {
 	fi
 	
 	if [[ "$3" == "iphoneos" ]] || [[ "$3" == "iphonesimulator" ]]; then
-		TODO
+		local ios_abi=
+		#https://github.com/leenjewel/openssl_for_ios_and_android/blob/master/tools/build-ios-openssl.sh
+		if [[ "$2" == "aarch64" ]]; then
+			ios_abi=arm64-v8a
+
+			export CC="xcrun -sdk iphoneos clang -arch arm64"
+        	export CXX="xcrun -sdk iphoneos clang++ -arch arm64"
+       	 	export CFLAGS="-arch arm64 -target aarch64-ios-darwin -march=armv8 -mcpu=generic -Wno-unused-function -fstrict-aliasing -Oz -Wno-ignored-optimization-argument -isysroot ${SDKROOT} -fembed-bitcode -miphoneos-version-min=${IOS_MIN_TARGET} -I${SDKROOT}/usr/include"
+        	export LDFLAGS="-arch arm64 -target aarch64-ios-darwin -march=armv8 -isysroot ${SDKROOT} -fembed-bitcode -L${SDKROOT}/usr/lib "
+        	export CXXFLAGS="-std=c++14 -arch arm64 -target aarch64-ios-darwin -march=armv8 -mcpu=generic -fstrict-aliasing -fembed-bitcode -miphoneos-version-min=${IOS_MIN_TARGET} -I${SDKROOT}/usr/include"
+        
+
+			./Configure iphoneos-cross no-shared --prefix="${PREFIX_DIR}"
+        	sed -ie "s!-fno-common!-fno-common -fembed-bitcode !" "Makefile"
+		fi
+	
+		if [[ "$2" == "arm7" ]]; then
+			ios_abi=armeabi-v7a
+		fi
+	
+		if [[ "$2" == "x86" ]]; then
+			ios_abi=x86
+		fi
+	
+		if [[ "$2" == "x86_64" ]]; then
+			ios_abi=x86_64
+
+			export CC="xcrun -sdk iphonesimulator clang -arch x86_64"
+        	export CXX="xcrun -sdk iphonesimulator clang++ -arch x86_64"
+        	export CFLAGS="-arch x86_64 -target x86_64-ios-darwin -march=x86-64 -msse4.2 -mpopcnt -m64 -mtune=intel -Wno-unused-function -fstrict-aliasing -O2 -Wno-ignored-optimization-argument -isysroot ${SDKROOT} -mios-simulator-version-min=${IOS_MIN_TARGET} -I${SDKROOT}/usr/include"
+        	export LDFLAGS="-arch x86_64 -target x86_64-ios-darwin -march=x86-64 -isysroot ${SDKROOT} -L${SDKROOT}/usr/lib "
+        	export CXXFLAGS="-std=c++14 -arch x86_64 -target x86_64-ios-darwin -march=x86-64 -msse4.2 -mpopcnt -m64 -mtune=intel -fstrict-aliasing -mios-simulator-version-min=${IOS_MIN_TARGET} -I${SDKROOT}/usr/include"
+
+			./Configure darwin64-x86_64-cc no-shared --prefix="${build_dir_root}"
+        
+		fi
 	fi
 	
 	if [[ "$3" == "android" ]]; then
@@ -2126,6 +2176,8 @@ function archive_ios {
 	lipo -create  "${build_dir0}/lib/libbenchmark_main.a"  "${build_dir1}/lib/libbenchmark_main.a"  -output "${root_dir}/build/ios-fat/libbenchmark_main.a"
 	lipo -create  "${build_dir0}/lib/libbenchmark.a"  "${build_dir1}/lib/libbenchmark.a"  -output "${root_dir}/build/ios-fat/libbenchmark.a"
 	lipo -create  "${build_dir0}/lib/libTracyClient.a"  "${build_dir1}/lib/libTracyClient.a"  -output "${root_dir}/build/ios-fat/libTracyClient.a"
+	lipo -create  "${build_dir0}/lib/libcrypto.a"  "${build_dir1}/lib/libcrypto.a"  -output "${root_dir}/build/ios-fat/libcrypto.a"
+	lipo -create  "${build_dir0}/lib/libssl.a"  "${build_dir1}/lib/libssl.a"  -output "${root_dir}/build/ios-fat/libssl.a"
 }
 function clean {
     echo "Cleaning build directories..."
@@ -2248,8 +2300,10 @@ build_openssl release arm64 iphoneos
 build_openssl release x86_64 iphonesimulator
 build_websocket release arm64 iphoneos
 build_websocket release x86_64 iphonesimulator
-archive_ios release iphoneos arm64 iphonesimulator x86_64
 
+archive_ios_lib release crypto
+archive_ios_lib release ssl
+archive_ios_lib release websocket
 
 #build_curl Release "win32" windows
 
