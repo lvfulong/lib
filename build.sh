@@ -2184,7 +2184,7 @@ function clean {
 #build_tracy release "arm7" android
 #build_tracy release "x86_64" android
 #build_tracy release "x86" android
-build_tracy release "x86_64" linux
+#build_tracy release "x86_64" linux
 
 #build_tracy release "arm64" ohos
 
@@ -2242,6 +2242,14 @@ build_tracy release "x86_64" linux
 
 #build_websocket release "x86_64" android
 #build_websocket  release "x86_64" linux
+
+
+build_openssl release arm64 iphoneos
+build_openssl release x86_64 iphonesimulator
+build_websocket release arm64 iphoneos
+build_websocket release x86_64 iphonesimulator
+archive_ios release iphoneos arm64 iphonesimulator x86_64
+
 
 #build_curl Release "win32" windows
 
