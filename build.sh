@@ -34,6 +34,9 @@ OHOS_SDK_LINUX_PATH="/home/ubuntu/lfl/command-line-tools/sdk/default/openharmony
 BUILD_LIB_TYPE=""
 ISSUE_CLEAN=false
 
+IOS_MIN_TARGET="11.0"
+
+IOS_MIN_TARGET_SIMULATOR="11.0"
 
 #archive_ios_lib release crypto
 #archive_ios_lib release ssl
@@ -978,7 +981,7 @@ function build_openssl {
     local build_dir="${build_dir_root}/${lib_name}"
 	mkdir -p "${build_dir}"
 	cd ${lib_name}
-	local lib_source_dir=openssl-3.1.4
+	local lib_source_dir=openssl-3.5.0
 	rm -rf ${lib_source_dir}
 	tar xvzf ${lib_source_dir}.tar.gz
 
@@ -1017,41 +1020,42 @@ function build_openssl {
 	fi
 	
 	if [[ "$3" == "iphoneos" ]] || [[ "$3" == "iphonesimulator" ]]; then
-		local ios_abi=
+		local IOS_PLATFORM=
 		#https://github.com/leenjewel/openssl_for_ios_and_android/blob/master/tools/build-ios-openssl.sh
-		if [[ "$2" == "aarch64" ]]; then
-			ios_abi=arm64-v8a
+		if [[ "$2" == "arm64" ]]; then
+			IOS_PLATFORM=arm64
+			IOS_PLATFORM=$3
+			IOS_SDK=$(xcrun -sdk ${IOS_PLATFORM} -show-sdk-path)
+			export PREFIX=${build_dir_root}
+
 
 			export CC="xcrun -sdk iphoneos clang -arch arm64"
         	export CXX="xcrun -sdk iphoneos clang++ -arch arm64"
-       	 	export CFLAGS="-arch arm64 -target aarch64-ios-darwin -march=armv8 -mcpu=generic -Wno-unused-function -fstrict-aliasing -Oz -Wno-ignored-optimization-argument -isysroot ${SDKROOT} -fembed-bitcode -miphoneos-version-min=${IOS_MIN_TARGET} -I${SDKROOT}/usr/include"
-        	export LDFLAGS="-arch arm64 -target aarch64-ios-darwin -march=armv8 -isysroot ${SDKROOT} -fembed-bitcode -L${SDKROOT}/usr/lib "
-        	export CXXFLAGS="-std=c++14 -arch arm64 -target aarch64-ios-darwin -march=armv8 -mcpu=generic -fstrict-aliasing -fembed-bitcode -miphoneos-version-min=${IOS_MIN_TARGET} -I${SDKROOT}/usr/include"
+       	 	export CFLAGS="-arch arm64 -target aarch64-ios-darwin -march=armv8 -mcpu=generic -Wno-unused-function -fstrict-aliasing -Oz -Wno-ignored-optimization-argument -isysroot ${IOS_SDK} -fembed-bitcode -miphoneos-version-min=${IOS_MIN_TARGET} -I${PREFIX}/usr/include"
+        	export LDFLAGS="-arch arm64 -target aarch64-ios-darwin -march=armv8 -isysroot ${IOS_SDK} -fembed-bitcode -L${PREFIX}/usr/lib "
+        	export CXXFLAGS="-std=c++14 -arch arm64 -target aarch64-ios-darwin -march=armv8 -mcpu=generic -fstrict-aliasing -fembed-bitcode -miphoneos-version-min=${IOS_MIN_TARGET} -I${PREFIX}/usr/include"
         
 
-			./Configure iphoneos-cross no-shared --prefix="${PREFIX_DIR}"
+			./Configure iphoneos-cross no-shared --prefix="${build_dir_root}"
         	sed -ie "s!-fno-common!-fno-common -fembed-bitcode !" "Makefile"
+			/Applications/Xcode.app/Contents/Developer/usr/bin/make install_sw
 		fi
-	
-		if [[ "$2" == "arm7" ]]; then
-			ios_abi=armeabi-v7a
-		fi
-	
-		if [[ "$2" == "x86" ]]; then
-			ios_abi=x86
-		fi
-	
+
 		if [[ "$2" == "x86_64" ]]; then
-			ios_abi=x86_64
+			IOS_PLATFORM=x86_64
+			IOS_PLATFORM=$3
+			IOS_SDK=$(xcrun -sdk ${IOS_PLATFORM} -show-sdk-path)
+			export PREFIX=${build_dir_root}
+
 
 			export CC="xcrun -sdk iphonesimulator clang -arch x86_64"
         	export CXX="xcrun -sdk iphonesimulator clang++ -arch x86_64"
-        	export CFLAGS="-arch x86_64 -target x86_64-ios-darwin -march=x86-64 -msse4.2 -mpopcnt -m64 -mtune=intel -Wno-unused-function -fstrict-aliasing -O2 -Wno-ignored-optimization-argument -isysroot ${SDKROOT} -mios-simulator-version-min=${IOS_MIN_TARGET} -I${SDKROOT}/usr/include"
-        	export LDFLAGS="-arch x86_64 -target x86_64-ios-darwin -march=x86-64 -isysroot ${SDKROOT} -L${SDKROOT}/usr/lib "
-        	export CXXFLAGS="-std=c++14 -arch x86_64 -target x86_64-ios-darwin -march=x86-64 -msse4.2 -mpopcnt -m64 -mtune=intel -fstrict-aliasing -mios-simulator-version-min=${IOS_MIN_TARGET} -I${SDKROOT}/usr/include"
+        	export CFLAGS="-arch x86_64 -target x86_64-ios-darwin -march=x86-64 -msse4.2 -mpopcnt -m64 -mtune=x86-64 -Wno-unused-function -fstrict-aliasing -O2 -Wno-ignored-optimization-argument -isysroot ${IOS_SDK} -mios-simulator-version-min=${IOS_MIN_TARGET_SIMULATOR} -I${PREFIX}/usr/include"
+        	export LDFLAGS="-arch x86_64 -target x86_64-ios-darwin -march=x86-64 -isysroot ${IOS_SDK} -L${PREFIX}/usr/lib "
+        	export CXXFLAGS="-std=c++14 -arch x86_64 -target x86_64-ios-darwin -march=x86-64 -msse4.2 -mpopcnt -m64 -mtune=x86-64 -fstrict-aliasing -mios-simulator-version-min=${IOS_MIN_TARGET_SIMULATOR} -I${PREFIX}/usr/include"
 
 			./Configure darwin64-x86_64-cc no-shared --prefix="${build_dir_root}"
-        
+        	/Applications/Xcode.app/Contents/Developer/usr/bin/make install_sw
 		fi
 	fi
 	
@@ -1137,7 +1141,7 @@ function build_websocket {
     local build_dir="${build_dir_root}/${lib_name}"
 	mkdir -p "${build_dir}"
 	cd ${lib_name}
-	local lib_source_dir=libwebsockets-4.2.0
+	local lib_source_dir=libwebsockets-4.3.5
 	rm -rf ${lib_source_dir}
 	tar xvzf  ${lib_source_dir}.tar.gz
 
@@ -1184,9 +1188,10 @@ function build_websocket {
 			-DLWS_WITHOUT_TEST_SERVER=1 \
 			-DLWS_WITHOUT_TEST_SERVER_EXTPOLL=1 \
 			-DLWS_WITHOUT_TEST_PING=1 \
-			-DLWS_WITHOUT_TEST_ECHO=1 \ 
+			-DLWS_WITHOUT_TEST_ECHO=1 \
 			-DLWS_WITHOUT_TEST_CLIENT=1 \
  			-DLWS_WITHOUT_TEST_FRAGGLE=1 \
+			-DLWS_DETECTED_PLAT_IOS=1 \
 			-DLWS_IPV6=1 \
 			../../../${lib_name}/${lib_source_dir}
 		
@@ -2296,14 +2301,14 @@ function clean {
 #build_websocket  release "x86_64" linux
 
 
-build_openssl release arm64 iphoneos
-build_openssl release x86_64 iphonesimulator
-build_websocket release arm64 iphoneos
-build_websocket release x86_64 iphonesimulator
+#build_openssl release arm64 iphoneos
+#build_openssl release x86_64 iphonesimulator
+#build_websocket release arm64 iphoneos
+#build_websocket release x86_64 iphonesimulator
 
 archive_ios_lib release crypto
 archive_ios_lib release ssl
-archive_ios_lib release websocket
+archive_ios_lib release websockets
 
 #build_curl Release "win32" windows
 
