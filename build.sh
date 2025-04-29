@@ -2212,18 +2212,39 @@ function build_mbedtls {
 	fi
 	
 	if [[ "$3" == "ohos" ]]; then
-		${OHOS_NDK_CMAKE_PATH}/cmake  -G "Ninja" \
-		-DCMAKE_BUILD_TYPE=${build_type} \
-		-DCMAKE_INSTALL_PREFIX=${build_dir_root} \
-		-DCMAKE_PREFIX_PATH=${build_dir_root} \
-		-DOHOS_STL=c++_shared \
-		-DCMAKE_TOOLCHAIN_FILE=${OHOS_NDK_CMAKE_TOOLCHAIN_PATH} \
-		-DBUILD_SHARED_LIBS=OFF \
-		../../../${lib_name}/${lib_source_dir}
+		#${OHOS_NDK_CMAKE_PATH}/cmake  -G "Ninja" \
+		#-DCMAKE_BUILD_TYPE=${build_type} \
+		#-DCMAKE_INSTALL_PREFIX=${build_dir_root} \
+		#-DCMAKE_PREFIX_PATH=${build_dir_root} \
+		#-DOHOS_STL=c++_shared \
+		#-DENABLE_TESTING=OFF \
+		#-DCMAKE_TOOLCHAIN_FILE=${OHOS_NDK_CMAKE_TOOLCHAIN_PATH} \
+		#-DBUILD_SHARED_LIBS=OFF \
+		#../../../${lib_name}/${lib_source_dir}
 
-		#make
-		#make install
-		${OHOS_NDK_CMAKE_PATH}/cmake --build . --config ${build_type} 
+
+		#${OHOS_NDK_CMAKE_PATH}/cmake --build . --config ${build_type}
+
+
+		export OHOS_SDK=${OHOS_SDK_LINUX_PATH}
+		export AS=${OHOS_SDK}/native/llvm/bin/llvm-as
+		export CC="${OHOS_SDK}/native/llvm/bin/clang --target=aarch64-linux-ohos"
+		export CXX="${OHOS_SDK}/native/llvm/bin/clang++ --target=aarch64-linux-ohos"
+		export LD=${OHOS_SDK}/native/llvm/bin/ld.lld
+		export STRIP=${OHOS_SDK}/native/llvm/bin/llvm-strip
+		export RANLIB=${OHOS_SDK}/native/llvm/bin/llvm-ranlib
+		export OBJDUMP=${OHOS_SDK}/native/llvm/bin/llvm-objdump
+		export OBJCOPY=${OHOS_SDK}/native/llvm/bin/llvm-objcopy
+		export NM=${OHOS_SDK}/native/llvm/bin/llvm-nm
+		export AR=${OHOS_SDK}/native/llvm/bin/llvm-ar
+		export CFLAGS="-fPIC"
+		export CXXFLAGS="-fPIC"
+
+		./configure --prefix=${build_dir_root}
+
+
+		make
+		make install 
 	fi
 
 	if [[ "$3" == "android" ]]; then
@@ -2437,7 +2458,7 @@ function clean {
 #build_mbedtls release "x86_64" linux
 
 
-#build_mbedtls release "arm64" ohos
+build_mbedtls release arm64 ohos
 #build_mbedtls release "aarch64" android
 #build_mbedtls release "arm7" android
 #build_mbedtls release "x86_64" android
@@ -2445,10 +2466,10 @@ function clean {
 
 
 
-build_mbedtls release arm64 iphoneos
-build_mbedtls release x86_64 iphonesimulator
-archive_ios_lib release mbedcrypto
-archive_ios_lib release mbedtls
+#build_mbedtls release arm64 iphoneos
+#build_mbedtls release x86_64 iphonesimulator
+#archive_ios_lib release mbedcrypto
+#archive_ios_lib release mbedtls
 
 #build_curl Release "x64" windows
 
