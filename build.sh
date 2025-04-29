@@ -2245,7 +2245,7 @@ function build_mbedtls {
 
 		#make
 		#make install
-		make no_test
+		make
 	fi
 
 	if [[ "$3" == "android" ]]; then
