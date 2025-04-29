@@ -2456,10 +2456,10 @@ function clean {
 #build_mbedtls Debug "x64" windows
 
 
-#build_mbedtls release "x86_64" linux
+build_mbedtls release "x86_64" linux
 
 
-build_mbedtls release arm64 ohos
+#build_mbedtls release arm64 ohos
 #build_mbedtls release "aarch64" android
 #build_mbedtls release "arm7" android
 #build_mbedtls release "x86_64" android
