@@ -2019,12 +2019,11 @@ function build_sqlite {
 		export CFLAGS="-fPIC -D__MUSL__=1"
 		export CXXFLAGS="-fPIC -D__MUSL__=1"
 
-		#./configure --prefix=${build_dir_root}
+		./configure --prefix=${build_dir_root}
 
 
-		#make
-		#make install
-		make no_test
+		make
+		make install
 	fi
 	
 
@@ -2241,11 +2240,12 @@ function build_mbedtls {
 		export CFLAGS="-fPIC"
 		export CXXFLAGS="-fPIC"
 
-		./configure --prefix=${build_dir_root}
+		#./configure --prefix=${build_dir_root}
 
 
-		make
-		make install 
+		#make
+		#make install
+		make no_test
 	fi
 
 	if [[ "$3" == "android" ]]; then
