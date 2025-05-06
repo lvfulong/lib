@@ -2286,6 +2286,130 @@ function build_mbedtls {
 	rm -rf ${root_dir}/${lib_name}/${lib_source_dir}
 	cd ${root_dir}
 }
+
+function build_googletest {
+	local build_type=$1
+    local arch=$2
+    local platform=$3
+
+	local lib_name=googletest
+	local build_dir_root="${root_dir}/build/${platform}-${build_type}-${arch}"
+    local build_dir="${build_dir_root}/${lib_name}"
+	mkdir -p "${build_dir}"
+	cd ${lib_name}
+	local lib_source_dir=googletest-1.17.0
+	rm -rf ${lib_source_dir}
+	tar xvzf ${lib_source_dir}.tar.gz
+
+	cd ..
+	cd ${build_dir}
+	
+
+	#-DPLATFORM_NAME="${platform}"
+	#-DCMAKE_BUILD_TYPE=${build_type} 
+	if [[ "$3" == "windows" ]]; then	
+	
+		cmake . -G "Visual Studio 17 2022" \
+			-A ${arch} \
+			-DCMAKE_INSTALL_PREFIX=${build_dir_root} \
+			-DCMAKE_PREFIX_PATH=${build_dir_root} \
+			-DBUILD_SHARED_LIBS=OFF \
+			../../../${lib_name}/${lib_source_dir}
+	
+		cmake --build . --config ${build_type} --target install
+	fi
+	
+	if [[ "$3" == "iphoneos" ]] || [[ "$3" == "iphonesimulator" ]]; then
+		cmake \
+			-G "Unix Makefiles" \
+			-DCMAKE_BUILD_TYPE="${build_type}" \
+			-DIOS_ARCH="${arch}" \
+			-DPLATFORM_NAME="${platform}" \
+			-DCMAKE_TOOLCHAIN_FILE=../../../CMake/clang/iOS.cmake \
+			-DCMAKE_SYSTEM_NAME=iOS \
+			-DCMAKE_INSTALL_PREFIX=${build_dir_root} \
+			-DCMAKE_PREFIX_PATH=${build_dir_root} \
+			-DBUILD_SHARED_LIBS=OFF \
+			../../../${lib_name}/${lib_source_dir}
+		
+		cmake --build . --config ${build_type} --target install
+	fi
+	
+	if [[ "$3" == "ohos" ]]; then
+		${OHOS_NDK_CMAKE_PATH}/cmake  -G "Ninja" \
+		-DCMAKE_BUILD_TYPE=${build_type} \
+		-DCMAKE_INSTALL_PREFIX=${build_dir_root} \
+		-DCMAKE_PREFIX_PATH=${build_dir_root} \
+		-DOHOS_STL=c++_shared \
+		-DCMAKE_TOOLCHAIN_FILE=${OHOS_NDK_CMAKE_TOOLCHAIN_PATH} \
+    	-DCMAKE_MAKE_PROGRAM=${OHOS_NDK_CMAKE_PATH}/ninja \
+		-DCMAKE_C_FLAGS=-Qunused-arguments \
+		-DCMAKE_CXX_FLAGS=-Qunused-arguments \
+		../../../${lib_name}/${lib_source_dir}
+
+
+		${OHOS_NDK_CMAKE_PATH}/cmake --build . --config ${build_type} --target install
+
+
+	fi
+
+	if [[ "$3" == "android" ]]; then
+		local android_abi=
+		if [[ "$2" == "aarch64" ]]; then
+			android_abi=arm64-v8a
+		fi
+	
+		if [[ "$2" == "arm7" ]]; then
+			android_abi=armeabi-v7a
+		fi
+	
+		if [[ "$2" == "x86" ]]; then
+			android_abi=x86
+		fi
+	
+		if [[ "$2" == "x86_64" ]]; then
+			android_abi=x86_64
+		fi
+		#-DCMAKE_ARCHIVE_OUTPUT_DIRECTORY=../android-${build_type}/Conch why not work?
+		cmake -G "Unix Makefiles" \
+			-DCMAKE_BUILD_TYPE=${build_type} \
+			-DCMAKE_TOOLCHAIN_FILE=${CONCH_NDK_PATH}/build/cmake/android.toolchain.cmake \
+			-DANDROID_ABI=${android_abi} \
+			-DANDROID_NDK=${CONCH_NDK_PATH} \
+			-DCMAKE_ANDROID_ARCH_ABI=${android_abi} \
+			-DCMAKE_ANDROID_NDK=${CONCH_NDK_PATH} \
+			-DCMAKE_EXPORT_COMPILE_COMMANDS=ON \
+			-DCMAKE_SYSTEM_NAME=Android \
+			-DCMAKE_SYSTEM_VERSION=19 \
+			-DANDROID_STL=c++_shared \
+			-DANDROID_PLATFORM=${CONCH_ANDROID_MINI_SDK_VERSION} \
+			-DANDROID_ARM_NEON=TRUE \
+			-DANDROID_TOOLCHAIN=clang \
+			-DCMAKE_INSTALL_PREFIX=${build_dir_root} \
+			-DCMAKE_PREFIX_PATH=${build_dir_root} \
+			-DBUILD_SHARED_LIBS=OFF \
+			../../../${lib_name}/${lib_source_dir}
+
+		cmake --build . --config ${build_type} --target install
+	fi
+
+	if [[ "$3" == "linux" ]]; then
+		cmake \
+			-G "Unix Makefiles" \
+			-DCMAKE_C_FLAGS=-fPIC \
+			-DCMAKE_CXX_FLAGS=-fPIC \
+			-DCMAKE_BUILD_TYPE="${build_type}" \
+			-DCMAKE_INSTALL_PREFIX=${build_dir_root} \
+			-DCMAKE_PREFIX_PATH=${build_dir_root} \
+			-DBUILD_SHARED_LIBS=OFF \
+			../../../${lib_name}/${lib_source_dir}
+		
+		cmake --build . --config ${build_type} --target install
+	fi
+
+	rm -rf ${root_dir}/${lib_name}/${lib_source_dir}
+	cd ${root_dir}
+}
 function archive_ios {
 
 	local build_type=$1
@@ -2432,6 +2556,30 @@ function clean {
 #archive_ios_lib release ssl
 #archive_ios_lib release websockets
 
+
+#build_googletest Release "x64" windows
+#build_googletest Debug "x64" windows
+#build_googletest release arm64 ohos
+
+build_googletest release "x86_64" linux
+
+
+#build_googletest release "aarch64" android
+#build_googletest release "arm7" android
+#build_googletest release "x86_64" android
+#build_googletest release "x86" android
+
+
+#build_googletest release arm64 iphoneos
+#build_googletest release x86_64 iphonesimulator
+#archive_ios_lib release gtest
+#archive_ios_lib release gtest_main
+#archive_ios_lib release gmock
+#archive_ios_lib release gmock_main
+
+
+
+
 #build_mbedtls Release "x64" windows
 
 #build_mbedtls Debug "x64" windows
@@ -2440,7 +2588,7 @@ function clean {
 #build_mbedtls release "x86_64" linux
 
 
-build_mbedtls release arm64 ohos
+#build_mbedtls release arm64 ohos
 #build_mbedtls release "aarch64" android
 #build_mbedtls release "arm7" android
 #build_mbedtls release "x86_64" android
