@@ -22,8 +22,8 @@ function check_android_environment {
 }
 
 
-OHOS_NDK_CMAKE_PATH="E:/huawei/IDE/DevEcoStudio/sdk/default/openharmony/native/build-tools/cmake/bin"
-OHOS_NDK_CMAKE_TOOLCHAIN_PATH="E:/huawei/IDE/DevEcoStudio/sdk/default/openharmony/native/build/cmake/ohos.toolchain.cmake"
+OHOS_NDK_CMAKE_PATH="E:/huawei/commandline-tools-windows-x64-5.0.13.100/command-line-tools/sdk/default/openharmony/native/build-tools/cmake/bin"
+OHOS_NDK_CMAKE_TOOLCHAIN_PATH="E:/huawei/commandline-tools-windows-x64-5.0.13.100/command-line-tools/sdk/default/openharmony/native/build/cmake/ohos.toolchain.cmake"
 #OHOS_NDK_CMAKE_PATH="/Users/joychina/Desktop/lvfulong/ohos-sdk/packages/ohos-sdk/darwin/native/build-tools/cmake/bin"
 #OHOS_NDK_CMAKE_TOOLCHAIN_PATH="/Users/joychina/Desktop/lvfulong/ohos-sdk/packages/ohos-sdk/darwin/native/build/cmake/ohos.toolchain.cmake"
 
@@ -2212,40 +2212,21 @@ function build_mbedtls {
 	fi
 	
 	if [[ "$3" == "ohos" ]]; then
-		#${OHOS_NDK_CMAKE_PATH}/cmake  -G "Ninja" \
-		#-DCMAKE_BUILD_TYPE=${build_type} \
-		#-DCMAKE_INSTALL_PREFIX=${build_dir_root} \
-		#-DCMAKE_PREFIX_PATH=${build_dir_root} \
-		#-DOHOS_STL=c++_shared \
-		#-DENABLE_TESTING=OFF \
-		#-DCMAKE_TOOLCHAIN_FILE=${OHOS_NDK_CMAKE_TOOLCHAIN_PATH} \
-		#-DBUILD_SHARED_LIBS=OFF \
-		#../../../${lib_name}/${lib_source_dir}
+		${OHOS_NDK_CMAKE_PATH}/cmake  -G "Ninja" \
+		-DCMAKE_BUILD_TYPE=${build_type} \
+		-DCMAKE_INSTALL_PREFIX=${build_dir_root} \
+		-DCMAKE_PREFIX_PATH=${build_dir_root} \
+		-DOHOS_STL=c++_shared \
+		-DCMAKE_TOOLCHAIN_FILE=${OHOS_NDK_CMAKE_TOOLCHAIN_PATH} \
+    	-DCMAKE_MAKE_PROGRAM=${OHOS_NDK_CMAKE_PATH}/ninja \
+		-DCMAKE_C_FLAGS=-Qunused-arguments \
+		-DCMAKE_CXX_FLAGS=-Qunused-arguments \
+		../../../${lib_name}/${lib_source_dir}
 
 
-		#${OHOS_NDK_CMAKE_PATH}/cmake --build . --config ${build_type}
+		${OHOS_NDK_CMAKE_PATH}/cmake --build . --config ${build_type} --target install
 
 
-		export OHOS_SDK=${OHOS_SDK_LINUX_PATH}
-		export AS=${OHOS_SDK}/native/llvm/bin/llvm-as
-		export CC="${OHOS_SDK}/native/llvm/bin/clang --target=aarch64-linux-ohos"
-		export CXX="${OHOS_SDK}/native/llvm/bin/clang++ --target=aarch64-linux-ohos"
-		export LD=${OHOS_SDK}/native/llvm/bin/ld.lld
-		export STRIP=${OHOS_SDK}/native/llvm/bin/llvm-strip
-		export RANLIB=${OHOS_SDK}/native/llvm/bin/llvm-ranlib
-		export OBJDUMP=${OHOS_SDK}/native/llvm/bin/llvm-objdump
-		export OBJCOPY=${OHOS_SDK}/native/llvm/bin/llvm-objcopy
-		export NM=${OHOS_SDK}/native/llvm/bin/llvm-nm
-		export AR=${OHOS_SDK}/native/llvm/bin/llvm-ar
-		export CFLAGS="-fPIC"
-		export CXXFLAGS="-fPIC"
-
-		#./configure --prefix=${build_dir_root}
-
-
-		#make
-		#make install
-		make
 	fi
 
 	if [[ "$3" == "android" ]]; then
@@ -2456,10 +2437,10 @@ function clean {
 #build_mbedtls Debug "x64" windows
 
 
-build_mbedtls release "x86_64" linux
+#build_mbedtls release "x86_64" linux
 
 
-#build_mbedtls release arm64 ohos
+build_mbedtls release arm64 ohos
 #build_mbedtls release "aarch64" android
 #build_mbedtls release "arm7" android
 #build_mbedtls release "x86_64" android
