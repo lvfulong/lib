@@ -1458,6 +1458,7 @@ function build_curl {
 			-DOHOS_STL=c++_shared \
 			-DOHOS_ARCH=arm64-v8a \
 			-DCMAKE_TOOLCHAIN_FILE=${LINUX_OHOS_NDK_CMAKE_TOOLCHAIN_PATH} \
+			-DCMAKE_FIND_ROOT_PATH=${build_dir_root} \
 			-DCURL_ZLIB=ON \
 		   	-DUSE_OPENSSL=ON \
 		   	-DENABLE_IPV6=ON \
