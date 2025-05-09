@@ -1123,7 +1123,7 @@ function build_openssl {
 		export CFLAGS="-fPIC -D__MUSL__=1"
 		export CXXFLAGS="-fPIC -D__MUSL__=1"
 
-		./Configure arm64-v8a --prefix=${build_dir_root}
+		./Configure linux-aarch64 --prefix=${build_dir_root}
 
 
 		make
