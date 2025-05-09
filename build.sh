@@ -1467,7 +1467,7 @@ function build_curl {
 		    -DBUILD_TESTING=OFF \
 			-DZLIB_LIBRARIES="${build_dir_root}/lib" \
 			-DZLIB_INCLUDE_DIRS="${build_dir_root}/include" \
-	        -DOPENSSL_LIBRARIES="${build_dir_root}/lib64" \
+	        -DOPENSSL_LIBRARIES="${build_dir_root}/lib" \
 			-DOPENSSL_INCLUDE_DIR="${build_dir_root}/include" \
 			../../../${lib_name}/${lib_source_dir}
 		
