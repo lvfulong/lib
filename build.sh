@@ -1108,6 +1108,27 @@ function build_openssl {
 		
 	fi
 	
+	if [[ "$3" == "ohos" ]]; then
+		export OHOS_SDK=${OHOS_SDK_LINUX_PATH}
+		export AS=${OHOS_SDK}/native/llvm/bin/llvm-as
+		export CC="${OHOS_SDK}/native/llvm/bin/clang --target=aarch64-linux-ohos"
+		export CXX="${OHOS_SDK}/native/llvm/bin/clang++ --target=aarch64-linux-ohos"
+		export LD=${OHOS_SDK}/native/llvm/bin/ld.lld
+		export STRIP=${OHOS_SDK}/native/llvm/bin/llvm-strip
+		export RANLIB=${OHOS_SDK}/native/llvm/bin/llvm-ranlib
+		export OBJDUMP=${OHOS_SDK}/native/llvm/bin/llvm-objdump
+		export OBJCOPY=${OHOS_SDK}/native/llvm/bin/llvm-objcopy
+		export NM=${OHOS_SDK}/native/llvm/bin/llvm-nm
+		export AR=${OHOS_SDK}/native/llvm/bin/llvm-ar
+		export CFLAGS="-fPIC -D__MUSL__=1"
+		export CXXFLAGS="-fPIC -D__MUSL__=1"
+
+		./Configure arm64-v8a --prefix=${build_dir_root}
+
+
+		make
+		make install
+	fi
 
 	#Option	Description
 	#--prefix=/opt/openssl	The top of the installation directory tree. The OpenSSL libraries will be created in this directory (/opt/openssl)
@@ -2561,7 +2582,7 @@ function clean {
 #build_googletest Debug "x64" windows
 #build_googletest release arm64 ohos
 
-build_googletest release "x86_64" linux
+#build_googletest release "x86_64" linux
 
 
 #build_googletest release "aarch64" android
@@ -2623,3 +2644,5 @@ build_googletest release "x86_64" linux
 
 #build_openssl release "x86_64" linux
 #build_websocket release "x86_64" linux
+
+build_openssl release arm64 ohos
