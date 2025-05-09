@@ -27,8 +27,13 @@ OHOS_NDK_CMAKE_TOOLCHAIN_PATH="E:/huawei/commandline-tools-windows-x64-5.0.13.10
 #OHOS_NDK_CMAKE_PATH="/Users/joychina/Desktop/lvfulong/ohos-sdk/packages/ohos-sdk/darwin/native/build-tools/cmake/bin"
 #OHOS_NDK_CMAKE_TOOLCHAIN_PATH="/Users/joychina/Desktop/lvfulong/ohos-sdk/packages/ohos-sdk/darwin/native/build/cmake/ohos.toolchain.cmake"
 
-
 OHOS_SDK_LINUX_PATH="/home/ubuntu/lfl/command-line-tools/sdk/default/openharmony"
+LINUX_OHOS_NDK_CMAKE_PATH="${OHOS_SDK_LINUX_PATH}/native/build-tools/cmake/bin"
+LINUX_OHOS_NDK_CMAKE_TOOLCHAIN_PATH="${OHOS_SDK_LINUX_PATH}/native/build/cmake/ohos.toolchain.cmake"
+
+
+
+
 
 
 BUILD_LIB_TYPE=""
@@ -145,6 +150,23 @@ function build_zlib {
 			../../../${lib_name}/${lib_source_dir}
 		
 		cmake --build . --config ${build_type} --target install
+	fi
+
+	if [[ "$3" == "ohos" ]]; then
+		${LINUX_OHOS_NDK_CMAKE_PATH}/cmake  -G "Ninja" \
+		-DCMAKE_BUILD_TYPE=${build_type} \
+		-DCMAKE_INSTALL_PREFIX=${build_dir_root} \
+		-DCMAKE_PREFIX_PATH=${build_dir_root} \
+		-DENABLE_STATIC=ON \
+		-DENABLE_SHARED=OFF \
+		-DOHOS_STL=c++_shared \
+		-DOHOS_ARCH=arm64-v8a \
+		-DCMAKE_TOOLCHAIN_FILE=${LINUX_OHOS_NDK_CMAKE_TOOLCHAIN_PATH} \
+		../../../${lib_name}/${lib_source_dir}
+
+		#make
+		#make install
+		${LINUX_OHOS_NDK_CMAKE_PATH}/cmake --build . --config ${build_type} --target install
 	fi
 
 	rm -rf ${root_dir}/${lib_name}/${lib_source_dir}
@@ -1305,8 +1327,8 @@ function build_curl {
     local arch=$2
     local platform=$3
 	#depends zlib
-	#build_zlib ${build_type} ${arch} ${platform}
-	#build_openssl ${build_type} ${arch} ${platform}
+	build_zlib ${build_type} ${arch} ${platform}
+	build_openssl ${build_type} ${arch} ${platform}
 	local lib_name=curl
 	local build_dir_root="${root_dir}/build/${platform}-${build_type}-${arch}"
     local build_dir="${build_dir_root}/${lib_name}"
@@ -1425,6 +1447,32 @@ function build_curl {
 		make
 		make install
 	fi
+
+	if [[ "$3" == "ohos" ]]; then
+		${LINUX_OHOS_NDK_CMAKE_PATH}/cmake  -G "Ninja" \
+			-DCMAKE_BUILD_TYPE=${build_type} \
+			-DCMAKE_INSTALL_PREFIX=${build_dir_root} \
+			-DCMAKE_PREFIX_PATH=${build_dir_root} \
+			-DOHOS_STL=c++_shared \
+			-DOHOS_ARCH=arm64-v8a \
+			-DCMAKE_TOOLCHAIN_FILE=${LINUX_OHOS_NDK_CMAKE_TOOLCHAIN_PATH} \
+			-DCURL_ZLIB=ON \
+		   	-DUSE_OPENSSL=ON \
+		   	-DENABLE_IPV6=ON \
+			-DBUILD_SHARED_LIBS=OFF \
+		   	-DBUILD_STATIC_LIBS=ON \
+		   	-DBUILD_CURL_EXE=OFF \
+		    -DBUILD_TESTING=OFF \
+			-DZLIB_LIBRARIES="${build_dir_root}/lib" \
+			-DZLIB_INCLUDE_DIRS="${build_dir_root}/include" \
+	        -DOPENSSL_LIBRARIES="${build_dir_root}/lib64" \
+			-DOPENSSL_INCLUDE_DIR="${build_dir_root}/include" \
+			../../../${lib_name}/${lib_source_dir}
+		
+		${LINUX_OHOS_NDK_CMAKE_PATH}/cmake --build . --config ${build_type} --target install
+	fi
+
+
 	rm -rf ${root_dir}/${lib_name}/${lib_source_dir}
 	cd ${root_dir}
 }
@@ -2645,4 +2693,4 @@ function clean {
 #build_openssl release "x86_64" linux
 #build_websocket release "x86_64" linux
 
-build_openssl release arm64 ohos
+build_curl release arm64 ohos
