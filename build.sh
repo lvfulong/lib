@@ -1740,7 +1740,22 @@ function build_benchmark {
 		
 		cmake --build . --config ${build_type} --target install
 	fi
-	
+	if [[ "$3" == "ohos" ]]; then
+		${OHOS_NDK_CMAKE_PATH}/cmake  -G "Ninja" \
+		-DCMAKE_BUILD_TYPE=${build_type} \
+		-DCMAKE_INSTALL_PREFIX=${build_dir_root} \
+		-DCMAKE_PREFIX_PATH=${build_dir_root} \
+		-DOHOS_STL=c++_shared \
+		-DCMAKE_TOOLCHAIN_FILE=${OHOS_NDK_CMAKE_TOOLCHAIN_PATH} \
+    	-DCMAKE_MAKE_PROGRAM=${OHOS_NDK_CMAKE_PATH}/ninja \
+		-DBENCHMARK_ENABLE_TESTING=OFF \
+		../../../${lib_name}/${lib_source_dir}
+
+
+		${OHOS_NDK_CMAKE_PATH}/cmake --build . --config ${build_type} --target install
+
+
+	fi
 	if [[ "$3" == "android" ]]; then
 		local android_abi=
 		if [[ "$2" == "aarch64" ]]; then
@@ -2696,4 +2711,4 @@ function clean {
 #build_openssl release "x86_64" linux
 #build_websocket release "x86_64" linux
 
-build_curl release arm64 ohos
+build_benchmark release arm64 ohos
