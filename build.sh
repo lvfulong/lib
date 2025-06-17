@@ -4,6 +4,7 @@ mkdir -p "${ios_fat}"
 
 
 export ANDROID_HOME=/Users/joychina/Desktop/lvfulong/android-ndk-r21e
+#export ANDROID_HOME=/Applications/AndroidNDK9519653.app/Contents/NDK
 
 #CONCH_NDK_VERSION=21.0.6113669
 CONCH_NDK_PATH=${ANDROID_HOME}
@@ -964,6 +965,26 @@ function build_mpg123 {
 		if [[ "$2" == "x86_64" ]]; then
 			android_abi=x86_64
 		fi
+          cmake -G "Unix Makefiles" \
+            -DCMAKE_BUILD_TYPE=${build_type} \
+            -DCMAKE_TOOLCHAIN_FILE=${CONCH_NDK_PATH}/build/cmake/android.toolchain.cmake \
+            -DANDROID_ABI=${android_abi} \
+            -DANDROID_NDK=${CONCH_NDK_PATH} \
+            -DCMAKE_ANDROID_ARCH_ABI=${android_abi} \
+            -DCMAKE_ANDROID_NDK=${CONCH_NDK_PATH} \
+            -DCMAKE_EXPORT_COMPILE_COMMANDS=ON \
+            -DCMAKE_SYSTEM_NAME=Android \
+            -DCMAKE_SYSTEM_VERSION=19 \
+            -DANDROID_STL=c++_shared \
+            -DANDROID_PLATFORM=${CONCH_ANDROID_MINI_SDK_VERSION} \
+            -DANDROID_ARM_NEON=TRUE \
+            -DANDROID_TOOLCHAIN=clang \
+            -DCMAKE_INSTALL_PREFIX=${build_dir_root} \
+            -DCMAKE_PREFIX_PATH=${build_dir_root} \
+            -DBUILD_SHARED_LIBS=OFF \
+            ../../../${lib_name}/${lib_source_dir}/ports/cmake
+
+        cmake --build . --config ${build_type} --target install
 	fi
 	
 
@@ -2711,4 +2732,5 @@ function clean {
 #build_openssl release "x86_64" linux
 #build_websocket release "x86_64" linux
 
-build_benchmark release arm64 ohos
+#build_benchmark release arm64 ohos
+build_mpg123 release "x86" android
