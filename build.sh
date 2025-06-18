@@ -2660,7 +2660,7 @@ function clean {
 #build_websocket release arm64 iphoneos
 #build_websocket release x86_64 iphonesimulator
 
-build_openssl release arm7 android
+#build_openssl release arm7 android
 #build_websocket release arm7 android
 
 #build_openssl release aarch64 android
