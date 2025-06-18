@@ -1605,6 +1605,140 @@ function build_vorbis {
 		make
 		make install
 	fi
+      if [[ "$3" == "android" ]]; then
+        local android_abi=
+        cd ${lib_source_dir}
+        if [[ "$2" == "aarch64" ]]; then
+            android_abi=arm64-v8a
+
+
+            # 设置 Android NDK 工具链路径
+            export ANDROID_NDK_HOME=${CONCH_NDK_PATH}
+            export PATH=${ANDROID_NDK_HOME}/toolchains/llvm/prebuilt/darwin-x86_64/bin:$PATH
+
+            # 设置编译器
+            export CC=aarch64-linux-android21-clang
+            export CXX=aarch64-linux-android21-clang++
+            export AR=llvm-ar
+            export RANLIB=llvm-ranlib
+            export STRIP=llvm-strip
+            export LD=ld.lld
+
+            # 设置编译标志
+            export CFLAGS="-fPIC -D__ANDROID_API__=21"
+            export CXXFLAGS="-fPIC -D__ANDROID_API__=21"
+            export LDFLAGS="-fPIC"
+        
+
+            # 配置编译选项
+            ./configure --prefix=${build_dir_root} --datarootdir="${build_dir_root}/share" --includedir="${build_dir_root}/include" --libdir="${build_dir_root}/lib" \
+            --target=aarch64 --program-prefix="" --enable-static --disable-shared --disable-dependency-tracking --with-pic \
+                   --host=aarch64-linux-android
+
+            make clean
+            make
+            make install
+
+        fi
+    
+        if [[ "$2" == "arm7" ]]; then
+            android_abi=armeabi-v7a
+
+
+            # 设置 Android NDK 工具链路径
+            export ANDROID_NDK_HOME=${CONCH_NDK_PATH}
+            export PATH=${ANDROID_NDK_HOME}/toolchains/llvm/prebuilt/darwin-x86_64/bin:$PATH
+
+            # 设置编译器
+            export CC=armv7a-linux-androideabi21-clang
+            export CXX=armv7a-linux-androideabi21-clang++
+            export AR=llvm-ar
+            export RANLIB=llvm-ranlib
+            export STRIP=llvm-strip
+            export LD=ld.lld
+
+            # 设置编译标志
+            export CFLAGS="-fPIC -D__ANDROID_API__=21"
+            export CXXFLAGS="-fPIC -D__ANDROID_API__=21"
+            export LDFLAGS="-fPIC"
+        
+
+            # 配置编译选项
+            ./configure --prefix=${build_dir_root} --datarootdir="${build_dir_root}/share" --includedir="${build_dir_root}/include" --libdir="${build_dir_root}/lib" \
+            --target=armv7a --program-prefix="" --enable-static --disable-shared --disable-dependency-tracking --with-pic \
+                   --host=armv7a-linux-android
+
+            make clean
+            make
+            make install
+
+        fi
+    
+        if [[ "$2" == "x86" ]]; then
+            android_abi=x86
+
+
+            # 设置 Android NDK 工具链路径
+            export ANDROID_NDK_HOME=${CONCH_NDK_PATH}
+            export PATH=${ANDROID_NDK_HOME}/toolchains/llvm/prebuilt/darwin-x86_64/bin:$PATH
+
+            # 设置编译器
+            export CC=i686-linux-android21-clang
+            export CXX=i686-linux-android21-clang++
+            export AR=llvm-ar
+            export RANLIB=llvm-ranlib
+            export STRIP=llvm-strip
+            export LD=ld.lld
+
+            # 设置编译标志
+            export CFLAGS="-fPIC -D__ANDROID_API__=21"
+            export CXXFLAGS="-fPIC -D__ANDROID_API__=21"
+            export LDFLAGS="-fPIC"
+        
+
+            # 配置编译选项
+            ./configure --prefix=${build_dir_root} --datarootdir="${build_dir_root}/share" --includedir="${build_dir_root}/include" --libdir="${build_dir_root}/lib" \
+            --target=i686 --program-prefix="" --enable-static --disable-shared --disable-dependency-tracking --with-pic \
+                   --host=i686-linux-android
+
+            #make clean
+            make
+            make install
+
+        fi
+    
+        if [[ "$2" == "x86_64" ]]; then
+            android_abi=x86_64
+
+
+            # 设置 Android NDK 工具链路径
+            export ANDROID_NDK_HOME=${CONCH_NDK_PATH}
+            export PATH=${ANDROID_NDK_HOME}/toolchains/llvm/prebuilt/darwin-x86_64/bin:$PATH
+
+            # 设置编译器
+            export CC=x86_64-linux-android21-clang
+            export CXX=x86_64-linux-android21-clang++
+            export AR=llvm-ar
+            export RANLIB=llvm-ranlib
+            export STRIP=llvm-strip
+            export LD=ld.lld
+
+            # 设置编译标志
+            export CFLAGS="-fPIC -D__ANDROID_API__=21"
+            export CXXFLAGS="-fPIC -D__ANDROID_API__=21"
+            export LDFLAGS="-fPIC"
+        
+
+            # 配置编译选项
+            ./configure --prefix=${build_dir_root} --datarootdir="${build_dir_root}/share" --includedir="${build_dir_root}/include" --libdir="${build_dir_root}/lib" \
+            --target=x86_64 --program-prefix="" --enable-static --disable-shared --disable-dependency-tracking --with-pic \
+                   --host=x86_64-linux-android
+
+            make clean
+            make
+            make install
+        fi
+    fi
 	rm -rf ${root_dir}/${lib_name}/${lib_source_dir}
 	cd ${root_dir}
 }
@@ -2803,10 +2937,15 @@ function clean {
 #build_openssl release x86 android
 #build_websocket release x86 android
 
-build_ogg  release aarch64 android
-build_ogg  release arm7 android
-build_ogg  release x86 android
-build_ogg  release x86_64 android
+#build_ogg  release aarch64 android
+#build_ogg  release arm7 android
+#build_ogg  release x86 android
+#build_ogg  release x86_64 android
+
+#build_vorbis  release aarch64 android
+#build_vorbis  release arm7 android
+build_vorbis  release x86 android
+#build_vorbis  release x86_64 android
 
 #archive_ios_lib release crypto
 #archive_ios_lib release ssl
