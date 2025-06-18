@@ -3,8 +3,8 @@ ios_fat=${root_dir}/build/ios-fat
 mkdir -p "${ios_fat}"
 
 
-export ANDROID_HOME=/Users/joychina/Desktop/lvfulong/android-ndk-r21e
-#export ANDROID_HOME=/Applications/AndroidNDK9519653.app/Contents/NDK
+#export ANDROID_HOME=E:/github/lib2/android-ndk-r25c-windows/android-ndk-r25c
+export ANDROID_HOME=/Applications/AndroidNDK9519653.app/Contents/NDK
 
 #CONCH_NDK_VERSION=21.0.6113669
 CONCH_NDK_PATH=${ANDROID_HOME}
@@ -2660,6 +2660,21 @@ function clean {
 #build_websocket release arm64 iphoneos
 #build_websocket release x86_64 iphonesimulator
 
+build_openssl release arm7 android
+#build_websocket release arm7 android
+
+#build_openssl release aarch64 android
+#build_websocket release aarch64 android
+
+#build_openssl release x86_64 android
+#build_websocket release x86_64 android
+
+
+#build_openssl release x86 android
+#build_websocket release x86 android
+
+
+
 #archive_ios_lib release crypto
 #archive_ios_lib release ssl
 #archive_ios_lib release websockets
@@ -2733,4 +2748,4 @@ function clean {
 #build_websocket release "x86_64" linux
 
 #build_benchmark release arm64 ohos
-build_mpg123 release "x86" android
+#build_mpg123 release "arm7" android
