@@ -1605,7 +1605,7 @@ function build_vorbis {
 		make
 		make install
 	fi
-      if [[ "$3" == "android" ]]; then
+    if [[ "$3" == "android" ]]; then
         local android_abi=
         cd ${lib_source_dir}
         if [[ "$2" == "aarch64" ]]; then
@@ -1697,11 +1697,21 @@ function build_vorbis {
         
 
             # 配置编译选项
-            ./configure --prefix=${build_dir_root} --datarootdir="${build_dir_root}/share" --includedir="${build_dir_root}/include" --libdir="${build_dir_root}/lib" \
-            --target=i686 --program-prefix="" --enable-static --disable-shared --disable-dependency-tracking --with-pic \
-                   --host=i686-linux-android
+            ./configure --prefix=${build_dir_root} \
+            --with-ogg=${build_dir_root} \
+            --datarootdir=${build_dir_root}/share \
+            --includedir=${build_dir_root}/include \
+            --libdir=${build_dir_root}/lib \
+             --target=i686 \
+             --program-prefix="" \
+             --enable-static \
+             --disable-shared \
+             --disable-dependency-tracking \
+             --with-pic \
+             --disable-oggtest \
+             --host=i686-linux-android
 
-            #make clean
+            make clean
             make
             make install
 
@@ -2939,7 +2949,7 @@ function clean {
 
 #build_ogg  release aarch64 android
 #build_ogg  release arm7 android
-#build_ogg  release x86 android
+build_ogg  release x86 android
 #build_ogg  release x86_64 android
 
 #build_vorbis  release aarch64 android
