@@ -1685,37 +1685,64 @@ function build_vorbis {
 			export PATH=${ANDROID_NDK_HOME}/toolchains/llvm/prebuilt/windows-x86_64/bin:$PATH
 
             # 设置编译器
-            export CC=i686-linux-android21-clang
-            export CXX=i686-linux-android21-clang++
-            export AR=llvm-ar
-            export RANLIB=llvm-ranlib
-            export STRIP=llvm-strip
-            export LD=ld.lld
+            #export CC=i686-linux-android21-clang
+            #export CXX=i686-linux-android21-clang++
+            #export AR=llvm-ar
+            #export RANLIB=llvm-ranlib
+            #export STRIP=llvm-strip
+            #export LD=ld.lld
 
             # 设置编译标志
-            export CFLAGS="-fPIC -D__ANDROID_API__=21"
-            export CXXFLAGS="-fPIC -D__ANDROID_API__=21"
-            export LDFLAGS="-fPIC"
+            #export CFLAGS="-fPIC -D__ANDROID_API__=21"
+            #export CXXFLAGS="-fPIC -D__ANDROID_API__=21"
+            #export LDFLAGS="-fPIC"
         
 
             # 配置编译选项
-            ./configure --prefix=${build_dir_root} \
-            --with-ogg=${build_dir_root} \
-            --datarootdir=${build_dir_root}/share \
-            --includedir=${build_dir_root}/include \
-            --libdir=${build_dir_root}/lib \
-             --target=i686 \
-             --program-prefix="" \
-             --enable-static \
-             --disable-shared \
-             --disable-dependency-tracking \
-             --with-pic \
-             --disable-oggtest \
-             --host=i686-linux-android
+            #./configure --prefix=${build_dir_root} \
+            #--with-ogg=${build_dir_root} \
+            #--datarootdir=${build_dir_root}/share \
+            #--includedir=${build_dir_root}/include \
+            #--libdir=${build_dir_root}/lib \
+             #--target=i686 \
+            # --program-prefix="" \
+            # --enable-static \
+            # --disable-shared \
+            # --disable-dependency-tracking \
+            # --with-pic \
+            # --disable-oggtest \
+            # --host=i686-linux-android
 
-            make clean
-            make
-            make install
+            #make clean
+            #make
+            #make install
+            
+    
+
+        cd ..
+        cd ${build_dir}
+    
+        cmake -G "Unix Makefiles" \
+            -DCMAKE_BUILD_TYPE=${build_type} \
+            -DCMAKE_TOOLCHAIN_FILE=${CONCH_NDK_PATH}/build/cmake/android.toolchain.cmake \
+            -DANDROID_ABI=${android_abi} \
+            -DANDROID_NDK=${CONCH_NDK_PATH} \
+            -DCMAKE_ANDROID_ARCH_ABI=${android_abi} \
+            -DCMAKE_ANDROID_NDK=${CONCH_NDK_PATH} \
+            -DCMAKE_EXPORT_COMPILE_COMMANDS=ON \
+            -DCMAKE_SYSTEM_NAME=Android \
+            -DCMAKE_SYSTEM_VERSION=19 \
+            -DANDROID_STL=c++_shared \
+            -DANDROID_PLATFORM=${CONCH_ANDROID_MINI_SDK_VERSION} \
+            -DANDROID_ARM_NEON=TRUE \
+            -DANDROID_TOOLCHAIN=clang \
+            -DCMAKE_INSTALL_PREFIX=${build_dir_root} \
+            -DCMAKE_PREFIX_PATH=${build_dir_root} \
+            -DCMAKE_FIND_ROOT_PATH=${build_dir_root} \
+            ../../../${lib_name}/${lib_source_dir}
+
+        cmake --build . --config ${build_type} --target install
+    
 
         fi
     
@@ -2950,15 +2977,15 @@ function clean {
 #build_openssl release x86 android
 #build_websocket release x86 android
 
-#build_ogg  release aarch64 android
-#build_ogg  release arm7 android
+build_ogg  release aarch64 android
+build_ogg  release arm7 android
 build_ogg  release x86 android
-#build_ogg  release x86_64 android
+build_ogg  release x86_64 android
 
-#build_vorbis  release aarch64 android
-#build_vorbis  release arm7 android
+build_vorbis  release aarch64 android
+build_vorbis  release arm7 android
 build_vorbis  release x86 android
-#build_vorbis  release x86_64 android
+build_vorbis  release x86_64 android
 
 #archive_ios_lib release crypto
 #archive_ios_lib release ssl
