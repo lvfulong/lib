@@ -1588,7 +1588,7 @@ function build_vorbis {
     local build_dir="${build_dir_root}/${lib_name}"
 	mkdir -p "${build_dir}"
 	cd ${lib_name}
-	local lib_source_dir=libvorbis-1.3.5
+	local lib_source_dir=libvorbis-1.3.7
 	rm -rf ${lib_source_dir}
 	tar xvzf ${lib_source_dir}.tar.gz
 
@@ -1614,7 +1614,8 @@ function build_vorbis {
 
             # 设置 Android NDK 工具链路径
             export ANDROID_NDK_HOME=${CONCH_NDK_PATH}
-            export PATH=${ANDROID_NDK_HOME}/toolchains/llvm/prebuilt/darwin-x86_64/bin:$PATH
+            #export PATH=${ANDROID_NDK_HOME}/toolchains/llvm/prebuilt/darwin-x86_64/bin:$PATH
+			export PATH=${ANDROID_NDK_HOME}/toolchains/llvm/prebuilt/windows-x86_64/bin:$PATH
 
             # 设置编译器
             export CC=aarch64-linux-android21-clang
@@ -1680,7 +1681,8 @@ function build_vorbis {
 
             # 设置 Android NDK 工具链路径
             export ANDROID_NDK_HOME=${CONCH_NDK_PATH}
-            export PATH=${ANDROID_NDK_HOME}/toolchains/llvm/prebuilt/darwin-x86_64/bin:$PATH
+            #export PATH=${ANDROID_NDK_HOME}/toolchains/llvm/prebuilt/darwin-x86_64/bin:$PATH
+			export PATH=${ANDROID_NDK_HOME}/toolchains/llvm/prebuilt/windows-x86_64/bin:$PATH
 
             # 设置编译器
             export CC=i686-linux-android21-clang
@@ -1852,7 +1854,8 @@ function build_ogg {
 
             # 设置 Android NDK 工具链路径
             export ANDROID_NDK_HOME=${CONCH_NDK_PATH}
-            export PATH=${ANDROID_NDK_HOME}/toolchains/llvm/prebuilt/darwin-x86_64/bin:$PATH
+            #export PATH=${ANDROID_NDK_HOME}/toolchains/llvm/prebuilt/darwin-x86_64/bin:$PATH
+			export PATH=${ANDROID_NDK_HOME}/toolchains/llvm/prebuilt/windows-x86_64/bin:$PATH
 
             # 设置编译器
             export CC=i686-linux-android21-clang
