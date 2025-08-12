@@ -60,12 +60,12 @@ v8_enable_i18n_support=false
 treat_warnings_as_errors=false
 symbol_level=0
 v8_enable_webassembly=true
-use_cxx23=true
 v8_enable_sandbox=${ENABLE_SANDBOX}
 v8_enable_pointer_compression=${POINTER_COMPRESSION}
 android_ndk_root=\"${NDK_ROOT_R28}\"
 android_ndk_version=\"r28c\"
-android_ndk_api_level=21
+android32_ndk_api_level=19
+android64_ndk_api_level=21
 use_custom_libunwind=false
 use_ml_inliner=false"
 
