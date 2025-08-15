@@ -4,7 +4,7 @@ mkdir -p "${ios_fat}"
 
 
 #export ANDROID_HOME=E:/github/lib2/android-ndk-r25c-windows/android-ndk-r25c
-export ANDROID_HOME=/Applications/AndroidNDK9519653.app/Contents/NDK
+export ANDROID_HOME=/Applications/AndroidNDK13750724.app/Contents/NDK
 
 #CONCH_NDK_VERSION=21.0.6113669
 CONCH_NDK_PATH=${ANDROID_HOME}
@@ -1881,8 +1881,8 @@ function build_ogg {
 
             # 设置 Android NDK 工具链路径
             export ANDROID_NDK_HOME=${CONCH_NDK_PATH}
-            #export PATH=${ANDROID_NDK_HOME}/toolchains/llvm/prebuilt/darwin-x86_64/bin:$PATH
-			export PATH=${ANDROID_NDK_HOME}/toolchains/llvm/prebuilt/windows-x86_64/bin:$PATH
+            export PATH=${ANDROID_NDK_HOME}/toolchains/llvm/prebuilt/darwin-x86_64/bin:$PATH
+			#export PATH=${ANDROID_NDK_HOME}/toolchains/llvm/prebuilt/windows-x86_64/bin:$PATH
 
             # 设置编译器
             export CC=i686-linux-android21-clang
@@ -2977,15 +2977,15 @@ function clean {
 #build_openssl release x86 android
 #build_websocket release x86 android
 
-build_ogg  release aarch64 android
-build_ogg  release arm7 android
+#build_ogg  release aarch64 android
+#build_ogg  release arm7 android
 build_ogg  release x86 android
-build_ogg  release x86_64 android
+#build_ogg  release x86_64 android
 
-build_vorbis  release aarch64 android
-build_vorbis  release arm7 android
+#build_vorbis  release aarch64 android
+#build_vorbis  release arm7 android
 build_vorbis  release x86 android
-build_vorbis  release x86_64 android
+#build_vorbis  release x86_64 android
 
 #archive_ios_lib release crypto
 #archive_ios_lib release ssl
