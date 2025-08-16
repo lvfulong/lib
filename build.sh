@@ -67,7 +67,7 @@ function build_zlib {
     local build_dir="${build_dir_root}/${lib_name}"
 	mkdir -p "${build_dir}"
 	cd ${lib_name}
-	local lib_source_dir=zlib-1.2.13
+	local lib_source_dir=zlib-1.3.1
 	rm -rf ${lib_source_dir}
 	tar xvzf ${lib_source_dir}.tar.gz
 
@@ -1222,6 +1222,7 @@ function build_websocket {
 			-DCMAKE_INSTALL_PREFIX=${build_dir_root} \
 			-DCMAKE_PREFIX_PATH=${build_dir_root} \
 			-DLWS_WITH_SSL=1 \
+			-DLWS_WITH_ZLIB=1 \
 			-DLWS_WITHOUT_SERVER=0 \
 			-DLWS_WITH_SHARED=0 \
 			-DLWS_WITHOUT_TEST_SERVER=1 \
@@ -1247,6 +1248,7 @@ function build_websocket {
 			-DCMAKE_INSTALL_PREFIX=${build_dir_root} \
 			-DCMAKE_PREFIX_PATH=${build_dir_root} \
 			-DLWS_WITH_SSL=1 \
+			-DLWS_WITH_ZLIB=1 \
 			-DLWS_WITHOUT_SERVER=0 \
 			-DLWS_WITH_SHARED=0 \
 			-DLWS_WITHOUT_TEST_SERVER=1 \
@@ -1297,6 +1299,7 @@ function build_websocket {
 			-DCMAKE_INSTALL_PREFIX=${build_dir_root} \
 			-DCMAKE_PREFIX_PATH=${build_dir_root} \
             -DCMAKE_FIND_ROOT_PATH=${build_dir_root} \
+			-DLWS_WITH_ZLIB=1 \
 			-DLWS_WITH_SSL=1 \
 			-DLWS_WITHOUT_SERVER=0 \
 			-DLWS_WITH_SHARED=0 \
