@@ -2,8 +2,8 @@
 
 set -e
 
-XCODE_DEVELOPER_PATH=$(xcode-select -p)
-
+#XCODE_DEVELOPER_PATH=$(xcode-select -p)
+XCODE_DEVELOPER_PATH=`pwd`
 ARCH=$1
 TARGET_ENV=$2
 
@@ -14,7 +14,7 @@ v8_target_cpu=\"${ARCH}\"
 enable_dsyms=false
 use_thin_lto=false
 use_lld=false
-clang_base_path=\"${XCODE_DEVELOPER_PATH}/Toolchains/XcodeDefault.xctoolchain/usr\"
+clang_base_path=\"${XCODE_DEVELOPER_PATH}/third_party/llvm-build/Release+Asserts\"
 clang_use_chrome_plugins=false
 chrome_pgo_phase=0
 is_component_build=false
