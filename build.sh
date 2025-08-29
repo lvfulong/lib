@@ -2972,6 +2972,12 @@ function build_libwebp {
 			-DCMAKE_INSTALL_PREFIX=${build_dir_root} \
 			-DCMAKE_PREFIX_PATH=${build_dir_root} \
 			-DBUILD_SHARED_LIBS=OFF \
+			-DWEBP_BUILD_CWEBP=OFF  \
+			-DWEBP_BUILD_DWEBP=OFF \
+			-DWEBP_BUILD_IMG2WEBP=OFF \
+			-DWEBP_BUILD_WEBPINFO=OFF \
+			-DWEBP_BUILD_WEBPMUX=OFF \
+			-DWEBP_BUILD_EXTRAS=OFF \
 			../../../${lib_name}/${lib_source_dir}
 		
 		cmake --build . --config ${build_type} --target install
@@ -3002,6 +3008,11 @@ function archive_ios {
 	lipo -create  "${build_dir0}/lib/libTracyClient.a"  "${build_dir1}/lib/libTracyClient.a"  -output "${root_dir}/build/ios-fat/libTracyClient.a"
 	lipo -create  "${build_dir0}/lib/libcrypto.a"  "${build_dir1}/lib/libcrypto.a"  -output "${root_dir}/build/ios-fat/libcrypto.a"
 	lipo -create  "${build_dir0}/lib/libssl.a"  "${build_dir1}/lib/libssl.a"  -output "${root_dir}/build/ios-fat/libssl.a"
+
+	lipo -create  "${build_dir0}/lib/libsharpyuv.a"  "${build_dir1}/lib/libsharpyuv.a"  -output "${root_dir}/build/ios-fat/libsharpyuv.a"
+	lipo -create  "${build_dir0}/lib/libwebp.a"  "${build_dir1}/lib/libwebp.a"  -output "${root_dir}/build/ios-fat/libwebp.a"
+	lipo -create  "${build_dir0}/lib/libwebpdecoder.a"  "${build_dir1}/lib/libwebpdecoder.a"  -output "${root_dir}/build/ios-fat/libwebpdecoder.a"
+	lipo -create  "${build_dir0}/lib/libwebpmux.a"  "${build_dir1}/lib/libwebpmux.a"  -output "${root_dir}/build/ios-fat/libwebpmux.a"
 }
 function clean {
     echo "Cleaning build directories..."
@@ -3260,14 +3271,14 @@ function clean {
 #build_libwebp Release "x64" windows
 #build_libwebp release arm64 ohos
 
-build_libwebp release "aarch64" android
-build_libwebp release "arm7" android
-build_libwebp release "x86" android
-build_libwebp release "x86_64" android
+#build_libwebp release "aarch64" android
+#build_libwebp release "arm7" android
+#build_libwebp release "x86" android
+#build_libwebp release "x86_64" android
 
 
-build_libwebp release arm64 iphoneos
-build_libwebp release x86_64 iphonesimulator
+#build_libwebp release arm64 iphoneos
+#build_libwebp release x86_64 iphonesimulator
 archive_ios release iphoneos arm64 iphonesimulator x86_64
 
 #build_libwebp release "x86_64" linux
