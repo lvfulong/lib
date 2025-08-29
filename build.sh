@@ -4,7 +4,7 @@ mkdir -p "${ios_fat}"
 
 
 #export ANDROID_HOME=E:/github/lib2/android-ndk-r25c-windows/android-ndk-r25c
-export ANDROID_HOME=/Applications/AndroidNDK9519653.app/Contents/NDK
+export ANDROID_HOME=/Applications/AndroidNDK13750724.app/Contents/NDK
 
 #CONCH_NDK_VERSION=21.0.6113669
 CONCH_NDK_PATH=${ANDROID_HOME}
@@ -67,7 +67,7 @@ function build_zlib {
     local build_dir="${build_dir_root}/${lib_name}"
 	mkdir -p "${build_dir}"
 	cd ${lib_name}
-	local lib_source_dir=zlib-1.2.13
+	local lib_source_dir=zlib-1.3.1
 	rm -rf ${lib_source_dir}
 	tar xvzf ${lib_source_dir}.tar.gz
 
@@ -1222,6 +1222,7 @@ function build_websocket {
 			-DCMAKE_INSTALL_PREFIX=${build_dir_root} \
 			-DCMAKE_PREFIX_PATH=${build_dir_root} \
 			-DLWS_WITH_SSL=1 \
+			-DLWS_WITH_ZLIB=1 \
 			-DLWS_WITHOUT_SERVER=0 \
 			-DLWS_WITH_SHARED=0 \
 			-DLWS_WITHOUT_TEST_SERVER=1 \
@@ -1247,6 +1248,7 @@ function build_websocket {
 			-DCMAKE_INSTALL_PREFIX=${build_dir_root} \
 			-DCMAKE_PREFIX_PATH=${build_dir_root} \
 			-DLWS_WITH_SSL=1 \
+			-DLWS_WITH_ZLIB=1 \
 			-DLWS_WITHOUT_SERVER=0 \
 			-DLWS_WITH_SHARED=0 \
 			-DLWS_WITHOUT_TEST_SERVER=1 \
@@ -1297,6 +1299,7 @@ function build_websocket {
 			-DCMAKE_INSTALL_PREFIX=${build_dir_root} \
 			-DCMAKE_PREFIX_PATH=${build_dir_root} \
             -DCMAKE_FIND_ROOT_PATH=${build_dir_root} \
+			-DLWS_WITH_ZLIB=1 \
 			-DLWS_WITH_SSL=1 \
 			-DLWS_WITHOUT_SERVER=0 \
 			-DLWS_WITH_SHARED=0 \
@@ -1554,6 +1557,37 @@ function build_openal {
 		if [[ "$2" == "x86_64" ]]; then
 			android_abi=x86_64
 		fi
+
+			cmake -G "Unix Makefiles" \
+			-DCMAKE_BUILD_TYPE=${build_type} \
+			-DCMAKE_TOOLCHAIN_FILE=${CONCH_NDK_PATH}/build/cmake/android.toolchain.cmake \
+			-DANDROID_ABI=${android_abi} \
+			-DANDROID_NDK=${CONCH_NDK_PATH} \
+			-DCMAKE_ANDROID_ARCH_ABI=${android_abi} \
+			-DCMAKE_ANDROID_NDK=${CONCH_NDK_PATH} \
+			-DCMAKE_EXPORT_COMPILE_COMMANDS=ON \
+			-DCMAKE_SYSTEM_NAME=Android \
+			-DCMAKE_SYSTEM_VERSION=19 \
+			-DANDROID_STL=c++_shared \
+			-DANDROID_PLATFORM=${CONCH_ANDROID_MINI_SDK_VERSION} \
+			-DANDROID_ARM_NEON=TRUE \
+			-DANDROID_TOOLCHAIN=clang \
+			-DCMAKE_INSTALL_PREFIX=${build_dir_root} \
+			-DCMAKE_PREFIX_PATH=${build_dir_root} \
+            -DCMAKE_FIND_ROOT_PATH=${build_dir_root} \
+			-DLIBTYPE=STATIC \
+			-DALSOFT_BACKEND_OPENSL=1 \
+			-DALSOFT_BACKEND_WAVE=1 \
+			-DALSOFT_AMBDEC_PRESETS=0 \
+			-DALSOFT_EMBED_HRTF_DATA=0 \
+			-DALSOFT_ENABLE_SSE2_CODEGEN=0 \
+			-DALSOFT_EXAMPLES=0 \
+			-DALSOFT_HRTF_DEFS=0 \
+			-DCMAKE_C_FLAGS=-fPIC \
+			-DCMAKE_CXX_FLAGS=-fPIC \
+			../../../${lib_name}/${lib_source_dir}
+
+		cmake --build . --config ${build_type} --target install
 	fi
 	if [[ "$3" == "linux" ]]; then
 		cmake . -G "Unix Makefiles" \
@@ -1881,8 +1915,8 @@ function build_ogg {
 
             # 设置 Android NDK 工具链路径
             export ANDROID_NDK_HOME=${CONCH_NDK_PATH}
-            #export PATH=${ANDROID_NDK_HOME}/toolchains/llvm/prebuilt/darwin-x86_64/bin:$PATH
-			export PATH=${ANDROID_NDK_HOME}/toolchains/llvm/prebuilt/windows-x86_64/bin:$PATH
+            export PATH=${ANDROID_NDK_HOME}/toolchains/llvm/prebuilt/darwin-x86_64/bin:$PATH
+			#export PATH=${ANDROID_NDK_HOME}/toolchains/llvm/prebuilt/windows-x86_64/bin:$PATH
 
             # 设置编译器
             export CC=i686-linux-android21-clang
@@ -2870,6 +2904,8 @@ function clean {
 #build_jpeg_turbo release "arm7" android
 #build_jpeg_turbo release "x86_64" android
 #build_jpeg_turbo release "x86" android
+
+#
 #build_jpeg_turbo release "x86_64" linux
 
 #build_zip Release "win32" windows
@@ -2879,10 +2915,12 @@ function clean {
 #build_zip release x86_64 iphonesimulator
 #archive_ios release iphoneos arm64 iphonesimulator x86_64
 
-#build_zip release "aarch64" android
-#build_zip release "arm7" android
-#build_zip release "x86_64" android
-#build_zip release "x86" android
+build_zip release "aarch64" android
+build_zip release "arm7" android
+build_zip release "x86_64" android
+build_zip release "x86" android
+
+
 #build_zip release "x86_64" linux
 
 #build_freetype Release "win32" windows
@@ -2909,10 +2947,18 @@ function clean {
 #build_freetype release x86_64 iphonesimulator
 #archive_ios release iphoneos arm64 iphonesimulator x86_64
 
+#build_swappy release "arm7" android
+#build_swappy release "x86_64" android
+#build_swappy release "x86" android
 #build_swappy release "aarch64" android
+
+
 #build_freetype release "arm7" android
 #build_freetype release "x86_64" android
 #build_freetype release "x86" android
+#build_freetype release "aarch64" android
+
+
 #build_freetype release "x86_64" linux
 
 
@@ -2942,6 +2988,9 @@ function clean {
 #build_jxl release "arm64" ohos
 #build_sqlite release "x86_64" linux
 #build_sqlite release "arm64" ohos
+
+
+
 #build_sqlite release "aarch64" android
 #build_sqlite release "arm7" android
 #build_sqlite release "x86_64" android
@@ -2973,19 +3022,18 @@ function clean {
 #build_openssl release x86_64 android
 #build_websocket release x86_64 android
 
-
 #build_openssl release x86 android
 #build_websocket release x86 android
 
-build_ogg  release aarch64 android
-build_ogg  release arm7 android
-build_ogg  release x86 android
-build_ogg  release x86_64 android
+#build_ogg  release aarch64 android
+#build_ogg  release arm7 android
+#build_ogg  release x86 android
+#build_ogg  release x86_64 android
 
-build_vorbis  release aarch64 android
-build_vorbis  release arm7 android
-build_vorbis  release x86 android
-build_vorbis  release x86_64 android
+#build_vorbis  release aarch64 android
+#build_vorbis  release arm7 android
+#build_vorbis  release x86 android
+#build_vorbis  release x86_64 android
 
 #archive_ios_lib release crypto
 #archive_ios_lib release ssl
@@ -3024,6 +3072,8 @@ build_vorbis  release x86_64 android
 
 
 #build_mbedtls release arm64 ohos
+
+
 #build_mbedtls release "aarch64" android
 #build_mbedtls release "arm7" android
 #build_mbedtls release "x86_64" android
@@ -3061,3 +3111,22 @@ build_vorbis  release x86_64 android
 
 #build_benchmark release arm64 ohos
 #build_mpg123 release "arm7" android
+
+
+#build_benchmark release "aarch64" android
+#build_benchmark release "arm7" android
+#build_benchmark release "x86" android
+#build_benchmark release "x86_64" android
+
+
+#build_googletest release "aarch64" android
+#build_googletest release "arm7" android
+#build_googletest release "x86" android
+#build_googletest release "x86_64" android
+
+
+#build_openal release "aarch64" android
+#build_openal release "arm7" android
+#build_openal release "x86" android
+#build_openal release "x86_64" android
+

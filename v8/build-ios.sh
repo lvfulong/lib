@@ -2,19 +2,19 @@
 
 set -e
 
-XCODE_DEVELOPER_PATH=$(xcode-select -p)
-
+#XCODE_DEVELOPER_PATH=$(xcode-select -p)
+XCODE_DEVELOPER_PATH=`pwd`
 ARCH=$1
 TARGET_ENV=$2
 
 ARGS="target_os=\"ios\"
-v8_enable_pointer_compression=false
+v8_enable_pointer_compression=true
 target_cpu=\"${ARCH}\"
 v8_target_cpu=\"${ARCH}\"
 enable_dsyms=false
 use_thin_lto=false
 use_lld=false
-clang_base_path=\"${XCODE_DEVELOPER_PATH}/Toolchains/XcodeDefault.xctoolchain/usr\"
+clang_base_path=\"${XCODE_DEVELOPER_PATH}/third_party/llvm-build/Release+Asserts\"
 clang_use_chrome_plugins=false
 chrome_pgo_phase=0
 is_component_build=false
@@ -28,7 +28,7 @@ treat_warnings_as_errors=false
 symbol_level=0
 v8_enable_webassembly=false
 use_cxx17=true
-v8_enable_sandbox=false
+v8_enable_sandbox=true
 ios_deployment_target=\"11.0\"
 ios_enable_code_signing=false"
 
@@ -43,6 +43,6 @@ fi
 echo "FINAL_ARGS:${FINAL_ARGS}"
 
 
-gn gen out/ios --args="${FINAL_ARGS}"
+gn gen out/ios_${ARCH} --args="${FINAL_ARGS}"
 
-ninja -C out/ios v8_monolith d8 -v
+ninja -C out/ios_${ARCH} v8_monolith 
