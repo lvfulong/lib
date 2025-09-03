@@ -1390,6 +1390,34 @@ function build_curl {
 
 		cmake --build . --config ${build_type} --target install
 	fi
+     if [[ "$3" == "iphoneos" ]] || [[ "$3" == "iphonesimulator" ]]; then
+	    cd ..
+		cd ${build_dir}
+        cmake \
+            -G "Unix Makefiles" \
+            -DCMAKE_BUILD_TYPE="${build_type}" \
+            -DIOS_ARCH="${arch}" \
+            -DPLATFORM_NAME="${platform}" \
+            -DCMAKE_TOOLCHAIN_FILE=../../../CMake/clang/iOS.cmake \
+            -DCMAKE_SYSTEM_NAME=iOS \
+            -DCMAKE_INSTALL_PREFIX=${build_dir_root} \
+            -DCMAKE_PREFIX_PATH=${build_dir_root} \
+            -DCURL_ZLIB=ON \
+            -DUSE_OPENSSL=ON \
+            -DENABLE_IPV6=ON \
+            -DBUILD_SHARED_LIBS=OFF \
+            -DBUILD_STATIC_LIBS=ON \
+            -DBUILD_CURL_EXE=OFF \
+            -DBUILD_TESTING=OFF \
+            -DZLIB_LIBRARIES="${build_dir_root}/lib" \
+            -DZLIB_INCLUDE_DIRS="${build_dir_root}/include" \
+            -DOPENSSL_LIBRARIES="${build_dir_root}/lib" \
+            -DOPENSSL_INCLUDE_DIR="${build_dir_root}/include" \
+            -DCMAKE_C_FLAGS="-Wno-implicit-function-declaration" \
+            ../../../${lib_name}/${lib_source_dir}
+        
+        cmake --build . --config ${build_type} --target install
+    fi
 	if [[ "$3" == "android" ]]; then
 		local android_abi=
 		if [[ "$2" == "aarch64" ]]; then
@@ -1439,6 +1467,7 @@ function build_curl {
 			-DZLIB_INCLUDE_DIRS="${build_dir_root}/include" \
 	        -DOPENSSL_LIBRARIES="${build_dir_root}/lib" \
 			-DOPENSSL_INCLUDE_DIR="${build_dir_root}/include" \
+			-DCMAKE_C_FLAGS="-Wno-implicit-function-declaration" \
 			../../../${lib_name}/${lib_source_dir}
 
 		cmake --build . --config ${build_type} --target install
@@ -3008,7 +3037,7 @@ function archive_ios {
 	lipo -create  "${build_dir0}/lib/libTracyClient.a"  "${build_dir1}/lib/libTracyClient.a"  -output "${root_dir}/build/ios-fat/libTracyClient.a"
 	lipo -create  "${build_dir0}/lib/libcrypto.a"  "${build_dir1}/lib/libcrypto.a"  -output "${root_dir}/build/ios-fat/libcrypto.a"
 	lipo -create  "${build_dir0}/lib/libssl.a"  "${build_dir1}/lib/libssl.a"  -output "${root_dir}/build/ios-fat/libssl.a"
-
+	lipo -create  "${build_dir0}/lib/libcurl.a"  "${build_dir1}/lib/libcurl.a"  -output "${root_dir}/build/ios-fat/libcurl.a"
 	lipo -create  "${build_dir0}/lib/libsharpyuv.a"  "${build_dir1}/lib/libsharpyuv.a"  -output "${root_dir}/build/ios-fat/libsharpyuv.a"
 	lipo -create  "${build_dir0}/lib/libwebp.a"  "${build_dir1}/lib/libwebp.a"  -output "${root_dir}/build/ios-fat/libwebp.a"
 	lipo -create  "${build_dir0}/lib/libwebpdecoder.a"  "${build_dir1}/lib/libwebpdecoder.a"  -output "${root_dir}/build/ios-fat/libwebpdecoder.a"
@@ -3249,6 +3278,18 @@ function clean {
 #build_benchmark release arm64 ohos
 #build_mpg123 release "arm7" android
 
+#build_zlib release arm64 iphoneos
+#build_openssl release arm64 iphoneos
+#build_curl release arm64 iphoneos
+
+build_zlib release x86_64 iphonesimulator
+build_openssl release x86_64 iphonesimulator
+build_curl release x86_64 iphonesimulator
+
+archive_ios_lib release crypto
+archive_ios_lib release ssl
+archive_ios_lib release z
+archive_ios_lib release curl
 
 #build_benchmark release "aarch64" android
 #build_benchmark release "arm7" android
@@ -3279,6 +3320,6 @@ function clean {
 
 #build_libwebp release arm64 iphoneos
 #build_libwebp release x86_64 iphonesimulator
-archive_ios release iphoneos arm64 iphonesimulator x86_64
+#archive_ios release iphoneos arm64 iphonesimulator x86_64
 
 #build_libwebp release "x86_64" linux
