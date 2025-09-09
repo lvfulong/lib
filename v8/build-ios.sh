@@ -8,7 +8,7 @@ ARCH=$1
 TARGET_ENV=$2
 
 ARGS="target_os=\"ios\"
-v8_enable_pointer_compression=true
+v8_enable_pointer_compression=false
 target_cpu=\"${ARCH}\"
 v8_target_cpu=\"${ARCH}\"
 enable_dsyms=false
@@ -28,7 +28,7 @@ treat_warnings_as_errors=false
 symbol_level=0
 v8_enable_webassembly=false
 use_cxx17=true
-v8_enable_sandbox=true
+v8_enable_sandbox=false
 ios_deployment_target=\"11.0\"
 ios_enable_code_signing=false"
 
