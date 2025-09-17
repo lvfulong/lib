@@ -4,7 +4,7 @@ mkdir -p "${ios_fat}"
 
 
 #export ANDROID_HOME=E:/github/lib2/android-ndk-r25c-windows/android-ndk-r25c
-export ANDROID_HOME=/Applications/AndroidNDK13750724.app/Contents/NDK
+export ANDROID_HOME=/Applications/AndroidNDK13676358.app/Contents/NDK
 
 #CONCH_NDK_VERSION=21.0.6113669
 CONCH_NDK_PATH=${ANDROID_HOME}
