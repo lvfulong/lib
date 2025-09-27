@@ -39,9 +39,9 @@ else
 fi
 
 
-NDK_ROOT_R26=/home/ubuntu/lfl/android-ndk-r26d
+NDK_ROOT_R27=/home/ubuntu/lfl/android-ndk-r27
 
-echo "NDK_ROOT_R26=${NDK_ROOT_R26}"
+echo "NDK_ROOT_R27=${NDK_ROOT_R27}"
 
 ARGS="target_os=\"android\"
 target_cpu=\"${ARCH}\"
@@ -54,6 +54,8 @@ is_component_build=false
 v8_monolithic=true
 use_custom_libcxx=false
 is_debug=false
+strip_debug_info=true
+enable_resource_allowlist_generation=false
 v8_use_external_startup_data=false
 is_official_build=true
 v8_enable_i18n_support=false
@@ -62,10 +64,6 @@ symbol_level=0
 v8_enable_webassembly=true
 v8_enable_sandbox=${ENABLE_SANDBOX}
 v8_enable_pointer_compression=${POINTER_COMPRESSION}
-clang_base_path=\"${NDK_ROOT_R26}/toolchains/llvm/prebuilt/linux-x86_64\"
-android_ndk_root=\"${NDK_ROOT_R26}\"
-android_ndk_version=\"r26d\"
-android_ndk_major_version=26
 android32_ndk_api_level=21
 android64_ndk_api_level=21
 default_min_sdk_version=21
