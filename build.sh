@@ -1345,13 +1345,13 @@ function build_websocket {
 	fi
 
 	if [[ "$3" == "ohos" ]]; then
-		${OHOS_NDK_CMAKE_PATH}/cmake  -G "Ninja" \
+		${LINUX_OHOS_NDK_CMAKE_PATH}/cmake  -G "Ninja" \
 		-DCMAKE_BUILD_TYPE=${build_type} \
 		-DCMAKE_INSTALL_PREFIX=${build_dir_root} \
 		-DCMAKE_PREFIX_PATH=${build_dir_root} \
 		-DOHOS_STL=c++_shared \
-		-DCMAKE_TOOLCHAIN_FILE=${OHOS_NDK_CMAKE_TOOLCHAIN_PATH} \
-    	-DCMAKE_MAKE_PROGRAM=${OHOS_NDK_CMAKE_PATH}/ninja \
+		-DCMAKE_TOOLCHAIN_FILE=${LINUX_OHOS_NDK_CMAKE_TOOLCHAIN_PATH} \
+    	-DCMAKE_MAKE_PROGRAM=${LINUX_OHOS_NDK_CMAKE_PATH}/ninja \
 		-DCMAKE_C_FLAGS=-Qunused-arguments \
 		-DCMAKE_CXX_FLAGS=-Qunused-arguments \
 		-DLWS_WITH_ZLIB=1 \
@@ -1368,7 +1368,7 @@ function build_websocket {
 		../../../${lib_name}/${lib_source_dir}
 
 
-		${OHOS_NDK_CMAKE_PATH}/cmake --build . --config ${build_type} --target install
+		${LINUX_OHOS_NDK_CMAKE_PATH}/cmake --build . --config ${build_type} --target install
 
 
 	fi
