@@ -1354,6 +1354,8 @@ function build_websocket {
     	-DCMAKE_MAKE_PROGRAM=${LINUX_OHOS_NDK_CMAKE_PATH}/ninja \
 		-DCMAKE_C_FLAGS=-Qunused-arguments \
 		-DCMAKE_CXX_FLAGS=-Qunused-arguments \
+			-DLWS_HAVE_EVP_MD_CTX_free=1 \
+			-DLWS_HAVE_HMAC_CTX_new=1 \
 		-DLWS_WITH_ZLIB=1 \
 		-DLWS_WITH_SSL=1 \
 		-DLWS_WITHOUT_SERVER=0 \
