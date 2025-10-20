@@ -1352,8 +1352,8 @@ function build_websocket {
 		-DOHOS_STL=c++_shared \
 		-DCMAKE_TOOLCHAIN_FILE=${LINUX_OHOS_NDK_CMAKE_TOOLCHAIN_PATH} \
     	-DCMAKE_MAKE_PROGRAM=${LINUX_OHOS_NDK_CMAKE_PATH}/ninja \
-		-DCMAKE_C_FLAGS=-Qunused-arguments \
-		-DCMAKE_CXX_FLAGS=-Qunused-arguments \
+		-DCMAKE_C_FLAGS=-Qunused-arguments -Wno-implicit-int-conversion \
+		-DCMAKE_CXX_FLAGS=-Qunused-arguments -Wno-implicit-int-conversion \
 			-DLWS_HAVE_EVP_MD_CTX_free=1 \
 			-DLWS_HAVE_HMAC_CTX_new=1 \
 		-DLWS_WITH_ZLIB=1 \
