@@ -1343,6 +1343,36 @@ function build_websocket {
 
 		cmake --build . --config ${build_type} --target install
 	fi
+
+	if [[ "$3" == "ohos" ]]; then
+		${OHOS_NDK_CMAKE_PATH}/cmake  -G "Ninja" \
+		-DCMAKE_BUILD_TYPE=${build_type} \
+		-DCMAKE_INSTALL_PREFIX=${build_dir_root} \
+		-DCMAKE_PREFIX_PATH=${build_dir_root} \
+		-DOHOS_STL=c++_shared \
+		-DCMAKE_TOOLCHAIN_FILE=${OHOS_NDK_CMAKE_TOOLCHAIN_PATH} \
+    	-DCMAKE_MAKE_PROGRAM=${OHOS_NDK_CMAKE_PATH}/ninja \
+		-DCMAKE_C_FLAGS=-Qunused-arguments \
+		-DCMAKE_CXX_FLAGS=-Qunused-arguments \
+		-DLWS_WITH_ZLIB=1 \
+		-DLWS_WITH_SSL=1 \
+		-DLWS_WITHOUT_SERVER=0 \
+		-DLWS_WITH_SHARED=0 \
+		-DLWS_WITHOUT_TEST_SERVER=1 \
+		-DLWS_WITHOUT_TEST_SERVER_EXTPOLL=1 \
+		-DLWS_WITHOUT_TEST_PING=1 \
+		-DLWS_WITHOUT_TEST_ECHO=1 \
+		-DLWS_WITHOUT_TEST_CLIENT=1 \
+ 		-DLWS_WITHOUT_TEST_FRAGGLE=1 \
+		-DLWS_IPV6=1 \
+		../../../${lib_name}/${lib_source_dir}
+
+
+		${OHOS_NDK_CMAKE_PATH}/cmake --build . --config ${build_type} --target install
+
+
+	fi
+
 	rm -rf ${root_dir}/${lib_name}/${lib_source_dir}
 	cd ${root_dir}
 }
@@ -3173,6 +3203,9 @@ function clean {
 #build_websocket release "x86_64" android
 #build_websocket  release "x86_64" linux
 
+build_openssl release arm64 ohos
+build_websocket release arm64 ohos
+
 
 #build_openssl release arm64 iphoneos
 #build_openssl release x86_64 iphonesimulator
@@ -3282,14 +3315,14 @@ function clean {
 #build_openssl release arm64 iphoneos
 #build_curl release arm64 iphoneos
 
-build_zlib release x86_64 iphonesimulator
-build_openssl release x86_64 iphonesimulator
-build_curl release x86_64 iphonesimulator
+#build_zlib release x86_64 iphonesimulator
+#build_openssl release x86_64 iphonesimulator
+#build_curl release x86_64 iphonesimulator
 
-archive_ios_lib release crypto
-archive_ios_lib release ssl
-archive_ios_lib release z
-archive_ios_lib release curl
+#archive_ios_lib release crypto
+#archive_ios_lib release ssl
+#archive_ios_lib release z
+#archive_ios_lib release curl
 
 #build_benchmark release "aarch64" android
 #build_benchmark release "arm7" android
