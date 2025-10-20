@@ -1365,6 +1365,10 @@ function build_websocket {
 		-DLWS_WITHOUT_TEST_CLIENT=1 \
  		-DLWS_WITHOUT_TEST_FRAGGLE=1 \
 		-DLWS_IPV6=1 \
+		-DLWS_ZLIB_LIBRARIES="${build_dir_root}/lib/libz.a" \
+		-DLWS_ZLIB_INCLUDE_DIRS="${build_dir_root}/include" \
+		-DLWS_OPENSSL_LIBRARIES="${build_dir_root}/lib64/libssl.a;${build_dir_root}/lib64/libcrypto.a" \
+		-DLWS_OPENSSL_INCLUDE_DIRS="${build_dir_root}/include" \
 		../../../${lib_name}/${lib_source_dir}
 
 
@@ -3203,7 +3207,7 @@ function clean {
 #build_websocket release "x86_64" android
 #build_websocket  release "x86_64" linux
 
-build_openssl release arm64 ohos
+#build_openssl release arm64 ohos
 build_websocket release arm64 ohos
 
 
