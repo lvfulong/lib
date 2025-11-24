@@ -3209,7 +3209,7 @@ function clean {
 #build_websocket release "x86_64" android
 #build_websocket  release "x86_64" linux
 
-#build_openssl release arm64 ohos
+build_openssl release arm64 ohos
 build_websocket release arm64 ohos
 
 
