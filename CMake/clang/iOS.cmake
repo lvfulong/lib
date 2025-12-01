@@ -18,7 +18,7 @@ add_definitions(-DIOS)
 set(IOS_MIN_TARGET "11.0")
 
 if(PLATFORM_NAME STREQUAL "iphonesimulator")
-    add_definitions(-DFILAMENT_IOS_SIMULATOR)
+    add_definitions(-DIOS_SIMULATOR)
     # The simulator only supports iOS >= 13.0
     set(IOS_MIN_TARGET "13.0")
 endif()

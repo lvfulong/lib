@@ -3096,9 +3096,15 @@ function clean {
 
 #check_android_environment
 
-build_zlib release arm64-v8a ohos
-build_zlib release x86_64 ohos
 
+#zlib ohos
+#build_zlib release arm64-v8a ohos
+#build_zlib release x86_64 ohos
+
+#zlib ios
+build_zlib release arm64 iphoneos
+build_zlib release arm64 iphonesimulator
+archive_ios release iphoneos arm64 iphonesimulator arm64
 
 #build_png Release "win32" windows
 #build_png Release "win64" windows
