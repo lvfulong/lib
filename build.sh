@@ -23,8 +23,8 @@ function check_android_environment {
 }
 
 
-OHOS_NDK_CMAKE_PATH="E:/huawei/commandline-tools-windows-x64-5.0.13.100/command-line-tools/sdk/default/openharmony/native/build-tools/cmake/bin"
-OHOS_NDK_CMAKE_TOOLCHAIN_PATH="E:/huawei/commandline-tools-windows-x64-5.0.13.100/command-line-tools/sdk/default/openharmony/native/build/cmake/ohos.toolchain.cmake"
+WIN_OHOS_NDK_CMAKE_PATH="F:/Ohayoo-native/huawei/ide6.0.1/DevEcoStudio/sdk/default/openharmony/native/build-tools/cmake/bin"
+WIN_OHOS_NDK_CMAKE_TOOLCHAIN_PATH="F:/Ohayoo-native/huawei/ide6.0.1/DevEcoStudio/sdk/default/openharmony/native/build/cmake/ohos.toolchain.cmake"
 #OHOS_NDK_CMAKE_PATH="/Users/joychina/Desktop/lvfulong/ohos-sdk/packages/ohos-sdk/darwin/native/build-tools/cmake/bin"
 #OHOS_NDK_CMAKE_TOOLCHAIN_PATH="/Users/joychina/Desktop/lvfulong/ohos-sdk/packages/ohos-sdk/darwin/native/build/cmake/ohos.toolchain.cmake"
 
@@ -32,7 +32,8 @@ OHOS_SDK_LINUX_PATH="/home/ubuntu/lfl/command-line-tools/sdk/default/openharmony
 LINUX_OHOS_NDK_CMAKE_PATH="${OHOS_SDK_LINUX_PATH}/native/build-tools/cmake/bin"
 LINUX_OHOS_NDK_CMAKE_TOOLCHAIN_PATH="${OHOS_SDK_LINUX_PATH}/native/build/cmake/ohos.toolchain.cmake"
 
-
+OHOS_NDK_CMAKE_PATH=${WIN_OHOS_NDK_CMAKE_PATH}  #${LINUX_OHOS_NDK_CMAKE_PATH}
+OHOS_NDK_CMAKE_TOOLCHAIN_PATH=${WIN_OHOS_NDK_CMAKE_TOOLCHAIN_PATH}  #${LINUX_OHOS_NDK_CMAKE_TOOLCHAIN_PATH}
 
 
 
@@ -102,11 +103,11 @@ function build_zlib {
 	
 	if [[ "$3" == "android" ]]; then
 		local android_abi=
-		if [[ "$2" == "aarch64" ]]; then
+		if [[ "$2" == "arm64-v8a" ]]; then
 			android_abi=arm64-v8a
 		fi
 	
-		if [[ "$2" == "arm7" ]]; then
+		if [[ "$2" == "armeabi-v7a" ]]; then
 			android_abi=armeabi-v7a
 		fi
 	
@@ -154,20 +155,28 @@ function build_zlib {
 	fi
 
 	if [[ "$3" == "ohos" ]]; then
-		${LINUX_OHOS_NDK_CMAKE_PATH}/cmake  -G "Ninja" \
+		local ohos_abi=
+		if [[ "$2" == "arm64-v8a" ]]; then
+			ohos_abi=arm64-v8a
+		fi	
+		if [[ "$2" == "x86_64" ]]; then
+			ohos_abi=x86_64
+		fi
+
+		${OHOS_NDK_CMAKE_PATH}/cmake  -G "Ninja" \
 		-DCMAKE_BUILD_TYPE=${build_type} \
 		-DCMAKE_INSTALL_PREFIX=${build_dir_root} \
 		-DCMAKE_PREFIX_PATH=${build_dir_root} \
 		-DENABLE_STATIC=ON \
 		-DENABLE_SHARED=OFF \
 		-DOHOS_STL=c++_shared \
-		-DOHOS_ARCH=arm64-v8a \
-		-DCMAKE_TOOLCHAIN_FILE=${LINUX_OHOS_NDK_CMAKE_TOOLCHAIN_PATH} \
+		-DOHOS_ARCH=${ohos_abi} \
+		-DCMAKE_TOOLCHAIN_FILE=${OHOS_NDK_CMAKE_TOOLCHAIN_PATH} \
 		../../../${lib_name}/${lib_source_dir}
 
 		#make
 		#make install
-		${LINUX_OHOS_NDK_CMAKE_PATH}/cmake --build . --config ${build_type} --target install
+		${OHOS_NDK_CMAKE_PATH}/cmake --build . --config ${build_type} --target install
 	fi
 
 	rm -rf ${root_dir}/${lib_name}/${lib_source_dir}
@@ -3087,6 +3096,10 @@ function clean {
 
 #check_android_environment
 
+build_zlib release arm64-v8a ohos
+build_zlib release x86_64 ohos
+
+
 #build_png Release "win32" windows
 #build_png Release "win64" windows
 #build_png release "x86_64" linux
@@ -3209,8 +3222,8 @@ function clean {
 #build_websocket release "x86_64" android
 #build_websocket  release "x86_64" linux
 
-build_openssl release arm64 ohos
-build_websocket release arm64 ohos
+#build_openssl release arm64 ohos
+#build_websocket release arm64 ohos
 
 
 #build_openssl release arm64 iphoneos
