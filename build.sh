@@ -921,7 +921,113 @@ function build_freetype {
 	rm -rf ${root_dir}/${lib_name}/${lib_source_dir}
 	cd ${root_dir}
 }
+function build_glslang {
+	local build_type=$1
+    local arch=$2
+    local platform=$3
+	#depends zlib png
+	#build_zlib ${build_type} ${arch} ${platform}
+	#build_png ${build_type} ${arch} ${platform}
+	local lib_name=glslang
+	local build_dir_root="${root_dir}/build/${platform}-${build_type}-${arch}"
+    local build_dir="${build_dir_root}/${lib_name}"
+	mkdir -p "${build_dir}"
+	cd ${lib_name}
+	local lib_source_dir=glslang-16.1.0
+	rm -rf ${lib_source_dir}
+	tar xvzf ${lib_source_dir}.tar.gz
 
+	cd ${lib_source_dir} 
+	python ./update_glslang_sources.py
+	cd ..
+
+	cd ..
+	cd ${build_dir}
+	
+
+	#-DPLATFORM_NAME="${platform}"
+	#-DCMAKE_BUILD_TYPE=${build_type} 
+	if [[ "$3" == "windows" ]]; then	
+	
+		cmake . -G "Visual Studio 17 2022" \
+			-A ${arch} \
+			-DCMAKE_INSTALL_PREFIX=${build_dir_root} \
+			-DCMAKE_PREFIX_PATH=${build_dir_root} \
+			../../../${lib_name}/${lib_source_dir}
+	
+		cmake --build . --config ${build_type} --target install
+	fi
+	
+	#if [[ "$3" == "iphoneos" ]] || [[ "$3" == "iphonesimulator" ]]; then
+	#fi
+	
+	if [[ "$3" == "android" ]]; then
+		local android_abi=
+		if [[ "$2" == "aarch64" ]]; then
+			android_abi=arm64-v8a
+		fi
+	
+		if [[ "$2" == "arm7" ]]; then
+			android_abi=armeabi-v7a
+		fi
+	
+		if [[ "$2" == "x86" ]]; then
+			android_abi=x86
+		fi
+	
+		if [[ "$2" == "x86_64" ]]; then
+			android_abi=x86_64
+		fi
+		#-DCMAKE_ARCHIVE_OUTPUT_DIRECTORY=../android-${build_type}/Conch why not work?
+		cmake -G "Unix Makefiles" \
+			-DCMAKE_BUILD_TYPE=${build_type} \
+			-DCMAKE_TOOLCHAIN_FILE=${CONCH_NDK_PATH}/build/cmake/android.toolchain.cmake \
+			-DANDROID_ABI=${android_abi} \
+			-DANDROID_NDK=${CONCH_NDK_PATH} \
+			-DCMAKE_ANDROID_ARCH_ABI=${android_abi} \
+			-DCMAKE_ANDROID_NDK=${CONCH_NDK_PATH} \
+			-DCMAKE_EXPORT_COMPILE_COMMANDS=ON \
+			-DCMAKE_SYSTEM_NAME=Android \
+			-DCMAKE_SYSTEM_VERSION=19 \
+			-DANDROID_STL=c++_shared \
+			-DANDROID_PLATFORM=${CONCH_ANDROID_MINI_SDK_VERSION} \
+			-DANDROID_ARM_NEON=TRUE \
+			-DANDROID_TOOLCHAIN=clang \
+			-DCMAKE_INSTALL_PREFIX=${build_dir_root} \
+			-DCMAKE_PREFIX_PATH=${build_dir_root} \
+			../../../${lib_name}/${lib_source_dir}
+
+		cmake --build . --config ${build_type} --target install
+	fi
+	
+
+	if [[ "$3" == "linux" ]]; then
+		cmake  -G "Unix Makefiles" \
+		    -DCMAKE_C_FLAGS=-fPIC \
+			-DCMAKE_CXX_FLAGS=-fPIC \
+			-DCMAKE_BUILD_TYPE=${build_type} \
+			-DCMAKE_INSTALL_PREFIX=${build_dir_root} \
+			-DCMAKE_PREFIX_PATH=${build_dir_root} \
+			../../../${lib_name}/${lib_source_dir}
+		
+		cmake --build . --config ${build_type} --target install
+	fi
+
+	if [[ "$3" == "linux" ]]; then
+		cmake -G "Unix Makefiles" \
+			-DCMAKE_BUILD_TYPE=${build_type} \
+			-DCMAKE_INSTALL_PREFIX=${build_dir_root} \
+			-DCMAKE_PREFIX_PATH=${build_dir_root} \
+			-DCMAKE_C_FLAGS=-fPIC \
+			-DCMAKE_CXX_FLAGS=-fPIC \
+			../../../${lib_name}/${lib_source_dir}
+
+		cmake --build . --config ${build_type} --target install
+	fi
+
+	rm -rf ${root_dir}/${lib_name}/${lib_source_dir}
+	cd ${root_dir}
+}
 function build_mpg123 {
 	local build_type=$1
     local arch=$2
@@ -3102,13 +3208,25 @@ function clean {
 #build_zlib release x86_64 ohos
 
 #zlib ios
-build_zlib release arm64 iphoneos
-build_zlib release arm64 iphonesimulator
-archive_ios release iphoneos arm64 iphonesimulator arm64
+#build_zlib release arm64 iphoneos
+#build_zlib release arm64 iphonesimulator
+#archive_ios release iphoneos arm64 iphonesimulator arm64
 
 #build_png Release "win32" windows
 #build_png Release "win64" windows
 #build_png release "x86_64" linux
+
+
+#build_glslang Release "win64" windows
+
+build_glslang release "aarch64" android
+build_glslang release "arm7" android
+build_glslang release "x86_64" android
+build_glslang release "x86" android
+
+#build_glslang release arm64-v8a ohos
+#build_glslang release x86_64 ohos
+
 
 #build_png release arm64 iphoneos
 #build_png release x86_64 iphonesimulator
