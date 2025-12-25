@@ -53,7 +53,7 @@ function archive_ios_lib {
 	local lib_name=$2
 	
 	local build_dir0="${root_dir}/build/iphoneos-${build_type}-arm64"
-	local build_dir1="${root_dir}/build/iphonesimulator-${build_type}-x86_64"
+	local build_dir1="${root_dir}/build/iphonesimulator-${build_type}-arm64"
 
 	lipo -create  "${build_dir0}/lib/lib${lib_name}.a"  "${build_dir1}/lib/lib${lib_name}.a"  -output "${root_dir}/build/ios-fat/lib${lib_name}.a"
 }
@@ -3210,7 +3210,7 @@ function clean {
 #zlib ios
 #build_zlib release arm64 iphoneos
 #build_zlib release arm64 iphonesimulator
-#archive_ios release iphoneos arm64 iphonesimulator arm64
+#archive_ios_lib release zlib
 
 #build_png Release "win32" windows
 #build_png Release "win64" windows
