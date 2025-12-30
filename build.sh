@@ -935,7 +935,7 @@ function build_glslang {
 	cd ${lib_name}
 	local lib_source_dir=glslang-16.1.0
 	rm -rf ${lib_source_dir}
-	tar xvzf ${lib_source_dir}.tar.gz
+	tar xvzf ${lib_source_dir}.tar
 
 	cd ${lib_source_dir} 
 	#python ./update_glslang_sources.py
