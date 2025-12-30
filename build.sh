@@ -933,7 +933,7 @@ function build_glslang {
     local build_dir="${build_dir_root}/${lib_name}"
 	mkdir -p "${build_dir}"
 	cd ${lib_name}
-	local lib_source_dir=glslang-14.3.0
+	local lib_source_dir=glslang-16.1.0
 	rm -rf ${lib_source_dir}
 	tar xvzf ${lib_source_dir}.tar.gz
 
