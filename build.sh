@@ -935,11 +935,11 @@ function build_glslang {
 	cd ${lib_name}
 	local lib_source_dir=glslang-16.1.0
 	rm -rf ${lib_source_dir}
-	tar xvzf ${lib_source_dir}.tar
+	tar xvzf ${lib_source_dir}.tar.gz
 
 	cd ${lib_source_dir} 
-	#python ./update_glslang_sources.py
-	python3 ./update_glslang_sources.py
+	python ./update_glslang_sources.py
+	#python3 ./update_glslang_sources.py
 	cd ..
 
 	cd ..
@@ -1014,16 +1014,19 @@ function build_glslang {
 		cmake --build . --config ${build_type} --target install
 	fi
 
-	if [[ "$3" == "linux" ]]; then
-		cmake -G "Unix Makefiles" \
-			-DCMAKE_BUILD_TYPE=${build_type} \
-			-DCMAKE_INSTALL_PREFIX=${build_dir_root} \
-			-DCMAKE_PREFIX_PATH=${build_dir_root} \
-			-DCMAKE_C_FLAGS=-fPIC \
-			-DCMAKE_CXX_FLAGS=-fPIC \
-			../../../${lib_name}/${lib_source_dir}
+	if [[ "$3" == "ohos" ]]; then
+		${OHOS_NDK_CMAKE_PATH}/cmake  -G "Ninja" \
+    	-DCMAKE_BUILD_TYPE=${build_type} \
+    	-DCMAKE_INSTALL_PREFIX=${build_dir_root} \
+        -DCMAKE_PREFIX_PATH=${build_dir_root} \
+        -DCMAKE_TOOLCHAIN_FILE=${OHOS_NDK_CMAKE_TOOLCHAIN_PATH} \
+        -DCMAKE_MAKE_PROGRAM=${OHOS_NDK_CMAKE_PATH}/ninja \
+        -DOHOS_STL=c++_shared \
+        ../../../${lib_name}/${lib_source_dir}
 
-		cmake --build . --config ${build_type} --target install
+    #make
+    #make install
+    ${OHOS_NDK_CMAKE_PATH}/cmake --build . --config ${build_type} --target install
 	fi
 
 	rm -rf ${root_dir}/${lib_name}/${lib_source_dir}
@@ -3220,13 +3223,14 @@ function clean {
 
 #build_glslang Release "win64" windows
 
-build_glslang release "aarch64" android
-build_glslang release "arm7" android
-build_glslang release "x86_64" android
-build_glslang release "x86" android
+#build_glslang release "aarch64" android
+#build_glslang release "arm7" android
+#build_glslang release "x86_64" android
+#build_glslang release "x86" android
 
-#build_glslang release arm64-v8a ohos
-#build_glslang release x86_64 ohos
+build_glslang release arm64-v8a ohos
+build_glslang release x86_64 ohos
+
 
 
 #build_png release arm64 iphoneos
