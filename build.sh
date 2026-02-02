@@ -1860,11 +1860,11 @@ function build_openal {
 			-DLIBTYPE=STATIC \
 			-DALSOFT_BACKEND_OPENSL=1 \
 			-DALSOFT_BACKEND_WAVE=1 \
-			-DALSOFT_AMBDEC_PRESETS=0 \
+			-DALSOFT_INSTALL_AMBDEC_PRESETS=0 \
 			-DALSOFT_EMBED_HRTF_DATA=0 \
 			-DALSOFT_ENABLE_SSE2_CODEGEN=0 \
 			-DALSOFT_EXAMPLES=0 \
-			-DALSOFT_HRTF_DEFS=0 \
+			-DALSOFT_INSTALL_HRTF_DATA=0 \
 			-DCMAKE_C_FLAGS=-fPIC \
 			-DCMAKE_CXX_FLAGS=-fPIC \
 			../../../${lib_name}/${lib_source_dir}
@@ -1880,17 +1880,46 @@ function build_openal {
 			-DLIBTYPE=STATIC \
 			-DALSOFT_BACKEND_OPENSL=1 \
 			-DALSOFT_BACKEND_WAVE=1 \
-			-DALSOFT_AMBDEC_PRESETS=0 \
+			-DALSOFT_INSTALL_AMBDEC_PRESETS=0 \
 			-DALSOFT_EMBED_HRTF_DATA=0 \
 			-DALSOFT_ENABLE_SSE2_CODEGEN=0 \
 			-DALSOFT_EXAMPLES=0 \
-			-DALSOFT_HRTF_DEFS=0 \
+			-DALSOFT_INSTALL_HRTF_DATA=0 \
 			-DCMAKE_C_FLAGS=-fPIC \
 			-DCMAKE_CXX_FLAGS=-fPIC \
 			../../../${lib_name}/${lib_source_dir}
 
 		cmake --build . --config ${build_type} --target install
 	fi
+
+	if [[ "$3" == "ohos" ]]; then
+        local ohos_abi=
+        if [[ "$2" == "arm64-v8a" ]]; then
+            ohos_abi=arm64-v8a
+        fi  
+        if [[ "$2" == "x86_64" ]]; then
+            ohos_abi=x86_64
+        fi
+
+        ${OHOS_NDK_CMAKE_PATH}/cmake  -G "Ninja" \
+        -DCMAKE_BUILD_TYPE=${build_type} \
+        -DCMAKE_INSTALL_PREFIX=${build_dir_root} \
+        -DCMAKE_PREFIX_PATH=${build_dir_root} \
+        -DLIBTYPE=STATIC \
+		-DALSOFT_BACKEND_WAVE=1 \
+		-DALSOFT_INSTALL_AMBDEC_PRESETS=0 \
+		-DALSOFT_EMBED_HRTF_DATA=0 \
+		-DALSOFT_EXAMPLES=0 \
+		-DALSOFT_INSTALL_HRTF_DATA=0 \
+        -DOHOS_STL=c++_shared \
+        -DOHOS_ARCH=${ohos_abi} \
+        -DCMAKE_TOOLCHAIN_FILE=${OHOS_NDK_CMAKE_TOOLCHAIN_PATH} \
+        ../../../${lib_name}/${lib_source_dir}
+
+        #make
+        #make install
+        ${OHOS_NDK_CMAKE_PATH}/cmake --build . --config ${build_type} --target install
+    fi
 	rm -rf ${root_dir}/${lib_name}/${lib_source_dir}
 	cd ${root_dir}
 }
@@ -2255,6 +2284,38 @@ function build_ogg {
             make install
         fi
     fi
+
+
+	if [[ "$3" == "ohos" ]]; then
+	   cd ${lib_source_dir}
+	 
+	   local ohos_target=
+        if [[ "$2" == "arm64-v8a" ]]; then
+            ohos_target=aarch64-linux-ohos
+        fi  
+        if [[ "$2" == "x86_64" ]]; then
+            ohos_target=x86_64-linux-ohos
+        fi
+		export OHOS_SDK=${OHOS_SDK_PATH}
+		export AS=${OHOS_SDK}/native/llvm/bin/llvm-as
+		export CC="${OHOS_SDK}/native/llvm/bin/clang --target=${ohos_target}"
+		export CXX="${OHOS_SDK}/native/llvm/bin/clang++ --target=${ohos_target}"
+		export LD=${OHOS_SDK}/native/llvm/bin/ld.lld
+		export STRIP=${OHOS_SDK}/native/llvm/bin/llvm-strip
+		export RANLIB=${OHOS_SDK}/native/llvm/bin/llvm-ranlib
+		export OBJDUMP=${OHOS_SDK}/native/llvm/bin/llvm-objdump
+		export OBJCOPY=${OHOS_SDK}/native/llvm/bin/llvm-objcopy
+		export NM=${OHOS_SDK}/native/llvm/bin/llvm-nm
+		export AR=${OHOS_SDK}/native/llvm/bin/llvm-ar
+		export CFLAGS="-fPIC -D__MUSL__=1"
+		export CXXFLAGS="-fPIC -D__MUSL__=1"
+
+		./configure --prefix=${build_dir_root}
+
+
+		make
+		make install
+	fi
 	rm -rf ${root_dir}/${lib_name}/${lib_source_dir}
 	cd ${root_dir}
 }
@@ -3436,8 +3497,8 @@ function clean {
 #build_png release "x86_64" android
 #build_png release "x86" android
 
-build_png release arm64-v8a ohos
-build_png release x86_64 ohos
+#build_png release arm64-v8a ohos
+#build_png release x86_64 ohos
 
 
 #build_zlib Release "x64" windows
@@ -3501,6 +3562,10 @@ build_png release x86_64 ohos
 #build_ogg  release arm7 android
 #build_ogg  release x86 android
 #build_ogg  release x86_64 android
+
+
+build_ogg release arm64-v8a ohos
+build_ogg release x86_64 ohos
 
 #build_vorbis  release aarch64 android
 #build_vorbis  release arm7 android
@@ -3613,6 +3678,9 @@ build_png release x86_64 ohos
 #build_openal release "arm7" android
 #build_openal release "x86" android
 #build_openal release "x86_64" android
+
+#build_openal release arm64-v8a ohos
+#build_openal release x86_64 ohos
 
 
 #build_libwebp Release "x64" windows
