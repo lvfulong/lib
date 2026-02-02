@@ -2123,6 +2123,42 @@ function build_vorbis {
             make install
         fi
     fi
+
+	if [[ "$3" == "ohos" ]]; then
+	   cd ${lib_source_dir}
+	 
+	   local ohos_target=
+	   local ohos_host=
+        if [[ "$2" == "arm64-v8a" ]]; then
+            ohos_target=aarch64-linux-ohos
+			ohos_host=aarch64-linux-musl
+        fi  
+        if [[ "$2" == "x86_64" ]]; then
+            ohos_target=x86_64-linux-ohos
+			ohos_host=x86_64-linux-musl
+        fi
+		export OHOS_SDK=${OHOS_SDK_PATH}
+		export AS=${OHOS_SDK}/native/llvm/bin/llvm-as
+		export CC="${OHOS_SDK}/native/llvm/bin/clang --target=${ohos_target}"
+		export CXX="${OHOS_SDK}/native/llvm/bin/clang++ --target=${ohos_target}"
+		export LD=${OHOS_SDK}/native/llvm/bin/ld.lld
+		export STRIP=${OHOS_SDK}/native/llvm/bin/llvm-strip
+		export RANLIB=${OHOS_SDK}/native/llvm/bin/llvm-ranlib
+		export OBJDUMP=${OHOS_SDK}/native/llvm/bin/llvm-objdump
+		export OBJCOPY=${OHOS_SDK}/native/llvm/bin/llvm-objcopy
+		export NM=${OHOS_SDK}/native/llvm/bin/llvm-nm
+		export AR=${OHOS_SDK}/native/llvm/bin/llvm-ar
+		export CFLAGS="-fPIC -D__MUSL__=1"
+		export CXXFLAGS="-fPIC -D__MUSL__=1"
+
+		./configure --prefix=${build_dir_root}  --host=${ohos_host}
+
+
+		make clean
+		make
+		make install
+
+	fi
 	rm -rf ${root_dir}/${lib_name}/${lib_source_dir}
 	cd ${root_dir}
 }
@@ -2316,7 +2352,7 @@ function build_ogg {
 		./configure --prefix=${build_dir_root}  --host=${ohos_host}
 
 
-
+		make clean
 		make
 		make install
 
@@ -3569,13 +3605,18 @@ function clean {
 #build_ogg  release x86_64 android
 
 
-build_ogg release arm64-v8a ohos
-build_ogg release x86_64 ohos
+#build_ogg release arm64-v8a ohos
+#build_ogg release x86_64 ohos
 
 #build_vorbis  release aarch64 android
 #build_vorbis  release arm7 android
 #build_vorbis  release x86 android
 #build_vorbis  release x86_64 android
+
+
+build_vorbis release arm64-v8a ohos
+build_vorbis release x86_64 ohos
+
 
 #archive_ios_lib release crypto
 #archive_ios_lib release ssl
