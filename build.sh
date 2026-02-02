@@ -582,6 +582,13 @@ function build_jpeg_turbo {
 	fi
 
 	if [[ "$3" == "ohos" ]]; then
+	 	local ohos_abi=
+        if [[ "$2" == "arm64-v8a" ]]; then
+            ohos_abi=arm64-v8a
+        fi  
+        if [[ "$2" == "x86_64" ]]; then
+            ohos_abi=x86_64
+        fi
 		${OHOS_NDK_CMAKE_PATH}/cmake  -G "Ninja" \
 		-DCMAKE_BUILD_TYPE=${build_type} \
 		-DCMAKE_INSTALL_PREFIX=${build_dir_root} \
@@ -589,6 +596,7 @@ function build_jpeg_turbo {
 		-DENABLE_STATIC=ON \
 		-DENABLE_SHARED=OFF \
 		-DOHOS_STL=c++_shared \
+		-DOHOS_ARCH=${ohos_abi} \
 		-DCMAKE_TOOLCHAIN_FILE=${OHOS_NDK_CMAKE_TOOLCHAIN_PATH} \
 		../../../${lib_name}/${lib_source_dir}
 
@@ -994,7 +1002,33 @@ function build_freetype {
 		
 		cmake --build . --config ${build_type} --target install
 	fi
+    if [[ "$3" == "ohos" ]]; then
+        local ohos_abi=
+        if [[ "$2" == "arm64-v8a" ]]; then
+            ohos_abi=arm64-v8a
+        fi  
+        if [[ "$2" == "x86_64" ]]; then
+            ohos_abi=x86_64
+        fi
 
+        ${OHOS_NDK_CMAKE_PATH}/cmake  -G "Ninja" \
+        -DCMAKE_BUILD_TYPE=${build_type} \
+        -DCMAKE_INSTALL_PREFIX=${build_dir_root} \
+        -DCMAKE_PREFIX_PATH=${build_dir_root} \
+        -DFT_REQUIRE_ZLIB=FALSE \
+        -DFT_REQUIRE_BZIP2=FALSE \
+        -DFT_REQUIRE_PNG=FALSE \
+        -DFT_REQUIRE_HARFBUZZ=FALSE \
+        -DFT_REQUIRE_BROTLI=FALSE \
+        -DOHOS_STL=c++_shared \
+        -DOHOS_ARCH=${ohos_abi} \
+        -DCMAKE_TOOLCHAIN_FILE=${OHOS_NDK_CMAKE_TOOLCHAIN_PATH} \
+        ../../../${lib_name}/${lib_source_dir}
+
+        #make
+        #make install
+        ${OHOS_NDK_CMAKE_PATH}/cmake --build . --config ${build_type} --target install
+    fi
 	rm -rf ${root_dir}/${lib_name}/${lib_source_dir}
 	cd ${root_dir}
 }
@@ -2493,11 +2527,19 @@ function build_benchmark {
 		cmake --build . --config ${build_type} --target install
 	fi
 	if [[ "$3" == "ohos" ]]; then
+	 	local ohos_abi=
+        if [[ "$2" == "arm64-v8a" ]]; then
+            ohos_abi=arm64-v8a
+        fi  
+        if [[ "$2" == "x86_64" ]]; then
+            ohos_abi=x86_64
+        fi
 		${OHOS_NDK_CMAKE_PATH}/cmake  -G "Ninja" \
 		-DCMAKE_BUILD_TYPE=${build_type} \
 		-DCMAKE_INSTALL_PREFIX=${build_dir_root} \
 		-DCMAKE_PREFIX_PATH=${build_dir_root} \
 		-DOHOS_STL=c++_shared \
+		-DOHOS_ARCH=${ohos_abi} \
 		-DCMAKE_TOOLCHAIN_FILE=${OHOS_NDK_CMAKE_TOOLCHAIN_PATH} \
     	-DCMAKE_MAKE_PROGRAM=${OHOS_NDK_CMAKE_PATH}/ninja \
 		-DBENCHMARK_ENABLE_TESTING=OFF \
@@ -3199,11 +3241,19 @@ function build_googletest {
 	fi
 	
 	if [[ "$3" == "ohos" ]]; then
+		local ohos_abi=
+        if [[ "$2" == "arm64-v8a" ]]; then
+            ohos_abi=arm64-v8a
+        fi  
+        if [[ "$2" == "x86_64" ]]; then
+            ohos_abi=x86_64
+        fi
 		${OHOS_NDK_CMAKE_PATH}/cmake  -G "Ninja" \
 		-DCMAKE_BUILD_TYPE=${build_type} \
 		-DCMAKE_INSTALL_PREFIX=${build_dir_root} \
 		-DCMAKE_PREFIX_PATH=${build_dir_root} \
 		-DOHOS_STL=c++_shared \
+		 -DOHOS_ARCH=${ohos_abi} \
 		-DCMAKE_TOOLCHAIN_FILE=${OHOS_NDK_CMAKE_TOOLCHAIN_PATH} \
     	-DCMAKE_MAKE_PROGRAM=${OHOS_NDK_CMAKE_PATH}/ninja \
 		-DCMAKE_C_FLAGS=-Qunused-arguments \
@@ -3493,7 +3543,10 @@ function clean {
 #build_jpeg_turbo release "x86_64" android
 #build_jpeg_turbo release "x86" android
 
-#
+#build_jpeg_turbo release arm64-v8a ohos
+#build_jpeg_turbo release x86_64 ohos
+
+
 #build_jpeg_turbo release "x86_64" linux
 
 #build_zip Release "win32" windows
@@ -3510,6 +3563,10 @@ function clean {
 
 
 #build_zip release "x86_64" linux
+
+build_freetype release arm64-v8a ohos
+build_freetype release x86_64 ohos
+
 
 #build_freetype Release "win32" windows
 #build_freetype Release "win64" windows
@@ -3672,8 +3729,8 @@ function clean {
 #archive_ios_lib release gmock_main
 
 
-build_aki release arm64-v8a ohos
-build_aki release x86_64 ohos
+#build_aki release arm64-v8a ohos
+#build_aki release x86_64 ohos
 
 
 #build_mbedtls Release "x64" windows
@@ -3743,11 +3800,17 @@ build_aki release x86_64 ohos
 #build_benchmark release "x86" android
 #build_benchmark release "x86_64" android
 
+#build_benchmark release arm64-v8a ohos
+#build_benchmark release x86_64 ohos
+
 
 #build_googletest release "aarch64" android
 #build_googletest release "arm7" android
 #build_googletest release "x86" android
 #build_googletest release "x86_64" android
+
+#build_googletest release arm64-v8a ohos
+#build_googletest release x86_64 ohos
 
 
 #build_openal release "aarch64" android
