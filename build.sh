@@ -793,7 +793,34 @@ function build_zip {
 		
 		cmake --build . --config ${build_type} --target install
 	fi
+	if [[ "$3" == "ohos" ]]; then
+        local ohos_abi=
+        if [[ "$2" == "arm64-v8a" ]]; then
+            ohos_abi=arm64-v8a
+        fi  
+        if [[ "$2" == "x86_64" ]]; then
+            ohos_abi=x86_64
+        fi
 
+        ${OHOS_NDK_CMAKE_PATH}/cmake  -G "Ninja" \
+        -DCMAKE_BUILD_TYPE=${build_type} \
+        -DCMAKE_INSTALL_PREFIX=${build_dir_root} \
+        -DCMAKE_PREFIX_PATH=${build_dir_root} \
+        -DOHOS_STL=c++_shared \
+        -DOHOS_ARCH=${ohos_abi} \
+        -DCMAKE_TOOLCHAIN_FILE=${OHOS_NDK_CMAKE_TOOLCHAIN_PATH} \
+		-DBUILD_SHARED_LIBS=OFF \
+		-DBUILD_TOOLS=OFF \
+		-DBUILD_REGRESS=OFF \
+		-DBUILD_TOOLS=OFF \
+		-DBUILD_EXAMPLES=OFF \
+		-DBUILD_DOC=OFF \
+        ../../../${lib_name}/${lib_source_dir}
+
+        #make
+        #make install
+        ${OHOS_NDK_CMAKE_PATH}/cmake --build . --config ${build_type} --target install
+    fi
 	rm -rf ${root_dir}/${lib_name}/${lib_source_dir}
 	cd ${root_dir}
 }
@@ -3228,9 +3255,12 @@ function clean {
 #build_glslang release "x86_64" android
 #build_glslang release "x86" android
 
-build_glslang release arm64-v8a ohos
-build_glslang release x86_64 ohos
+#build_glslang release arm64-v8a ohos
+#build_glslang release x86_64 ohos
 
+
+build_zip release arm64-v8a ohos
+build_zip release x86_64 ohos
 
 
 #build_png release arm64 iphoneos
