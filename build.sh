@@ -2290,11 +2290,14 @@ function build_ogg {
 	   cd ${lib_source_dir}
 	 
 	   local ohos_target=
+	   local ohos_host=
         if [[ "$2" == "arm64-v8a" ]]; then
             ohos_target=aarch64-linux-ohos
+			ohos_host=aarch64-linux-ohos
         fi  
         if [[ "$2" == "x86_64" ]]; then
             ohos_target=x86_64-linux-ohos
+			ohos_host=x86_64-linux-ohos
         fi
 		export OHOS_SDK=${OHOS_SDK_PATH}
 		export AS=${OHOS_SDK}/native/llvm/bin/llvm-as
@@ -2310,11 +2313,13 @@ function build_ogg {
 		export CFLAGS="-fPIC -D__MUSL__=1"
 		export CXXFLAGS="-fPIC -D__MUSL__=1"
 
-		./configure --prefix=${build_dir_root}
+		./configure --prefix=${build_dir_root}  --host=${ohos_host}
+
 
 
 		make
 		make install
+
 	fi
 	rm -rf ${root_dir}/${lib_name}/${lib_source_dir}
 	cd ${root_dir}
