@@ -1210,6 +1210,9 @@ function build_mpg123 {
 			-DOHOS_ARCH=${ohos_abi} \
 			-DCMAKE_TOOLCHAIN_FILE=${OHOS_NDK_CMAKE_TOOLCHAIN_PATH} \
 			-DCMAKE_BUILD_WITH_INSTALL_RPATH=ON \
+			-DNO_PROGRAMS=ON \
+			-DNO_MODULES=ON \
+			-DBUILD_LIBOUT123=OFF \
 			../../../${lib_name}/${lib_source_dir}/ports/cmake
 		
 		${OHOS_NDK_CMAKE_PATH}/cmake --build . --config ${build_type} --target install
