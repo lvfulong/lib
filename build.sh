@@ -23,8 +23,9 @@ function check_android_environment {
 }
 
 
-WIN_OHOS_NDK_CMAKE_PATH="F:/Ohayoo-native/huawei/ide6.0.1/DevEcoStudio/sdk/default/openharmony/native/build-tools/cmake/bin"
-WIN_OHOS_NDK_CMAKE_TOOLCHAIN_PATH="F:/Ohayoo-native/huawei/ide6.0.1/DevEcoStudio/sdk/default/openharmony/native/build/cmake/ohos.toolchain.cmake"
+WIN_OHOS_SDK_PATH="F:/Ohayoo-native/huawei/ide6.0.1/DevEcoStudio/sdk/default/openharmony"
+WIN_OHOS_NDK_CMAKE_PATH="${WIN_OHOS_SDK_PATH}/native/build-tools/cmake/bin"
+WIN_OHOS_NDK_CMAKE_TOOLCHAIN_PATH="${WIN_OHOS_SDK_PATH}/native/build/cmake/ohos.toolchain.cmake"
 #OHOS_NDK_CMAKE_PATH="/Users/joychina/Desktop/lvfulong/ohos-sdk/packages/ohos-sdk/darwin/native/build-tools/cmake/bin"
 #OHOS_NDK_CMAKE_TOOLCHAIN_PATH="/Users/joychina/Desktop/lvfulong/ohos-sdk/packages/ohos-sdk/darwin/native/build/cmake/ohos.toolchain.cmake"
 
@@ -37,13 +38,16 @@ LINUX_OHOS_NDK_CMAKE_TOOLCHAIN_PATH="${OHOS_SDK_LINUX_PATH}/native/build/cmake/o
 OS_TYPE=$(uname -s)
 
 if [[ "$OS_TYPE" == "Linux" ]]; then
+    OHOS_SDK_PATH=${OHOS_SDK_LINUX_PATH}
     OHOS_NDK_CMAKE_PATH=${LINUX_OHOS_NDK_CMAKE_PATH}
     OHOS_NDK_CMAKE_TOOLCHAIN_PATH=${LINUX_OHOS_NDK_CMAKE_TOOLCHAIN_PATH}
 elif [[ "$OS_TYPE" == *"MINGW"* ]] || [[ "$OS_TYPE" == *"MSYS"* ]]; then
+    OHOS_SDK_PATH=${WIN_OHOS_SDK_PATH}
     OHOS_NDK_CMAKE_PATH=${WIN_OHOS_NDK_CMAKE_PATH}
     OHOS_NDK_CMAKE_TOOLCHAIN_PATH=${WIN_OHOS_NDK_CMAKE_TOOLCHAIN_PATH}
 else
     # 默认使用 Windows 配置（或根据实际情况调整）
+    OHOS_SDK_PATH=${WIN_OHOS_SDK_PATH}
     OHOS_NDK_CMAKE_PATH=${WIN_OHOS_NDK_CMAKE_PATH}
     OHOS_NDK_CMAKE_TOOLCHAIN_PATH=${WIN_OHOS_NDK_CMAKE_TOOLCHAIN_PATH}
 fi
@@ -312,12 +316,18 @@ function build_png {
 	
 	 if [[ "$3" == "ohos" ]]; then
         local ohos_abi=
+        local ohos_toolchain_name=
         if [[ "$2" == "arm64-v8a" ]]; then
             ohos_abi=arm64-v8a
+            ohos_toolchain_name=aarch64-linux-ohos
         fi  
         if [[ "$2" == "x86_64" ]]; then
             ohos_abi=x86_64
+            ohos_toolchain_name=x86_64-linux-ohos
         fi
+
+        local ohos_sysroot_include="${OHOS_SDK_PATH}/native/sysroot/usr/include"
+        local ohos_arch_include="${ohos_sysroot_include}/${ohos_toolchain_name}"
 
         ${OHOS_NDK_CMAKE_PATH}/cmake  -G "Ninja" \
         -DCMAKE_BUILD_TYPE=${build_type} \
@@ -328,7 +338,10 @@ function build_png {
 		-DPNG_EXECUTABLES=OFF \
 		-DPNG_TESTS=OFF \
         -DOHOS_ARCH=${ohos_abi} \
+        -DOHOS_STL=c++_shared \
         -DCMAKE_TOOLCHAIN_FILE=${OHOS_NDK_CMAKE_TOOLCHAIN_PATH} \
+        -DCMAKE_C_FLAGS="-Wno-unused-command-line-argument -Wno-error=unused-command-line-argument -D__MUSL__ -isystem ${ohos_arch_include}" \
+        -DCMAKE_CXX_FLAGS="-Wno-unused-command-line-argument -Wno-error=unused-command-line-argument -isystem ${ohos_arch_include}" \
         ../../../${lib_name}/${lib_source_dir}
 
         #make
