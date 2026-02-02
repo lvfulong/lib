@@ -3117,11 +3117,19 @@ function build_libwebp {
 	fi
 	
 	if [[ "$3" == "ohos" ]]; then
+		local ohos_abi=
+        if [[ "$2" == "arm64-v8a" ]]; then
+            ohos_abi=arm64-v8a
+        fi  
+        if [[ "$2" == "x86_64" ]]; then
+            ohos_abi=x86_64
+        fi
 		${OHOS_NDK_CMAKE_PATH}/cmake  -G "Ninja" \
 		-DCMAKE_BUILD_TYPE=${build_type} \
 		-DCMAKE_INSTALL_PREFIX=${build_dir_root} \
 		-DCMAKE_PREFIX_PATH=${build_dir_root} \
 		-DOHOS_STL=c++_shared \
+		-DOHOS_ARCH=${ohos_abi} \
 		-DCMAKE_TOOLCHAIN_FILE=${OHOS_NDK_CMAKE_TOOLCHAIN_PATH} \
     	-DCMAKE_MAKE_PROGRAM=${OHOS_NDK_CMAKE_PATH}/ninja \
 		-DCMAKE_C_FLAGS=-Qunused-arguments \
@@ -3259,8 +3267,8 @@ function clean {
 #build_glslang release x86_64 ohos
 
 
-build_zip release arm64-v8a ohos
-build_zip release x86_64 ohos
+#build_zip release arm64-v8a ohos
+#build_zip release x86_64 ohos
 
 
 #build_png release arm64 iphoneos
@@ -3521,7 +3529,10 @@ build_zip release x86_64 ohos
 
 
 #build_libwebp Release "x64" windows
-#build_libwebp release arm64 ohos
+
+#build_libwebp release arm64-v8a ohos
+#build_libwebp release x86_64 ohos
+
 
 #build_libwebp release "aarch64" android
 #build_libwebp release "arm7" android
