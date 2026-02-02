@@ -1800,13 +1800,21 @@ function build_curl {
 	if [[ "$3" == "ohos" ]]; then
 		cd ..
 		cd ${build_dir}
-		${LINUX_OHOS_NDK_CMAKE_PATH}/cmake  -G "Ninja" \
+
+		local ohos_abi=
+        if [[ "$2" == "arm64-v8a" ]]; then
+            ohos_abi=arm64-v8a
+        fi  
+        if [[ "$2" == "x86_64" ]]; then
+            ohos_abi=x86_64
+        fi
+		${OHOS_NDK_CMAKE_PATH}/cmake  -G "Ninja" \
 			-DCMAKE_BUILD_TYPE=${build_type} \
 			-DCMAKE_INSTALL_PREFIX=${build_dir_root} \
 			-DCMAKE_PREFIX_PATH=${build_dir_root} \
 			-DOHOS_STL=c++_shared \
-			-DOHOS_ARCH=arm64-v8a \
-			-DCMAKE_TOOLCHAIN_FILE=${LINUX_OHOS_NDK_CMAKE_TOOLCHAIN_PATH} \
+			-DOHOS_ARCH=${ohos_abi} \
+			-DCMAKE_TOOLCHAIN_FILE=${OHOS_NDK_CMAKE_TOOLCHAIN_PATH} \
 			-DCMAKE_FIND_ROOT_PATH=${build_dir_root} \
 			-DCURL_ZLIB=ON \
 		   	-DUSE_OPENSSL=ON \
@@ -1821,7 +1829,7 @@ function build_curl {
 			-DOPENSSL_INCLUDE_DIR="${build_dir_root}/include" \
 			../../../${lib_name}/${lib_source_dir}
 		
-		${LINUX_OHOS_NDK_CMAKE_PATH}/cmake --build . --config ${build_type} --target install
+		${OHOS_NDK_CMAKE_PATH}/cmake --build . --config ${build_type} --target install
 	fi
 
 
@@ -3564,8 +3572,8 @@ function clean {
 
 #build_zip release "x86_64" linux
 
-build_freetype release arm64-v8a ohos
-build_freetype release x86_64 ohos
+#build_freetype release arm64-v8a ohos
+#build_freetype release x86_64 ohos
 
 
 #build_freetype Release "win32" windows
@@ -3757,6 +3765,20 @@ build_freetype release x86_64 ohos
 #archive_ios_lib release mbedtls
 
 #build_curl Release "x64" windows
+
+
+
+build_zlib release x86_64 ohos
+build_zlib release arm64-v8a ohos
+
+
+build_openssl release x86_64 ohos
+build_openssl release arm64-v8a ohos
+
+build_curl release x86_64 ohos
+build_curl release arm64-v8a ohos
+
+
 
 #build_zlib release "x86_64" android
 #build_openssl release "x86_64" android
