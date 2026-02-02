@@ -1514,11 +1514,14 @@ function build_websocket {
 
 	if [[ "$3" == "ohos" ]]; then
 		local ohos_abi=
+		local ohos_lib_dir=
         if [[ "$2" == "arm64-v8a" ]]; then
             ohos_abi=arm64-v8a
+			ohos_lib_dir=lib
         fi  
         if [[ "$2" == "x86_64" ]]; then
             ohos_abi=x86_64
+			ohos_lib_dir=lib64
         fi
 		${LINUX_OHOS_NDK_CMAKE_PATH}/cmake  -G "Ninja" \
 		-DCMAKE_BUILD_TYPE=${build_type} \
@@ -1545,7 +1548,7 @@ function build_websocket {
 		-DLWS_IPV6=1 \
 		-DLWS_ZLIB_LIBRARIES="${build_dir_root}/lib/libz.a" \
 		-DLWS_ZLIB_INCLUDE_DIRS="${build_dir_root}/include" \
-		-DLWS_OPENSSL_LIBRARIES="${build_dir_root}/lib/libssl.a;${build_dir_root}/lib/libcrypto.a" \
+		-DLWS_OPENSSL_LIBRARIES="${build_dir_root}/${ohos_lib_dir}/libssl.a;${build_dir_root}/${ohos_lib_dir}/libcrypto.a" \
 		-DLWS_OPENSSL_INCLUDE_DIRS="${build_dir_root}/include" \
 		../../../${lib_name}/${lib_source_dir}
 
