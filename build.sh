@@ -2667,11 +2667,19 @@ function build_aki {
 
 
 	if [[ "$3" == "ohos" ]]; then
+		local ohos_abi=
+        if [[ "$2" == "arm64-v8a" ]]; then
+            ohos_abi=arm64-v8a
+        fi  
+        if [[ "$2" == "x86_64" ]]; then
+            ohos_abi=x86_64
+        fi
 		${OHOS_NDK_CMAKE_PATH}/cmake  -G "Ninja" \
 		-DCMAKE_BUILD_TYPE=${build_type} \
 		-DCMAKE_INSTALL_PREFIX=${build_dir_root} \
 		-DCMAKE_PREFIX_PATH=${build_dir_root} \
 		-DOHOS_STL=c++_shared \
+		-DOHOS_ARCH=${ohos_abi} \
 		-DCMAKE_TOOLCHAIN_FILE=${OHOS_NDK_CMAKE_TOOLCHAIN_PATH} \
 		../../../ohos-specific/aki
 
@@ -3664,6 +3672,8 @@ function clean {
 #archive_ios_lib release gmock_main
 
 
+build_aki release arm64-v8a ohos
+build_aki release x86_64 ohos
 
 
 #build_mbedtls Release "x64" windows
@@ -3674,8 +3684,8 @@ function clean {
 #build_mbedtls release "x86_64" linux
 
 
-build_mbedtls release arm64-v8a ohos
-build_mbedtls release x86_64 ohos
+#build_mbedtls release arm64-v8a ohos
+#build_mbedtls release x86_64 ohos
 
 #build_mbedtls release "aarch64" android
 #build_mbedtls release "arm7" android
