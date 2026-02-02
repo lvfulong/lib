@@ -32,6 +32,7 @@ OHOS_SDK_LINUX_PATH="/home/ubuntu/lfl/command-line-tools/sdk/default/openharmony
 LINUX_OHOS_NDK_CMAKE_PATH="${OHOS_SDK_LINUX_PATH}/native/build-tools/cmake/bin"
 LINUX_OHOS_NDK_CMAKE_TOOLCHAIN_PATH="${OHOS_SDK_LINUX_PATH}/native/build/cmake/ohos.toolchain.cmake"
 
+
 OHOS_NDK_CMAKE_PATH=${WIN_OHOS_NDK_CMAKE_PATH}  #${LINUX_OHOS_NDK_CMAKE_PATH}
 OHOS_NDK_CMAKE_TOOLCHAIN_PATH=${WIN_OHOS_NDK_CMAKE_TOOLCHAIN_PATH}  #${LINUX_OHOS_NDK_CMAKE_TOOLCHAIN_PATH}
 
@@ -1298,10 +1299,20 @@ function build_openssl {
 	fi
 	
 	if [[ "$3" == "ohos" ]]; then
+		local ohos_abi=
+		local ohos_platform=
+        if [[ "$2" == "arm64-v8a" ]]; then
+            ohos_abi=aarch64-linux-ohos
+			ohos_platform=linux-aarch64
+        fi  
+        if [[ "$2" == "x86_64" ]]; then
+            ohos_abi=x86_64-linux-ohos
+			ohos_platform=linux-x86_64
+        fi
 		export OHOS_SDK=${OHOS_SDK_LINUX_PATH}
 		export AS=${OHOS_SDK}/native/llvm/bin/llvm-as
-		export CC="${OHOS_SDK}/native/llvm/bin/clang --target=aarch64-linux-ohos"
-		export CXX="${OHOS_SDK}/native/llvm/bin/clang++ --target=aarch64-linux-ohos"
+		export CC="${OHOS_SDK}/native/llvm/bin/clang --target=${ohos_abi}"
+		export CXX="${OHOS_SDK}/native/llvm/bin/clang++ --target=${ohos_abi}"
 		export LD=${OHOS_SDK}/native/llvm/bin/ld.lld
 		export STRIP=${OHOS_SDK}/native/llvm/bin/llvm-strip
 		export RANLIB=${OHOS_SDK}/native/llvm/bin/llvm-ranlib
@@ -1312,7 +1323,7 @@ function build_openssl {
 		export CFLAGS="-fPIC -D__MUSL__=1"
 		export CXXFLAGS="-fPIC -D__MUSL__=1"
 
-		./Configure linux-aarch64 --prefix=${build_dir_root}
+		./Configure ${ohos_platform} --prefix=${build_dir_root}
 
 
 		make
@@ -1491,11 +1502,19 @@ function build_websocket {
 	fi
 
 	if [[ "$3" == "ohos" ]]; then
+		local ohos_abi=
+        if [[ "$2" == "arm64-v8a" ]]; then
+            ohos_abi=arm64-v8a
+        fi  
+        if [[ "$2" == "x86_64" ]]; then
+            ohos_abi=x86_64
+        fi
 		${LINUX_OHOS_NDK_CMAKE_PATH}/cmake  -G "Ninja" \
 		-DCMAKE_BUILD_TYPE=${build_type} \
 		-DCMAKE_INSTALL_PREFIX=${build_dir_root} \
 		-DCMAKE_PREFIX_PATH=${build_dir_root} \
 		-DOHOS_STL=c++_shared \
+		-DOHOS_ARCH=${ohos_abi} \
 		-DCMAKE_TOOLCHAIN_FILE=${LINUX_OHOS_NDK_CMAKE_TOOLCHAIN_PATH} \
     	-DCMAKE_MAKE_PROGRAM=${LINUX_OHOS_NDK_CMAKE_PATH}/ninja \
 		-DCMAKE_C_FLAGS="-Qunused-arguments -Wno-implicit-int-conversion" \
@@ -3389,8 +3408,11 @@ function clean {
 #build_websocket release "x86_64" android
 #build_websocket  release "x86_64" linux
 
-#build_openssl release arm64 ohos
-#build_websocket release arm64 ohos
+build_openssl release arm64-v8a ohos
+build_websocket release arm64-v8a ohos
+
+build_openssl release x86_64 ohos
+build_websocket release x86_64 ohos
 
 
 #build_openssl release arm64 iphoneos
