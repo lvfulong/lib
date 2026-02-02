@@ -3058,6 +3058,14 @@ function build_mbedtls {
 	fi
 	
 	if [[ "$3" == "ohos" ]]; then
+		local ohos_abi=
+		if [[ "$2" == "arm64-v8a" ]]; then
+			ohos_abi=arm64-v8a
+		fi  
+		if [[ "$2" == "x86_64" ]]; then
+			ohos_abi=x86_64
+		fi
+
 		${OHOS_NDK_CMAKE_PATH}/cmake  -G "Ninja" \
 		-DCMAKE_BUILD_TYPE=${build_type} \
 		-DCMAKE_INSTALL_PREFIX=${build_dir_root} \
