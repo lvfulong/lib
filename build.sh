@@ -2695,10 +2695,17 @@ function build_sqlite {
 	fi
 
 	if [[ "$3" == "ohos" ]]; then
+	   local ohos_target=
+        if [[ "$2" == "arm64-v8a" ]]; then
+            ohos_target=aarch64-linux-ohos
+        fi  
+        if [[ "$2" == "x86_64" ]]; then
+            ohos_target=x86_64-linux-ohos
+        fi
 		export OHOS_SDK=${OHOS_SDK_LINUX_PATH}
 		export AS=${OHOS_SDK}/native/llvm/bin/llvm-as
-		export CC="${OHOS_SDK}/native/llvm/bin/clang --target=aarch64-linux-ohos"
-		export CXX="${OHOS_SDK}/native/llvm/bin/clang++ --target=aarch64-linux-ohos"
+		export CC="${OHOS_SDK}/native/llvm/bin/clang --target=${ohos_target}"
+		export CXX="${OHOS_SDK}/native/llvm/bin/clang++ --target=${ohos_target}"
 		export LD=${OHOS_SDK}/native/llvm/bin/ld.lld
 		export STRIP=${OHOS_SDK}/native/llvm/bin/llvm-strip
 		export RANLIB=${OHOS_SDK}/native/llvm/bin/llvm-ranlib
@@ -3422,12 +3429,14 @@ function clean {
 #build_websocket release "x86_64" android
 #build_websocket  release "x86_64" linux
 
-build_openssl release arm64-v8a ohos
-build_websocket release arm64-v8a ohos
+#build_openssl release arm64-v8a ohos
+#build_websocket release arm64-v8a ohos
 
-build_openssl release x86_64 ohos
-build_websocket release x86_64 ohos
+#build_openssl release x86_64 ohos
+#build_websocket release x86_64 ohos
 
+build_sqlite release arm64-v8a ohos
+build_sqlite release x86_64 ohos
 
 #build_openssl release arm64 iphoneos
 #build_openssl release x86_64 iphonesimulator
