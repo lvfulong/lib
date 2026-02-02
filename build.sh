@@ -3063,6 +3063,7 @@ function build_mbedtls {
 		-DCMAKE_INSTALL_PREFIX=${build_dir_root} \
 		-DCMAKE_PREFIX_PATH=${build_dir_root} \
 		-DOHOS_STL=c++_shared \
+		-DOHOS_ARCH=${ohos_abi} \
 		-DCMAKE_TOOLCHAIN_FILE=${OHOS_NDK_CMAKE_TOOLCHAIN_PATH} \
     	-DCMAKE_MAKE_PROGRAM=${OHOS_NDK_CMAKE_PATH}/ninja \
 		-DCMAKE_C_FLAGS=-Qunused-arguments \
@@ -3536,8 +3537,8 @@ function clean {
 #build_mpg123 release "x86_64" linux
 
 
-build_mpg123 release arm64-v8a ohos
-build_mpg123 release x86_64 ohos
+#build_mpg123 release arm64-v8a ohos
+#build_mpg123 release x86_64 ohos
 	
 #build_jpeg release "x86_64" linux
 #build_jpeg release arm64 iphoneos
@@ -3665,8 +3666,8 @@ build_mpg123 release x86_64 ohos
 #build_mbedtls release "x86_64" linux
 
 
-#build_mbedtls release arm64 ohos
-
+build_mbedtls release arm64-v8a ohos
+build_mbedtls release x86_64 ohos
 
 #build_mbedtls release "aarch64" android
 #build_mbedtls release "arm7" android
