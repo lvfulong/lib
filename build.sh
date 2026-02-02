@@ -2293,11 +2293,11 @@ function build_ogg {
 	   local ohos_host=
         if [[ "$2" == "arm64-v8a" ]]; then
             ohos_target=aarch64-linux-ohos
-			ohos_host=aarch64-linux-ohos
+			ohos_host=aarch64-linux-musl
         fi  
         if [[ "$2" == "x86_64" ]]; then
             ohos_target=x86_64-linux-ohos
-			ohos_host=x86_64-linux-ohos
+			ohos_host=x86_64-linux-musl
         fi
 		export OHOS_SDK=${OHOS_SDK_PATH}
 		export AS=${OHOS_SDK}/native/llvm/bin/llvm-as
