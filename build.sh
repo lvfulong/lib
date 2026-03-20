@@ -1126,6 +1126,13 @@ function build_glslang {
 	fi
 
 	if [[ "$3" == "ohos" ]]; then
+		local ohos_abi=
+        if [[ "$2" == "arm64-v8a" ]]; then
+            ohos_abi=arm64-v8a
+        fi  
+        if [[ "$2" == "x86_64" ]]; then
+            ohos_abi=x86_64
+        fi
 		${OHOS_NDK_CMAKE_PATH}/cmake  -G "Ninja" \
     	-DCMAKE_BUILD_TYPE=${build_type} \
     	-DCMAKE_INSTALL_PREFIX=${build_dir_root} \
@@ -1133,6 +1140,7 @@ function build_glslang {
         -DCMAKE_TOOLCHAIN_FILE=${OHOS_NDK_CMAKE_TOOLCHAIN_PATH} \
         -DCMAKE_MAKE_PROGRAM=${OHOS_NDK_CMAKE_PATH}/ninja \
         -DOHOS_STL=c++_shared \
+		-DOHOS_ARCH=${ohos_abi} \
         ../../../${lib_name}/${lib_source_dir}
 
     #make
@@ -3768,15 +3776,15 @@ function clean {
 
 
 
-build_zlib release x86_64 ohos
-build_zlib release arm64-v8a ohos
+#build_zlib release x86_64 ohos
+#build_zlib release arm64-v8a ohos
 
 
-build_openssl release x86_64 ohos
-build_openssl release arm64-v8a ohos
+#build_openssl release x86_64 ohos
+#build_openssl release arm64-v8a ohos
 
-build_curl release x86_64 ohos
-build_curl release arm64-v8a ohos
+#build_curl release x86_64 ohos
+#build_curl release arm64-v8a ohos
 
 
 
