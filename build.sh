@@ -3575,7 +3575,7 @@ function clean {
 #build_png release "x86_64" linux
 
 
-#build_glslang Release "win64" windows
+#build_glslang Release "x64" windows
 
 build_glslang release "aarch64" android
 build_glslang release "arm7" android
