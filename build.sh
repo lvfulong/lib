@@ -4,7 +4,7 @@ mkdir -p "${ios_fat}"
 
 
 #export ANDROID_HOME=E:/github/lib2/android-ndk-r25c-windows/android-ndk-r25c
-export ANDROID_HOME=/Applications/AndroidNDK13676358.app/Contents/NDK
+export ANDROID_HOME=/Users/layabox/Library/Android/sdk/ndk/28.2.13676358
 
 #CONCH_NDK_VERSION=21.0.6113669
 CONCH_NDK_PATH=${ANDROID_HOME}
@@ -1045,34 +1045,46 @@ function build_glslang {
 	mkdir -p "${build_dir}"
 	cd ${lib_name}
 	local lib_source_dir=glslang-16.1.0
-	rm -rf ${lib_source_dir}
-	tar xvzf ${lib_source_dir}.tar.gz
-
-	cd ${lib_source_dir} 
-	python ./update_glslang_sources.py
-	#python3 ./update_glslang_sources.py
-	cd ..
+	if [ ! -d "${lib_source_dir}/External/spirv-tools/source" ]; then
+		rm -rf ${lib_source_dir}
+		tar xvzf ${lib_source_dir}.tar.gz
+		cd ${lib_source_dir}
+		python3 ./update_glslang_sources.py
+		cd ..
+	fi
 
 	cd ..
 	cd ${build_dir}
 	
 
 	#-DPLATFORM_NAME="${platform}"
-	#-DCMAKE_BUILD_TYPE=${build_type} 
-	if [[ "$3" == "windows" ]]; then	
-	
+	#-DCMAKE_BUILD_TYPE=${build_type}
+	if [[ "$3" == "windows" ]]; then
+
 		cmake . -G "Visual Studio 17 2022" \
 			-A ${arch} \
 			-DCMAKE_INSTALL_PREFIX=${build_dir_root} \
 			-DCMAKE_PREFIX_PATH=${build_dir_root} \
 			../../../${lib_name}/${lib_source_dir}
-	
+
 		cmake --build . --config ${build_type} --target install
 	fi
-	
-	#if [[ "$3" == "iphoneos" ]] || [[ "$3" == "iphonesimulator" ]]; then
-	#fi
-	
+
+	if [[ "$3" == "iphoneos" ]] || [[ "$3" == "iphonesimulator" ]]; then
+		cmake \
+			-G "Unix Makefiles" \
+			-DCMAKE_BUILD_TYPE="${build_type}" \
+			-DIOS_ARCH="${arch}" \
+			-DPLATFORM_NAME="${platform}" \
+			-DCMAKE_INSTALL_PREFIX=${build_dir_root} \
+			-DCMAKE_PREFIX_PATH=${build_dir_root} \
+			-DCMAKE_TOOLCHAIN_FILE=../../../CMake/clang/iOS.cmake \
+			-DCMAKE_SYSTEM_NAME=iOS \
+			../../../${lib_name}/${lib_source_dir}
+
+		cmake --build . --config ${build_type} --target install
+	fi
+
 	if [[ "$3" == "android" ]]; then
 		local android_abi=
 		if [[ "$2" == "aarch64" ]]; then
@@ -1148,7 +1160,7 @@ function build_glslang {
     ${OHOS_NDK_CMAKE_PATH}/cmake --build . --config ${build_type} --target install
 	fi
 
-	rm -rf ${root_dir}/${lib_name}/${lib_source_dir}
+	#rm -rf ${root_dir}/${lib_name}/${lib_source_dir}
 	cd ${root_dir}
 }
 function build_mpg123 {
@@ -3565,14 +3577,30 @@ function clean {
 
 #build_glslang Release "win64" windows
 
-#build_glslang release "aarch64" android
-#build_glslang release "arm7" android
-#build_glslang release "x86_64" android
-#build_glslang release "x86" android
+build_glslang release "aarch64" android
+build_glslang release "arm7" android
+build_glslang release "x86_64" android
+build_glslang release "x86" android
 
 #build_glslang release arm64-v8a ohos
 #build_glslang release x86_64 ohos
 
+build_glslang release arm64 iphoneos
+build_glslang release arm64 iphonesimulator
+archive_ios_lib release glslang
+archive_ios_lib release GenericCodeGen
+archive_ios_lib release glslang-default-resource-limits
+archive_ios_lib release MachineIndependent
+archive_ios_lib release OSDependent
+archive_ios_lib release SPIRV
+archive_ios_lib release SPIRV-Tools
+archive_ios_lib release SPIRV-Tools-opt
+archive_ios_lib release SPIRV-Tools-link
+archive_ios_lib release SPIRV-Tools-diff
+archive_ios_lib release SPIRV-Tools-reduce
+archive_ios_lib release SPIRV-Tools-lint
+
+rm -rf ${root_dir}/glslang/glslang-16.1.0
 
 #build_zip release arm64-v8a ohos
 #build_zip release x86_64 ohos
