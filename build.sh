@@ -23,8 +23,9 @@ function check_android_environment {
 }
 
 
-WIN_OHOS_NDK_CMAKE_PATH="F:/Ohayoo-native/huawei/ide6.0.1/DevEcoStudio/sdk/default/openharmony/native/build-tools/cmake/bin"
-WIN_OHOS_NDK_CMAKE_TOOLCHAIN_PATH="F:/Ohayoo-native/huawei/ide6.0.1/DevEcoStudio/sdk/default/openharmony/native/build/cmake/ohos.toolchain.cmake"
+WIN_OHOS_SDK_PATH="F:/Ohayoo-native/huawei/ide6.0.1/DevEcoStudio/sdk/default/openharmony"
+WIN_OHOS_NDK_CMAKE_PATH="${WIN_OHOS_SDK_PATH}/native/build-tools/cmake/bin"
+WIN_OHOS_NDK_CMAKE_TOOLCHAIN_PATH="${WIN_OHOS_SDK_PATH}/native/build/cmake/ohos.toolchain.cmake"
 #OHOS_NDK_CMAKE_PATH="/Users/joychina/Desktop/lvfulong/ohos-sdk/packages/ohos-sdk/darwin/native/build-tools/cmake/bin"
 #OHOS_NDK_CMAKE_TOOLCHAIN_PATH="/Users/joychina/Desktop/lvfulong/ohos-sdk/packages/ohos-sdk/darwin/native/build/cmake/ohos.toolchain.cmake"
 
@@ -32,9 +33,24 @@ OHOS_SDK_LINUX_PATH="/home/ubuntu/lfl/command-line-tools/sdk/default/openharmony
 LINUX_OHOS_NDK_CMAKE_PATH="${OHOS_SDK_LINUX_PATH}/native/build-tools/cmake/bin"
 LINUX_OHOS_NDK_CMAKE_TOOLCHAIN_PATH="${OHOS_SDK_LINUX_PATH}/native/build/cmake/ohos.toolchain.cmake"
 
-OHOS_NDK_CMAKE_PATH=${WIN_OHOS_NDK_CMAKE_PATH}  #${LINUX_OHOS_NDK_CMAKE_PATH}
-OHOS_NDK_CMAKE_TOOLCHAIN_PATH=${WIN_OHOS_NDK_CMAKE_TOOLCHAIN_PATH}  #${LINUX_OHOS_NDK_CMAKE_TOOLCHAIN_PATH}
 
+# 自动检测操作系统
+OS_TYPE=$(uname -s)
+
+if [[ "$OS_TYPE" == "Linux" ]]; then
+    OHOS_SDK_PATH=${OHOS_SDK_LINUX_PATH}
+    OHOS_NDK_CMAKE_PATH=${LINUX_OHOS_NDK_CMAKE_PATH}
+    OHOS_NDK_CMAKE_TOOLCHAIN_PATH=${LINUX_OHOS_NDK_CMAKE_TOOLCHAIN_PATH}
+elif [[ "$OS_TYPE" == *"MINGW"* ]] || [[ "$OS_TYPE" == *"MSYS"* ]]; then
+    OHOS_SDK_PATH=${WIN_OHOS_SDK_PATH}
+    OHOS_NDK_CMAKE_PATH=${WIN_OHOS_NDK_CMAKE_PATH}
+    OHOS_NDK_CMAKE_TOOLCHAIN_PATH=${WIN_OHOS_NDK_CMAKE_TOOLCHAIN_PATH}
+else
+    # 默认使用 Windows 配置（或根据实际情况调整）
+    OHOS_SDK_PATH=${WIN_OHOS_SDK_PATH}
+    OHOS_NDK_CMAKE_PATH=${WIN_OHOS_NDK_CMAKE_PATH}
+    OHOS_NDK_CMAKE_TOOLCHAIN_PATH=${WIN_OHOS_NDK_CMAKE_TOOLCHAIN_PATH}
+fi
 
 
 
@@ -298,6 +314,40 @@ function build_png {
 		cmake --build . --config ${build_type} --target install
 	fi
 	
+	 if [[ "$3" == "ohos" ]]; then
+        local ohos_abi=
+        local ohos_toolchain_name=
+        if [[ "$2" == "arm64-v8a" ]]; then
+            ohos_abi=arm64-v8a
+            ohos_toolchain_name=aarch64-linux-ohos
+        fi  
+        if [[ "$2" == "x86_64" ]]; then
+            ohos_abi=x86_64
+            ohos_toolchain_name=x86_64-linux-ohos
+        fi
+
+        local ohos_sysroot_include="${OHOS_SDK_PATH}/native/sysroot/usr/include"
+        local ohos_arch_include="${ohos_sysroot_include}/${ohos_toolchain_name}"
+
+        ${OHOS_NDK_CMAKE_PATH}/cmake  -G "Ninja" \
+        -DCMAKE_BUILD_TYPE=${build_type} \
+        -DCMAKE_INSTALL_PREFIX=${build_dir_root} \
+        -DCMAKE_PREFIX_PATH=${build_dir_root} \
+      	-DPNG_STATIC=ON \
+		-DPNG_SHARED=OFF \
+		-DPNG_EXECUTABLES=OFF \
+		-DPNG_TESTS=OFF \
+        -DOHOS_ARCH=${ohos_abi} \
+        -DOHOS_STL=c++_shared \
+        -DCMAKE_TOOLCHAIN_FILE=${OHOS_NDK_CMAKE_TOOLCHAIN_PATH} \
+        -DCMAKE_C_FLAGS="-Wno-unused-command-line-argument -Wno-error=unused-command-line-argument -D__MUSL__ -isystem ${ohos_arch_include}" \
+        -DCMAKE_CXX_FLAGS="-Wno-unused-command-line-argument -Wno-error=unused-command-line-argument -isystem ${ohos_arch_include}" \
+        ../../../${lib_name}/${lib_source_dir}
+
+        #make
+        #make install
+        ${OHOS_NDK_CMAKE_PATH}/cmake --build . --config ${build_type} --target install
+    fi
 	rm -rf ${root_dir}/${lib_name}/${lib_source_dir}
 	cd ${root_dir}
 }
@@ -532,6 +582,13 @@ function build_jpeg_turbo {
 	fi
 
 	if [[ "$3" == "ohos" ]]; then
+	 	local ohos_abi=
+        if [[ "$2" == "arm64-v8a" ]]; then
+            ohos_abi=arm64-v8a
+        fi  
+        if [[ "$2" == "x86_64" ]]; then
+            ohos_abi=x86_64
+        fi
 		${OHOS_NDK_CMAKE_PATH}/cmake  -G "Ninja" \
 		-DCMAKE_BUILD_TYPE=${build_type} \
 		-DCMAKE_INSTALL_PREFIX=${build_dir_root} \
@@ -539,6 +596,7 @@ function build_jpeg_turbo {
 		-DENABLE_STATIC=ON \
 		-DENABLE_SHARED=OFF \
 		-DOHOS_STL=c++_shared \
+		-DOHOS_ARCH=${ohos_abi} \
 		-DCMAKE_TOOLCHAIN_FILE=${OHOS_NDK_CMAKE_TOOLCHAIN_PATH} \
 		../../../${lib_name}/${lib_source_dir}
 
@@ -793,7 +851,34 @@ function build_zip {
 		
 		cmake --build . --config ${build_type} --target install
 	fi
+	if [[ "$3" == "ohos" ]]; then
+        local ohos_abi=
+        if [[ "$2" == "arm64-v8a" ]]; then
+            ohos_abi=arm64-v8a
+        fi  
+        if [[ "$2" == "x86_64" ]]; then
+            ohos_abi=x86_64
+        fi
 
+        ${OHOS_NDK_CMAKE_PATH}/cmake  -G "Ninja" \
+        -DCMAKE_BUILD_TYPE=${build_type} \
+        -DCMAKE_INSTALL_PREFIX=${build_dir_root} \
+        -DCMAKE_PREFIX_PATH=${build_dir_root} \
+        -DOHOS_STL=c++_shared \
+        -DOHOS_ARCH=${ohos_abi} \
+        -DCMAKE_TOOLCHAIN_FILE=${OHOS_NDK_CMAKE_TOOLCHAIN_PATH} \
+		-DBUILD_SHARED_LIBS=OFF \
+		-DBUILD_TOOLS=OFF \
+		-DBUILD_REGRESS=OFF \
+		-DBUILD_TOOLS=OFF \
+		-DBUILD_EXAMPLES=OFF \
+		-DBUILD_DOC=OFF \
+        ../../../${lib_name}/${lib_source_dir}
+
+        #make
+        #make install
+        ${OHOS_NDK_CMAKE_PATH}/cmake --build . --config ${build_type} --target install
+    fi
 	rm -rf ${root_dir}/${lib_name}/${lib_source_dir}
 	cd ${root_dir}
 }
@@ -917,7 +1002,33 @@ function build_freetype {
 		
 		cmake --build . --config ${build_type} --target install
 	fi
+    if [[ "$3" == "ohos" ]]; then
+        local ohos_abi=
+        if [[ "$2" == "arm64-v8a" ]]; then
+            ohos_abi=arm64-v8a
+        fi  
+        if [[ "$2" == "x86_64" ]]; then
+            ohos_abi=x86_64
+        fi
 
+        ${OHOS_NDK_CMAKE_PATH}/cmake  -G "Ninja" \
+        -DCMAKE_BUILD_TYPE=${build_type} \
+        -DCMAKE_INSTALL_PREFIX=${build_dir_root} \
+        -DCMAKE_PREFIX_PATH=${build_dir_root} \
+        -DFT_REQUIRE_ZLIB=FALSE \
+        -DFT_REQUIRE_BZIP2=FALSE \
+        -DFT_REQUIRE_PNG=FALSE \
+        -DFT_REQUIRE_HARFBUZZ=FALSE \
+        -DFT_REQUIRE_BROTLI=FALSE \
+        -DOHOS_STL=c++_shared \
+        -DOHOS_ARCH=${ohos_abi} \
+        -DCMAKE_TOOLCHAIN_FILE=${OHOS_NDK_CMAKE_TOOLCHAIN_PATH} \
+        ../../../${lib_name}/${lib_source_dir}
+
+        #make
+        #make install
+        ${OHOS_NDK_CMAKE_PATH}/cmake --build . --config ${build_type} --target install
+    fi
 	rm -rf ${root_dir}/${lib_name}/${lib_source_dir}
 	cd ${root_dir}
 }
@@ -935,11 +1046,11 @@ function build_glslang {
 	cd ${lib_name}
 	local lib_source_dir=glslang-16.1.0
 	rm -rf ${lib_source_dir}
-	tar xvzf ${lib_source_dir}.tar
+	tar xvzf ${lib_source_dir}.tar.gz
 
 	cd ${lib_source_dir} 
-	#python ./update_glslang_sources.py
-	python3 ./update_glslang_sources.py
+	python ./update_glslang_sources.py
+	#python3 ./update_glslang_sources.py
 	cd ..
 
 	cd ..
@@ -1014,16 +1125,27 @@ function build_glslang {
 		cmake --build . --config ${build_type} --target install
 	fi
 
-	if [[ "$3" == "linux" ]]; then
-		cmake -G "Unix Makefiles" \
-			-DCMAKE_BUILD_TYPE=${build_type} \
-			-DCMAKE_INSTALL_PREFIX=${build_dir_root} \
-			-DCMAKE_PREFIX_PATH=${build_dir_root} \
-			-DCMAKE_C_FLAGS=-fPIC \
-			-DCMAKE_CXX_FLAGS=-fPIC \
-			../../../${lib_name}/${lib_source_dir}
+	if [[ "$3" == "ohos" ]]; then
+		local ohos_abi=
+        if [[ "$2" == "arm64-v8a" ]]; then
+            ohos_abi=arm64-v8a
+        fi  
+        if [[ "$2" == "x86_64" ]]; then
+            ohos_abi=x86_64
+        fi
+		${OHOS_NDK_CMAKE_PATH}/cmake  -G "Ninja" \
+    	-DCMAKE_BUILD_TYPE=${build_type} \
+    	-DCMAKE_INSTALL_PREFIX=${build_dir_root} \
+        -DCMAKE_PREFIX_PATH=${build_dir_root} \
+        -DCMAKE_TOOLCHAIN_FILE=${OHOS_NDK_CMAKE_TOOLCHAIN_PATH} \
+        -DCMAKE_MAKE_PROGRAM=${OHOS_NDK_CMAKE_PATH}/ninja \
+        -DOHOS_STL=c++_shared \
+		-DOHOS_ARCH=${ohos_abi} \
+        ../../../${lib_name}/${lib_source_dir}
 
-		cmake --build . --config ${build_type} --target install
+    #make
+    #make install
+    ${OHOS_NDK_CMAKE_PATH}/cmake --build . --config ${build_type} --target install
 	fi
 
 	rm -rf ${root_dir}/${lib_name}/${lib_source_dir}
@@ -1115,13 +1237,22 @@ function build_mpg123 {
 	fi
 
 	if [[ "$3" == "ohos" ]]; then
+	 	local ohos_abi=
+        if [[ "$2" == "arm64-v8a" ]]; then
+            ohos_abi=arm64-v8a
+        fi  
+        if [[ "$2" == "x86_64" ]]; then
+            ohos_abi=x86_64
+        fi
 		${OHOS_NDK_CMAKE_PATH}/cmake  -G "Ninja" \
 			-DCMAKE_BUILD_TYPE=${build_type} \
 			-DCMAKE_INSTALL_PREFIX=${build_dir_root} \
 			-DCMAKE_PREFIX_PATH=${build_dir_root} \
 			-DOHOS_STL=c++_shared \
+			-DOHOS_ARCH=${ohos_abi} \
 			-DCMAKE_TOOLCHAIN_FILE=${OHOS_NDK_CMAKE_TOOLCHAIN_PATH} \
 			-DCMAKE_BUILD_WITH_INSTALL_RPATH=ON \
+			-DBUILD_LIBOUT123=OFF \
 			../../../${lib_name}/${lib_source_dir}/ports/cmake
 		
 		${OHOS_NDK_CMAKE_PATH}/cmake --build . --config ${build_type} --target install
@@ -1268,10 +1399,20 @@ function build_openssl {
 	fi
 	
 	if [[ "$3" == "ohos" ]]; then
+		local ohos_abi=
+		local ohos_platform=
+        if [[ "$2" == "arm64-v8a" ]]; then
+            ohos_abi=aarch64-linux-ohos
+			ohos_platform=linux-aarch64
+        fi  
+        if [[ "$2" == "x86_64" ]]; then
+            ohos_abi=x86_64-linux-ohos
+			ohos_platform=linux-x86_64
+        fi
 		export OHOS_SDK=${OHOS_SDK_LINUX_PATH}
 		export AS=${OHOS_SDK}/native/llvm/bin/llvm-as
-		export CC="${OHOS_SDK}/native/llvm/bin/clang --target=aarch64-linux-ohos"
-		export CXX="${OHOS_SDK}/native/llvm/bin/clang++ --target=aarch64-linux-ohos"
+		export CC="${OHOS_SDK}/native/llvm/bin/clang --target=${ohos_abi}"
+		export CXX="${OHOS_SDK}/native/llvm/bin/clang++ --target=${ohos_abi}"
 		export LD=${OHOS_SDK}/native/llvm/bin/ld.lld
 		export STRIP=${OHOS_SDK}/native/llvm/bin/llvm-strip
 		export RANLIB=${OHOS_SDK}/native/llvm/bin/llvm-ranlib
@@ -1282,7 +1423,7 @@ function build_openssl {
 		export CFLAGS="-fPIC -D__MUSL__=1"
 		export CXXFLAGS="-fPIC -D__MUSL__=1"
 
-		./Configure linux-aarch64 --prefix=${build_dir_root}
+		./Configure ${ohos_platform} --prefix=${build_dir_root}
 
 
 		make
@@ -1461,11 +1602,22 @@ function build_websocket {
 	fi
 
 	if [[ "$3" == "ohos" ]]; then
+		local ohos_abi=
+		local ohos_lib_dir=
+        if [[ "$2" == "arm64-v8a" ]]; then
+            ohos_abi=arm64-v8a
+			ohos_lib_dir=lib
+        fi  
+        if [[ "$2" == "x86_64" ]]; then
+            ohos_abi=x86_64
+			ohos_lib_dir=lib64
+        fi
 		${LINUX_OHOS_NDK_CMAKE_PATH}/cmake  -G "Ninja" \
 		-DCMAKE_BUILD_TYPE=${build_type} \
 		-DCMAKE_INSTALL_PREFIX=${build_dir_root} \
 		-DCMAKE_PREFIX_PATH=${build_dir_root} \
 		-DOHOS_STL=c++_shared \
+		-DOHOS_ARCH=${ohos_abi} \
 		-DCMAKE_TOOLCHAIN_FILE=${LINUX_OHOS_NDK_CMAKE_TOOLCHAIN_PATH} \
     	-DCMAKE_MAKE_PROGRAM=${LINUX_OHOS_NDK_CMAKE_PATH}/ninja \
 		-DCMAKE_C_FLAGS="-Qunused-arguments -Wno-implicit-int-conversion" \
@@ -1485,7 +1637,7 @@ function build_websocket {
 		-DLWS_IPV6=1 \
 		-DLWS_ZLIB_LIBRARIES="${build_dir_root}/lib/libz.a" \
 		-DLWS_ZLIB_INCLUDE_DIRS="${build_dir_root}/include" \
-		-DLWS_OPENSSL_LIBRARIES="${build_dir_root}/lib/libssl.a;${build_dir_root}/lib/libcrypto.a" \
+		-DLWS_OPENSSL_LIBRARIES="${build_dir_root}/${ohos_lib_dir}/libssl.a;${build_dir_root}/${ohos_lib_dir}/libcrypto.a" \
 		-DLWS_OPENSSL_INCLUDE_DIRS="${build_dir_root}/include" \
 		../../../${lib_name}/${lib_source_dir}
 
@@ -1656,13 +1808,21 @@ function build_curl {
 	if [[ "$3" == "ohos" ]]; then
 		cd ..
 		cd ${build_dir}
-		${LINUX_OHOS_NDK_CMAKE_PATH}/cmake  -G "Ninja" \
+
+		local ohos_abi=
+        if [[ "$2" == "arm64-v8a" ]]; then
+            ohos_abi=arm64-v8a
+        fi  
+        if [[ "$2" == "x86_64" ]]; then
+            ohos_abi=x86_64
+        fi
+		${OHOS_NDK_CMAKE_PATH}/cmake  -G "Ninja" \
 			-DCMAKE_BUILD_TYPE=${build_type} \
 			-DCMAKE_INSTALL_PREFIX=${build_dir_root} \
 			-DCMAKE_PREFIX_PATH=${build_dir_root} \
 			-DOHOS_STL=c++_shared \
-			-DOHOS_ARCH=arm64-v8a \
-			-DCMAKE_TOOLCHAIN_FILE=${LINUX_OHOS_NDK_CMAKE_TOOLCHAIN_PATH} \
+			-DOHOS_ARCH=${ohos_abi} \
+			-DCMAKE_TOOLCHAIN_FILE=${OHOS_NDK_CMAKE_TOOLCHAIN_PATH} \
 			-DCMAKE_FIND_ROOT_PATH=${build_dir_root} \
 			-DCURL_ZLIB=ON \
 		   	-DUSE_OPENSSL=ON \
@@ -1677,7 +1837,7 @@ function build_curl {
 			-DOPENSSL_INCLUDE_DIR="${build_dir_root}/include" \
 			../../../${lib_name}/${lib_source_dir}
 		
-		${LINUX_OHOS_NDK_CMAKE_PATH}/cmake --build . --config ${build_type} --target install
+		${OHOS_NDK_CMAKE_PATH}/cmake --build . --config ${build_type} --target install
 	fi
 
 
@@ -1759,11 +1919,11 @@ function build_openal {
 			-DLIBTYPE=STATIC \
 			-DALSOFT_BACKEND_OPENSL=1 \
 			-DALSOFT_BACKEND_WAVE=1 \
-			-DALSOFT_AMBDEC_PRESETS=0 \
+			-DALSOFT_INSTALL_AMBDEC_PRESETS=0 \
 			-DALSOFT_EMBED_HRTF_DATA=0 \
 			-DALSOFT_ENABLE_SSE2_CODEGEN=0 \
 			-DALSOFT_EXAMPLES=0 \
-			-DALSOFT_HRTF_DEFS=0 \
+			-DALSOFT_INSTALL_HRTF_DATA=0 \
 			-DCMAKE_C_FLAGS=-fPIC \
 			-DCMAKE_CXX_FLAGS=-fPIC \
 			../../../${lib_name}/${lib_source_dir}
@@ -1779,17 +1939,46 @@ function build_openal {
 			-DLIBTYPE=STATIC \
 			-DALSOFT_BACKEND_OPENSL=1 \
 			-DALSOFT_BACKEND_WAVE=1 \
-			-DALSOFT_AMBDEC_PRESETS=0 \
+			-DALSOFT_INSTALL_AMBDEC_PRESETS=0 \
 			-DALSOFT_EMBED_HRTF_DATA=0 \
 			-DALSOFT_ENABLE_SSE2_CODEGEN=0 \
 			-DALSOFT_EXAMPLES=0 \
-			-DALSOFT_HRTF_DEFS=0 \
+			-DALSOFT_INSTALL_HRTF_DATA=0 \
 			-DCMAKE_C_FLAGS=-fPIC \
 			-DCMAKE_CXX_FLAGS=-fPIC \
 			../../../${lib_name}/${lib_source_dir}
 
 		cmake --build . --config ${build_type} --target install
 	fi
+
+	if [[ "$3" == "ohos" ]]; then
+        local ohos_abi=
+        if [[ "$2" == "arm64-v8a" ]]; then
+            ohos_abi=arm64-v8a
+        fi  
+        if [[ "$2" == "x86_64" ]]; then
+            ohos_abi=x86_64
+        fi
+
+        ${OHOS_NDK_CMAKE_PATH}/cmake  -G "Ninja" \
+        -DCMAKE_BUILD_TYPE=${build_type} \
+        -DCMAKE_INSTALL_PREFIX=${build_dir_root} \
+        -DCMAKE_PREFIX_PATH=${build_dir_root} \
+        -DLIBTYPE=STATIC \
+		-DALSOFT_BACKEND_WAVE=1 \
+		-DALSOFT_INSTALL_AMBDEC_PRESETS=0 \
+		-DALSOFT_EMBED_HRTF_DATA=0 \
+		-DALSOFT_EXAMPLES=0 \
+		-DALSOFT_INSTALL_HRTF_DATA=0 \
+        -DOHOS_STL=c++_shared \
+        -DOHOS_ARCH=${ohos_abi} \
+        -DCMAKE_TOOLCHAIN_FILE=${OHOS_NDK_CMAKE_TOOLCHAIN_PATH} \
+        ../../../${lib_name}/${lib_source_dir}
+
+        #make
+        #make install
+        ${OHOS_NDK_CMAKE_PATH}/cmake --build . --config ${build_type} --target install
+    fi
 	rm -rf ${root_dir}/${lib_name}/${lib_source_dir}
 	cd ${root_dir}
 }
@@ -1993,6 +2182,42 @@ function build_vorbis {
             make install
         fi
     fi
+
+	if [[ "$3" == "ohos" ]]; then
+	   cd ${lib_source_dir}
+	 
+	   local ohos_target=
+	   local ohos_host=
+        if [[ "$2" == "arm64-v8a" ]]; then
+            ohos_target=aarch64-linux-ohos
+			ohos_host=aarch64-linux-musl
+        fi  
+        if [[ "$2" == "x86_64" ]]; then
+            ohos_target=x86_64-linux-ohos
+			ohos_host=x86_64-linux-musl
+        fi
+		export OHOS_SDK=${OHOS_SDK_PATH}
+		export AS=${OHOS_SDK}/native/llvm/bin/llvm-as
+		export CC="${OHOS_SDK}/native/llvm/bin/clang --target=${ohos_target}"
+		export CXX="${OHOS_SDK}/native/llvm/bin/clang++ --target=${ohos_target}"
+		export LD=${OHOS_SDK}/native/llvm/bin/ld.lld
+		export STRIP=${OHOS_SDK}/native/llvm/bin/llvm-strip
+		export RANLIB=${OHOS_SDK}/native/llvm/bin/llvm-ranlib
+		export OBJDUMP=${OHOS_SDK}/native/llvm/bin/llvm-objdump
+		export OBJCOPY=${OHOS_SDK}/native/llvm/bin/llvm-objcopy
+		export NM=${OHOS_SDK}/native/llvm/bin/llvm-nm
+		export AR=${OHOS_SDK}/native/llvm/bin/llvm-ar
+		export CFLAGS="-fPIC -D__MUSL__=1"
+		export CXXFLAGS="-fPIC -D__MUSL__=1"
+
+		./configure --prefix=${build_dir_root}  --host=${ohos_host}
+
+
+		make clean
+		make
+		make install
+
+	fi
 	rm -rf ${root_dir}/${lib_name}/${lib_source_dir}
 	cd ${root_dir}
 }
@@ -2154,6 +2379,43 @@ function build_ogg {
             make install
         fi
     fi
+
+
+	if [[ "$3" == "ohos" ]]; then
+	   cd ${lib_source_dir}
+	 
+	   local ohos_target=
+	   local ohos_host=
+        if [[ "$2" == "arm64-v8a" ]]; then
+            ohos_target=aarch64-linux-ohos
+			ohos_host=aarch64-linux-musl
+        fi  
+        if [[ "$2" == "x86_64" ]]; then
+            ohos_target=x86_64-linux-ohos
+			ohos_host=x86_64-linux-musl
+        fi
+		export OHOS_SDK=${OHOS_SDK_PATH}
+		export AS=${OHOS_SDK}/native/llvm/bin/llvm-as
+		export CC="${OHOS_SDK}/native/llvm/bin/clang --target=${ohos_target}"
+		export CXX="${OHOS_SDK}/native/llvm/bin/clang++ --target=${ohos_target}"
+		export LD=${OHOS_SDK}/native/llvm/bin/ld.lld
+		export STRIP=${OHOS_SDK}/native/llvm/bin/llvm-strip
+		export RANLIB=${OHOS_SDK}/native/llvm/bin/llvm-ranlib
+		export OBJDUMP=${OHOS_SDK}/native/llvm/bin/llvm-objdump
+		export OBJCOPY=${OHOS_SDK}/native/llvm/bin/llvm-objcopy
+		export NM=${OHOS_SDK}/native/llvm/bin/llvm-nm
+		export AR=${OHOS_SDK}/native/llvm/bin/llvm-ar
+		export CFLAGS="-fPIC -D__MUSL__=1"
+		export CXXFLAGS="-fPIC -D__MUSL__=1"
+
+		./configure --prefix=${build_dir_root}  --host=${ohos_host}
+
+
+		make clean
+		make
+		make install
+
+	fi
 	rm -rf ${root_dir}/${lib_name}/${lib_source_dir}
 	cd ${root_dir}
 }
@@ -2281,11 +2543,19 @@ function build_benchmark {
 		cmake --build . --config ${build_type} --target install
 	fi
 	if [[ "$3" == "ohos" ]]; then
+	 	local ohos_abi=
+        if [[ "$2" == "arm64-v8a" ]]; then
+            ohos_abi=arm64-v8a
+        fi  
+        if [[ "$2" == "x86_64" ]]; then
+            ohos_abi=x86_64
+        fi
 		${OHOS_NDK_CMAKE_PATH}/cmake  -G "Ninja" \
 		-DCMAKE_BUILD_TYPE=${build_type} \
 		-DCMAKE_INSTALL_PREFIX=${build_dir_root} \
 		-DCMAKE_PREFIX_PATH=${build_dir_root} \
 		-DOHOS_STL=c++_shared \
+		-DOHOS_ARCH=${ohos_abi} \
 		-DCMAKE_TOOLCHAIN_FILE=${OHOS_NDK_CMAKE_TOOLCHAIN_PATH} \
     	-DCMAKE_MAKE_PROGRAM=${OHOS_NDK_CMAKE_PATH}/ninja \
 		-DBENCHMARK_ENABLE_TESTING=OFF \
@@ -2455,11 +2725,19 @@ function build_aki {
 
 
 	if [[ "$3" == "ohos" ]]; then
+		local ohos_abi=
+        if [[ "$2" == "arm64-v8a" ]]; then
+            ohos_abi=arm64-v8a
+        fi  
+        if [[ "$2" == "x86_64" ]]; then
+            ohos_abi=x86_64
+        fi
 		${OHOS_NDK_CMAKE_PATH}/cmake  -G "Ninja" \
 		-DCMAKE_BUILD_TYPE=${build_type} \
 		-DCMAKE_INSTALL_PREFIX=${build_dir_root} \
 		-DCMAKE_PREFIX_PATH=${build_dir_root} \
 		-DOHOS_STL=c++_shared \
+		-DOHOS_ARCH=${ohos_abi} \
 		-DCMAKE_TOOLCHAIN_FILE=${OHOS_NDK_CMAKE_TOOLCHAIN_PATH} \
 		../../../ohos-specific/aki
 
@@ -2632,10 +2910,17 @@ function build_sqlite {
 	fi
 
 	if [[ "$3" == "ohos" ]]; then
+	   local ohos_target=
+        if [[ "$2" == "arm64-v8a" ]]; then
+            ohos_target=aarch64-linux-ohos
+        fi  
+        if [[ "$2" == "x86_64" ]]; then
+            ohos_target=x86_64-linux-ohos
+        fi
 		export OHOS_SDK=${OHOS_SDK_LINUX_PATH}
 		export AS=${OHOS_SDK}/native/llvm/bin/llvm-as
-		export CC="${OHOS_SDK}/native/llvm/bin/clang --target=aarch64-linux-ohos"
-		export CXX="${OHOS_SDK}/native/llvm/bin/clang++ --target=aarch64-linux-ohos"
+		export CC="${OHOS_SDK}/native/llvm/bin/clang --target=${ohos_target}"
+		export CXX="${OHOS_SDK}/native/llvm/bin/clang++ --target=${ohos_target}"
 		export LD=${OHOS_SDK}/native/llvm/bin/ld.lld
 		export STRIP=${OHOS_SDK}/native/llvm/bin/llvm-strip
 		export RANLIB=${OHOS_SDK}/native/llvm/bin/llvm-ranlib
@@ -2839,11 +3124,20 @@ function build_mbedtls {
 	fi
 	
 	if [[ "$3" == "ohos" ]]; then
+		local ohos_abi=
+		if [[ "$2" == "arm64-v8a" ]]; then
+			ohos_abi=arm64-v8a
+		fi  
+		if [[ "$2" == "x86_64" ]]; then
+			ohos_abi=x86_64
+		fi
+
 		${OHOS_NDK_CMAKE_PATH}/cmake  -G "Ninja" \
 		-DCMAKE_BUILD_TYPE=${build_type} \
 		-DCMAKE_INSTALL_PREFIX=${build_dir_root} \
 		-DCMAKE_PREFIX_PATH=${build_dir_root} \
 		-DOHOS_STL=c++_shared \
+		-DOHOS_ARCH=${ohos_abi} \
 		-DCMAKE_TOOLCHAIN_FILE=${OHOS_NDK_CMAKE_TOOLCHAIN_PATH} \
     	-DCMAKE_MAKE_PROGRAM=${OHOS_NDK_CMAKE_PATH}/ninja \
 		-DCMAKE_C_FLAGS=-Qunused-arguments \
@@ -2963,11 +3257,19 @@ function build_googletest {
 	fi
 	
 	if [[ "$3" == "ohos" ]]; then
+		local ohos_abi=
+        if [[ "$2" == "arm64-v8a" ]]; then
+            ohos_abi=arm64-v8a
+        fi  
+        if [[ "$2" == "x86_64" ]]; then
+            ohos_abi=x86_64
+        fi
 		${OHOS_NDK_CMAKE_PATH}/cmake  -G "Ninja" \
 		-DCMAKE_BUILD_TYPE=${build_type} \
 		-DCMAKE_INSTALL_PREFIX=${build_dir_root} \
 		-DCMAKE_PREFIX_PATH=${build_dir_root} \
 		-DOHOS_STL=c++_shared \
+		 -DOHOS_ARCH=${ohos_abi} \
 		-DCMAKE_TOOLCHAIN_FILE=${OHOS_NDK_CMAKE_TOOLCHAIN_PATH} \
     	-DCMAKE_MAKE_PROGRAM=${OHOS_NDK_CMAKE_PATH}/ninja \
 		-DCMAKE_C_FLAGS=-Qunused-arguments \
@@ -3087,11 +3389,19 @@ function build_libwebp {
 	fi
 	
 	if [[ "$3" == "ohos" ]]; then
+		local ohos_abi=
+        if [[ "$2" == "arm64-v8a" ]]; then
+            ohos_abi=arm64-v8a
+        fi  
+        if [[ "$2" == "x86_64" ]]; then
+            ohos_abi=x86_64
+        fi
 		${OHOS_NDK_CMAKE_PATH}/cmake  -G "Ninja" \
 		-DCMAKE_BUILD_TYPE=${build_type} \
 		-DCMAKE_INSTALL_PREFIX=${build_dir_root} \
 		-DCMAKE_PREFIX_PATH=${build_dir_root} \
 		-DOHOS_STL=c++_shared \
+		-DOHOS_ARCH=${ohos_abi} \
 		-DCMAKE_TOOLCHAIN_FILE=${OHOS_NDK_CMAKE_TOOLCHAIN_PATH} \
     	-DCMAKE_MAKE_PROGRAM=${OHOS_NDK_CMAKE_PATH}/ninja \
 		-DCMAKE_C_FLAGS=-Qunused-arguments \
@@ -3220,13 +3530,17 @@ function clean {
 
 #build_glslang Release "win64" windows
 
-build_glslang release "aarch64" android
-build_glslang release "arm7" android
-build_glslang release "x86_64" android
-build_glslang release "x86" android
+#build_glslang release "aarch64" android
+#build_glslang release "arm7" android
+#build_glslang release "x86_64" android
+#build_glslang release "x86" android
 
 #build_glslang release arm64-v8a ohos
 #build_glslang release x86_64 ohos
+
+
+#build_zip release arm64-v8a ohos
+#build_zip release x86_64 ohos
 
 
 #build_png release arm64 iphoneos
@@ -3245,7 +3559,10 @@ build_glslang release "x86" android
 #build_jpeg_turbo release "x86_64" android
 #build_jpeg_turbo release "x86" android
 
-#
+#build_jpeg_turbo release arm64-v8a ohos
+#build_jpeg_turbo release x86_64 ohos
+
+
 #build_jpeg_turbo release "x86_64" linux
 
 #build_zip Release "win32" windows
@@ -3262,6 +3579,10 @@ build_glslang release "x86" android
 
 
 #build_zip release "x86_64" linux
+
+#build_freetype release arm64-v8a ohos
+#build_freetype release x86_64 ohos
+
 
 #build_freetype Release "win32" windows
 #build_freetype Release "win64" windows
@@ -3303,9 +3624,11 @@ build_glslang release "x86" android
 
 
 #build_mpg123 release "x86_64" linux
-#build_mpg123 release "arm64" ohos
 
 
+#build_mpg123 release arm64-v8a ohos
+#build_mpg123 release x86_64 ohos
+	
 #build_jpeg release "x86_64" linux
 #build_jpeg release arm64 iphoneos
 #build_jpeg release x86_64 iphonesimulator
@@ -3315,6 +3638,10 @@ build_glslang release "x86" android
 #build_png release "arm7" android
 #build_png release "x86_64" android
 #build_png release "x86" android
+
+#build_png release arm64-v8a ohos
+#build_png release x86_64 ohos
+
 
 #build_zlib Release "x64" windows
 #build_zlib release arm64 iphoneos
@@ -3336,7 +3663,8 @@ build_glslang release "x86" android
 #build_sqlite release "x86_64" android
 #build_sqlite release "x86" android
 
-
+#build_sqlite release arm64-v8a ohos
+#build_sqlite release x86_64 ohos
 
 #build_jxl release "x86_64" android
 #build_jxl release arm64 iphoneos
@@ -3347,8 +3675,12 @@ build_glslang release "x86" android
 #build_websocket release "x86_64" android
 #build_websocket  release "x86_64" linux
 
-#build_openssl release arm64 ohos
-#build_websocket release arm64 ohos
+#build_openssl release arm64-v8a ohos
+#build_websocket release arm64-v8a ohos
+
+#build_openssl release x86_64 ohos
+#build_websocket release x86_64 ohos
+
 
 
 #build_openssl release arm64 iphoneos
@@ -3373,10 +3705,19 @@ build_glslang release "x86" android
 #build_ogg  release x86 android
 #build_ogg  release x86_64 android
 
+
+#build_ogg release arm64-v8a ohos
+#build_ogg release x86_64 ohos
+
 #build_vorbis  release aarch64 android
 #build_vorbis  release arm7 android
 #build_vorbis  release x86 android
 #build_vorbis  release x86_64 android
+
+
+#build_vorbis release arm64-v8a ohos
+#build_vorbis release x86_64 ohos
+
 
 #archive_ios_lib release crypto
 #archive_ios_lib release ssl
@@ -3404,6 +3745,8 @@ build_glslang release "x86" android
 #archive_ios_lib release gmock_main
 
 
+#build_aki release arm64-v8a ohos
+#build_aki release x86_64 ohos
 
 
 #build_mbedtls Release "x64" windows
@@ -3414,8 +3757,8 @@ build_glslang release "x86" android
 #build_mbedtls release "x86_64" linux
 
 
-#build_mbedtls release arm64 ohos
-
+#build_mbedtls release arm64-v8a ohos
+#build_mbedtls release x86_64 ohos
 
 #build_mbedtls release "aarch64" android
 #build_mbedtls release "arm7" android
@@ -3430,6 +3773,20 @@ build_glslang release "x86" android
 #archive_ios_lib release mbedtls
 
 #build_curl Release "x64" windows
+
+
+
+#build_zlib release x86_64 ohos
+#build_zlib release arm64-v8a ohos
+
+
+#build_openssl release x86_64 ohos
+#build_openssl release arm64-v8a ohos
+
+#build_curl release x86_64 ohos
+#build_curl release arm64-v8a ohos
+
+
 
 #build_zlib release "x86_64" android
 #build_openssl release "x86_64" android
@@ -3473,11 +3830,17 @@ build_glslang release "x86" android
 #build_benchmark release "x86" android
 #build_benchmark release "x86_64" android
 
+#build_benchmark release arm64-v8a ohos
+#build_benchmark release x86_64 ohos
+
 
 #build_googletest release "aarch64" android
 #build_googletest release "arm7" android
 #build_googletest release "x86" android
 #build_googletest release "x86_64" android
+
+#build_googletest release arm64-v8a ohos
+#build_googletest release x86_64 ohos
 
 
 #build_openal release "aarch64" android
@@ -3485,9 +3848,15 @@ build_glslang release "x86" android
 #build_openal release "x86" android
 #build_openal release "x86_64" android
 
+#build_openal release arm64-v8a ohos
+#build_openal release x86_64 ohos
+
 
 #build_libwebp Release "x64" windows
-#build_libwebp release arm64 ohos
+
+#build_libwebp release arm64-v8a ohos
+#build_libwebp release x86_64 ohos
+
 
 #build_libwebp release "aarch64" android
 #build_libwebp release "arm7" android
