@@ -23,7 +23,7 @@ function check_android_environment {
 }
 
 
-WIN_OHOS_SDK_PATH="F:/Ohayoo-native/huawei/ide6.0.1/DevEcoStudio/sdk/default/openharmony"
+WIN_OHOS_SDK_PATH="D:/lvfulong/ohos/sdk/default/openharmony"
 WIN_OHOS_NDK_CMAKE_PATH="${WIN_OHOS_SDK_PATH}/native/build-tools/cmake/bin"
 WIN_OHOS_NDK_CMAKE_TOOLCHAIN_PATH="${WIN_OHOS_SDK_PATH}/native/build/cmake/ohos.toolchain.cmake"
 #OHOS_NDK_CMAKE_PATH="/Users/joychina/Desktop/lvfulong/ohos-sdk/packages/ohos-sdk/darwin/native/build-tools/cmake/bin"
@@ -1859,6 +1859,41 @@ function build_curl {
 	rm -rf ${root_dir}/${lib_name}/${lib_source_dir}
 	cd ${root_dir}
 }
+function build_openal_ohos {
+	local build_type=$1
+	local arch=$2
+
+	local lib_name=openal
+	local lib_source_dir=openal-soft-v16.1
+	local build_dir_root="${root_dir}/build/ohos-${build_type}-${arch}"
+
+	local tar_file=${root_dir}/${lib_name}/ohos/${lib_source_dir}.tar.gz
+	if [[ ! -f "${tar_file}" ]]; then
+		echo "Error: ${tar_file} not found."
+		return 1
+	fi
+
+	cd ${lib_name}
+	rm -rf ${lib_source_dir}
+	tar xzf ${tar_file}
+
+	local ohos_abi=${arch}
+	if [[ ! -d "${lib_source_dir}/${ohos_abi}" ]]; then
+		echo "Error: arch ${ohos_abi} not found in ${lib_source_dir}"
+		cd ${root_dir}
+		return 1
+	fi
+
+	mkdir -p "${build_dir_root}/lib"
+	mkdir -p "${build_dir_root}/include"
+	cp -rf ${lib_source_dir}/${ohos_abi}/lib/* ${build_dir_root}/lib/
+	cp -rf ${lib_source_dir}/${ohos_abi}/include/* ${build_dir_root}/include/
+
+	echo "Installed openal prebuilt (${ohos_abi}) to ${build_dir_root}"
+
+	rm -rf ${lib_source_dir}
+	cd ${root_dir}
+}
 function build_openal {
 	local build_type=$1
     local arch=$2
@@ -3543,7 +3578,7 @@ function clean {
 #build_png release "x86_64" linux
 
 
-#build_glslang Release "win64" windows
+#build_glslang Release "x64" windows
 
 #build_glslang release "aarch64" android
 #build_glslang release "arm7" android
@@ -3880,8 +3915,8 @@ rm -rf ${root_dir}/glslang/glslang-16.1.0
 #build_openal release "x86" android
 #build_openal release "x86_64" android
 
-#build_openal release arm64-v8a ohos
-#build_openal release x86_64 ohos
+#build_openal_ohos release arm64-v8a
+#build_openal_ohos release x86_64
 
 
 #build_libwebp Release "x64" windows
@@ -3901,3 +3936,5 @@ rm -rf ${root_dir}/glslang/glslang-16.1.0
 #archive_ios release iphoneos arm64 iphonesimulator x86_64
 
 #build_libwebp release "x86_64" linux
+
+
