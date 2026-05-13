@@ -67,10 +67,11 @@ function archive_ios_lib {
 
 	local build_type=$1
 	local lib_name=$2
-	
-	local build_dir0="${root_dir}/build/iphoneos-${build_type}-arm64"
-	local build_dir1="${root_dir}/build/iphonesimulator-${build_type}-arm64"
 
+	local build_dir0="${root_dir}/build/iphoneos-${build_type}-arm64"
+	local build_dir1="${root_dir}/build/iphonesimulator-${build_type}-x86_64"
+
+	mkdir -p "${root_dir}/build/ios-fat"
 	lipo -create  "${build_dir0}/lib/lib${lib_name}.a"  "${build_dir1}/lib/lib${lib_name}.a"  -output "${root_dir}/build/ios-fat/lib${lib_name}.a"
 }
 
@@ -1080,6 +1081,8 @@ function build_glslang {
 			-DCMAKE_PREFIX_PATH=${build_dir_root} \
 			-DCMAKE_TOOLCHAIN_FILE=../../../CMake/clang/iOS.cmake \
 			-DCMAKE_SYSTEM_NAME=iOS \
+			-DSPIRV_SKIP_EXECUTABLES=ON \
+			-DCMAKE_OSX_DEPLOYMENT_TARGET="13.0" \
 			../../../${lib_name}/${lib_source_dir}
 
 		cmake --build . --config ${build_type} --target install
@@ -3542,16 +3545,17 @@ function clean {
 
 #build_glslang Release "win64" windows
 
-build_glslang release "aarch64" android
-build_glslang release "arm7" android
-build_glslang release "x86_64" android
-build_glslang release "x86" android
+#build_glslang release "aarch64" android
+#build_glslang release "arm7" android
+#build_glslang release "x86_64" android
+#build_glslang release "x86" android
+
 
 #build_glslang release arm64-v8a ohos
 #build_glslang release x86_64 ohos
 
 build_glslang release arm64 iphoneos
-build_glslang release arm64 iphonesimulator
+build_glslang release x86_64 iphonesimulator
 archive_ios_lib release glslang
 archive_ios_lib release GenericCodeGen
 archive_ios_lib release glslang-default-resource-limits
