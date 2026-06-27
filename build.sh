@@ -3519,6 +3519,7 @@ function build_libwebp {
 			-DWEBP_BUILD_WEBPINFO=OFF \
 			-DWEBP_BUILD_WEBPMUX=OFF \
 			-DWEBP_BUILD_EXTRAS=OFF \
+			-DWEBP_ENABLE_SIMD=OFF \
 			../../../${lib_name}/${lib_source_dir}
 		
 		cmake --build . --config ${build_type} --target install
